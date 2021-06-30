@@ -1,16 +1,19 @@
 ﻿{
+  "$schema": "http://json.schemastore.org/template",
   "author": "Microsoft",
   "classifications": [
     "Universal"
   ],
-  "name": "Feature.SuspendAndResume.AddOnBackgroundEntered", 
+  "name": "Feature.SuspendAndResume.AddOnBackgroundEntered",
+  "identity": "Feature.SuspendAndResume.AddOnBackgroundEntered",
+  "shortName": "Feature.SuspendAndResume.AddOnBackgroundEntered",
   "tags": {
     "language": "C#",
     "type": "item",
     "wts.type": "composition",
     "wts.platform" : "Uwp",
     "wts.version": "1.0.0",
-    "wts.compositionFilter": "$frontendframework == CodeBehind|MVVMBasic|MVVMLight & identity == wts.Feat.SuspendAndResume"
+    "wts.compositionFilter": "$frontendframework == CodeBehind|MVVMBasic|MVVMLight|MVVMToolkit & identity == wts.Feat.SuspendAndResume"
   },
   "sourceName": "wts.ItemName",
   "preferNameDirectory": true,

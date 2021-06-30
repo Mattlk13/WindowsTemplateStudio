@@ -30,8 +30,6 @@ namespace Microsoft.Templates.UI.ViewModels.NewProject
         private RelayCommand _refreshTemplatesCacheCommand;
         private RelayCommand _compositionToolCommand;
 
-        private TemplateInfoViewModel _selectedTemplate;
-
         public Dictionary<TemplateType, TemplatesStepViewModel> StepsViewModels { get; } = new Dictionary<TemplateType, TemplatesStepViewModel>();
 
         public static MainViewModel Instance { get; private set; }
@@ -65,7 +63,6 @@ namespace Microsoft.Templates.UI.ViewModels.NewProject
             : base(mainView, provider, NewProjectSteps)
         {
             Instance = this;
-            ValidationService.Initialize(UserSelection.GetNames, UserSelection.GetPageNames);
             Navigation.OnFinish += OnFinish;
         }
 
@@ -85,10 +82,33 @@ namespace Microsoft.Templates.UI.ViewModels.NewProject
             }
         }
 
-        public override async Task InitializeAsync(string platform, string language)
+        public override void Initialize(UserSelectionContext context)
         {
-            WizardStatus.Title = $" ({GenContext.Current.ProjectName})";
-            await base.InitializeAsync(platform, language);
+            switch (context.Platform)
+            {
+                case Platforms.Uwp:
+                    WizardStatus.Title = $"{StringRes.NewProjectTitleUWP} ({GenContext.Current.ProjectName})";
+                    break;
+                case Platforms.Wpf:
+                    WizardStatus.Title = $"{StringRes.NewProjectTitleWPF} ({GenContext.Current.ProjectName})";
+                    break;
+                case Platforms.WinUI:
+                    switch (context.GetAppModel())
+                    {
+                        case AppModels.Desktop:
+                            WizardStatus.Title = $"{StringRes.NewProjectTitleWinUIDesktop} ({GenContext.Current.ProjectName})";
+                            break;
+                        case AppModels.Uwp:
+                            WizardStatus.Title = $"{StringRes.NewProjectTitleWinUIUWP} ({GenContext.Current.ProjectName})";
+                            break;
+                    }
+
+                    break;
+                default:
+                    break;
+            }
+
+            base.Initialize(context);
         }
 
         private void OnFinish(object sender, EventArgs e)
@@ -98,6 +118,11 @@ namespace Microsoft.Templates.UI.ViewModels.NewProject
 
         public override bool IsSelectionEnabled(MetadataType metadataType)
         {
+            if (WizardStatus.HasValidationErrors)
+            {
+                return false;
+            }
+
             bool result = false;
             if (!UserSelection.HasItemsAddedByUser)
             {
@@ -106,8 +131,10 @@ namespace Microsoft.Templates.UI.ViewModels.NewProject
             else
             {
                 var vm = new QuestionDialogViewModel(metadataType);
-                var questionDialog = new QuestionDialogWindow(vm);
-                questionDialog.Owner = WizardShell.Current;
+                var questionDialog = new QuestionDialogWindow(vm)
+                {
+                    Owner = WizardShell.Current,
+                };
                 questionDialog.ShowDialog();
 
                 if (vm.Result == DialogResult.Accept)
@@ -146,20 +173,26 @@ namespace Microsoft.Templates.UI.ViewModels.NewProject
 
         private async Task AddTemplateAsync(TemplateInfoViewModel selectedTemplate)
         {
-            if (selectedTemplate.MultipleInstance || !UserSelection.IsTemplateAdded(selectedTemplate))
+            if (!selectedTemplate.Disabled && selectedTemplate.CanBeAdded)
             {
                 await UserSelection.AddAsync(TemplateOrigin.UserSelection, selectedTemplate);
             }
         }
 
-        protected override async Task OnTemplatesAvailableAsync()
+        public override async Task OnTemplatesAvailableAsync()
         {
-            await ProjectType.LoadDataAsync(Platform);
+            ValidationService.Initialize(UserSelection.GetNames, UserSelection.GetPageNames);
+            await ProjectType.LoadDataAsync(Context);
             ShowNoContentPanel = !ProjectType.Items.Any();
         }
 
         public override async Task ProcessItemAsync(object item)
         {
+            if (WizardStatus.HasValidationErrors)
+            {
+                return;
+            }
+
             if (item is ProjectTypeMetaDataViewModel projectTypeMetaData)
             {
                 ProjectType.Selected = projectTypeMetaData;
@@ -170,7 +203,6 @@ namespace Microsoft.Templates.UI.ViewModels.NewProject
             }
             else if (item is TemplateInfoViewModel template)
             {
-                _selectedTemplate = template;
                 await AddTemplateAsync(template);
             }
         }
@@ -178,23 +210,32 @@ namespace Microsoft.Templates.UI.ViewModels.NewProject
         private async Task OnProjectTypeSelectedAsync()
         {
             await SafeThreading.JoinableTaskFactory.SwitchToMainThreadAsync();
-            await Framework.LoadDataAsync(ProjectType.Selected.Name, Platform);
+
+            Context.ProjectType = ProjectType.Selected.Name;
+            await Framework.LoadDataAsync(Context);
         }
 
         private async Task OnFrameworkSelectedAsync()
         {
             await SafeThreading.JoinableTaskFactory.SwitchToMainThreadAsync();
+
+            Context.FrontEndFramework = Framework.Selected.Name;
+
+            UserSelection.Initialize(Context);
+
             await BuildStepViewModelAsync(TemplateType.Page);
             await BuildStepViewModelAsync(TemplateType.Feature);
             await BuildStepViewModelAsync(TemplateType.Service);
             await BuildStepViewModelAsync(TemplateType.Testing);
-            await UserSelection.InitializeAsync(ProjectType.Selected.Name, Framework.Selected.Name, Platform, Language);
+
+            await UserSelection.AddLayoutTemplatesAsync();
+
             WizardStatus.IsLoading = false;
         }
 
         private async Task BuildStepViewModelAsync(TemplateType templateType)
         {
-            var hasTemplates = DataService.HasTemplatesFromType(templateType, Platform, ProjectType.Selected.Name, Framework.Selected.Name);
+            var hasTemplates = DataService.HasTemplatesFromType(templateType, Context);
             var stepId = templateType.GetNewProjectStepId();
             var isStepAdded = StepsViewModels.ContainsKey(templateType);
             if (hasTemplates)
@@ -203,7 +244,7 @@ namespace Microsoft.Templates.UI.ViewModels.NewProject
                 {
                     var stepTitle = templateType.GetNewProjectStepTitle();
                     var pageTitle = templateType.GetStepPageTitle();
-                    var step = new TemplatesStepViewModel(templateType, Platform, ProjectType.Selected.Name, Framework.Selected.Name, pageTitle);
+                    var step = new TemplatesStepViewModel(templateType, Context, pageTitle);
                     step.LoadData();
                     StepsViewModels.Add(templateType, step);
                     WizardNavigation.Current.AddNewStep(stepId, stepTitle, () => new TemplatesStepPage(templateType));
@@ -211,7 +252,7 @@ namespace Microsoft.Templates.UI.ViewModels.NewProject
                 else
                 {
                     var step = StepsViewModels[templateType];
-                    step.ResetData(ProjectType.Selected.Name, Framework.Selected.Name);
+                    step.ResetData();
                 }
             }
             else if (!hasTemplates && isStepAdded)
@@ -244,8 +285,10 @@ namespace Microsoft.Templates.UI.ViewModels.NewProject
 
         private void OnCompositionTool()
         {
-            var compositionTool = new CompositionToolWindow(UserSelection.GetUserSelection());
-            compositionTool.Owner = WizardShell.Current;
+            var compositionTool = new CompositionToolWindow(UserSelection.GetUserSelection())
+            {
+                Owner = WizardShell.Current,
+            };
             compositionTool.ShowDialog();
         }
 

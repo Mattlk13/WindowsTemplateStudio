@@ -8,6 +8,7 @@ using System.Linq;
 using System.Windows.Controls;
 using System.Windows.Input;
 using Microsoft.Templates.Core;
+using Microsoft.Templates.Core.Diagnostics;
 using Microsoft.Templates.Core.Gen;
 using Microsoft.Templates.UI.Controls;
 using Microsoft.Templates.UI.Extensions;
@@ -34,6 +35,7 @@ namespace Microsoft.Templates.UI.ViewModels.Common
         private ICommand _setFocusCommand;
         private Guid _id;
         private ICommand _deleteCommand;
+        private bool _renameReported;
 
         public TemplateInfo Template { get; }
 
@@ -48,6 +50,10 @@ namespace Microsoft.Templates.UI.ViewModels.Common
         public bool IsGroupExclusiveSelection { get; }
 
         public IEnumerable<BasicInfoViewModel> Dependencies { get; }
+
+        public IEnumerable<BasicInfoViewModel> Requirements { get; }
+
+        public IEnumerable<BasicInfoViewModel> Exclusions { get; }
 
         public string Name
         {
@@ -141,6 +147,7 @@ namespace Microsoft.Templates.UI.ViewModels.Common
             TemplateType = template.TemplateType;
             GenGroup = template.GenGroup;
             Dependencies = template.Dependencies;
+            Requirements = template.Requirements;
             Icon = template.Icon;
             ItemNameEditable = template.ItemNameEditable;
             IsHidden = template.IsHidden;
@@ -155,16 +162,21 @@ namespace Microsoft.Templates.UI.ViewModels.Common
         {
             if (ItemNameEditable)
             {
-                var validationResult = ValidationService.ValidateTemplateName(newName, ItemNameEditable, true);
+                var validationResult = ValidationService.ValidateTemplateName(newName);
                 HasErrors = !validationResult.IsValid;
                 MainViewModel.Instance.WizardStatus.HasValidationErrors = !validationResult.IsValid;
                 if (validationResult.IsValid)
                 {
                     NotificationsControl.CleanErrorNotificationsAsync(ErrorCategory.NamingValidation).FireAndForget();
+                    if (_name != null && !_renameReported)
+                    {
+                        AppHealth.Current.Telemetry.TrackEditSummaryItemAsync(EditItemActionEnum.Rename).FireAndForget();
+                        _renameReported = true;
+                    }
                 }
                 else
                 {
-                    NotificationsControl.AddNotificationAsync(validationResult.GetNotification()).FireAndForget();
+                   NotificationsControl.AddNotificationAsync(validationResult.Errors.FirstOrDefault()?.GetNotification()).FireAndForget();
                 }
             }
 
@@ -198,7 +210,7 @@ namespace Microsoft.Templates.UI.ViewModels.Common
             }
             else if (obj is TemplateInfoViewModel templateInfo)
             {
-                result = Identity.Equals(templateInfo.Identity);
+                result = Identity.Equals(templateInfo.Identity, StringComparison.Ordinal);
             }
 
             return result;

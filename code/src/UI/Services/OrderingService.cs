@@ -5,6 +5,9 @@
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Windows.Controls;
+
+using Microsoft.Templates.Core;
+using Microsoft.Templates.Core.Diagnostics;
 using Microsoft.Templates.UI.ViewModels.Common;
 using Microsoft.Templates.UI.ViewModels.NewProject;
 
@@ -12,8 +15,8 @@ namespace Microsoft.Templates.UI.Services
 {
     public class OrderingService
     {
-        private ListView _listView;
-        private DragAndDropService<SavedTemplateViewModel> _dragAndDropService;
+        private readonly ListView _listView;
+        private readonly DragAndDropService<SavedTemplateViewModel> _dragAndDropService;
 
         private ObservableCollection<SavedTemplateViewModel> Pages
         {
@@ -46,6 +49,8 @@ namespace Microsoft.Templates.UI.Services
                 var index = Pages.IndexOf(item);
                 MoveItemAndSetFocus(index, index - 1);
             }
+
+            AppHealth.Current.Telemetry.TrackEditSummaryItemAsync(EditItemActionEnum.MoveUp).FireAndForget();
         }
 
         public void MoveDown(SavedTemplateViewModel item)
@@ -55,6 +60,8 @@ namespace Microsoft.Templates.UI.Services
                 var index = Pages.IndexOf(item);
                 MoveItemAndSetFocus(index, index + 1);
             }
+
+            AppHealth.Current.Telemetry.TrackEditSummaryItemAsync(EditItemActionEnum.MoveDown).FireAndForget();
         }
 
         private bool AreCompatibleItems(int indexOfItem1, int indexOfItem2)
@@ -86,6 +93,11 @@ namespace Microsoft.Templates.UI.Services
                     _listView.UpdateLayout();
                     var item = _listView.ItemContainerGenerator.ContainerFromIndex(newIndex) as ListBoxItem;
                     item?.Focus();
+                }
+
+                if (newIndex == 0 && Pages.ElementAt(0).GenGroup == 0)
+                {
+                    AppHealth.Current.Telemetry.TrackEditSummaryItemAsync(EditItemActionEnum.SetHome).FireAndForget();
                 }
             }
         }

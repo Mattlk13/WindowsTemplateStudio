@@ -20,7 +20,7 @@ namespace Microsoft.Templates.UI.ViewModels.Common
     {
         public static WizardNavigation Current { get; private set; }
 
-        private Window _wizardShell;
+        private readonly Window _wizardShell;
 
         private bool _canGoBack = false;
         private bool _canGoForward = true;
@@ -28,10 +28,18 @@ namespace Microsoft.Templates.UI.ViewModels.Common
         private StepData _origStep;
         private StepData _currentStep;
 
+        private RelayCommand _restoreCommand;
+        private RelayCommand _maximizeCommand;
         private RelayCommand _cancelCommand;
         private RelayCommand _goBackCommand;
         private RelayCommand _goForwardCommand;
         private RelayCommand _finishCommand;
+
+        public bool IsMaximized => BaseMainViewModel.BaseInstance.MainView.WindowState == WindowState.Maximized;
+
+        public RelayCommand RestoreCommand => _restoreCommand ?? (_restoreCommand = new RelayCommand(Restore));
+
+        public RelayCommand MaximizeCommand => _maximizeCommand ?? (_maximizeCommand = new RelayCommand(Maximize));
 
         public RelayCommand CancelCommand => _cancelCommand ?? (_cancelCommand = new RelayCommand(Cancel));
 
@@ -52,7 +60,7 @@ namespace Microsoft.Templates.UI.ViewModels.Common
 
         public event EventHandler OnFinish;
 
-        public event EventHandler<StepData> OnStepUpdated;
+        public event EventHandler<StepDataEventsArgs> OnStepUpdated;
 
         public WizardNavigation(Window wizardShell, IEnumerable<StepData> steps, bool canFinish)
         {
@@ -70,6 +78,12 @@ namespace Microsoft.Templates.UI.ViewModels.Common
         private bool CanFinish() => _canFinish && !WizardStatus.Current.IsBusy;
 
         public void Cancel() => _wizardShell.Close();
+
+        public void Restore()
+            => BaseMainViewModel.BaseInstance.MainView.WindowState = WindowState.Normal;
+
+        public void Maximize()
+            => BaseMainViewModel.BaseInstance.MainView.WindowState = WindowState.Maximized;
 
         private async void GoBack()
         {
@@ -92,6 +106,11 @@ namespace Microsoft.Templates.UI.ViewModels.Common
 
         public async Task SetStepAsync(StepData newStep, bool navigate = true)
         {
+            if (WizardStatus.Current.HasValidationErrors)
+            {
+                return;
+            }
+
             _origStep = _currentStep;
             if (newStep != _currentStep)
             {
@@ -135,7 +154,7 @@ namespace Microsoft.Templates.UI.ViewModels.Common
             }
 
             UpdateBackForward();
-            OnStepUpdated?.Invoke(this, CurrentStep);
+            OnStepUpdated?.Invoke(this, new StepDataEventsArgs(CurrentStep));
         }
 
         private bool IsPrevious(StepData value1, StepData value2)
@@ -165,7 +184,7 @@ namespace Microsoft.Templates.UI.ViewModels.Common
         public void AddNewStep(string stepId, string title, Func<object> getPage)
         {
             var newStep = StepData.MainStep(stepId, (Steps.Count + 1).ToString(), title, getPage);
-            var nextStep = Steps.FirstOrDefault(s => s.Id.CompareTo(stepId) > 0);
+            var nextStep = Steps.FirstOrDefault(s => string.Compare(s.Id, stepId, StringComparison.OrdinalIgnoreCase) > 0);
             if (nextStep != null)
             {
                 int position = Steps.IndexOf(nextStep);
@@ -197,6 +216,15 @@ namespace Microsoft.Templates.UI.ViewModels.Common
                 SetStepsIndex();
             }
         }
+
+        public void SubscribeEventHandlers()
+            => BaseMainViewModel.BaseInstance.MainView.StateChanged += WindowStateChanged;
+
+        public void UnsubscribeEventHandlers()
+            => BaseMainViewModel.BaseInstance.MainView.StateChanged -= WindowStateChanged;
+
+        private void WindowStateChanged(object sender, EventArgs e)
+            => OnPropertyChanged(nameof(IsMaximized));
 
         private void SetStepsIndex()
         {

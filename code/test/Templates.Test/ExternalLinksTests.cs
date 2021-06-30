@@ -149,32 +149,32 @@ namespace Microsoft.Templates.Test
 
                     var localFilePath = file.Substring(DocsRoot.Length).Replace('\\', '/');
 
-                    if (url.StartsWith("_"))
+                    if (url.StartsWith("_", StringComparison.Ordinal))
                     {
                         // Some VB code samples can match the RegEx pattern but aren't URLs.
                         continue;
                     }
 
                     // Note. New files only added locally may cause false negatives
-                    if (url.StartsWith("/samples/"))
+                    if (url.StartsWith("/samples/", StringComparison.Ordinal))
                     {
                         localFilePath = localFilePath.Substring(0, localFilePath.LastIndexOf('/'));
                         url = httpRoot.Substring(0, httpRoot.LastIndexOf('/')) + localFilePath.Substring(0, localFilePath.LastIndexOf('/')) + url;
                     }
-                    else if (url.StartsWith("../"))
+                    else if (url.StartsWith("../", StringComparison.Ordinal))
                     {
                         localFilePath = localFilePath.Substring(0, localFilePath.LastIndexOf('/'));
                         url = httpRoot + localFilePath.Substring(0, localFilePath.LastIndexOf('/')) + url.Substring(2);
                     }
-                    else if (url.StartsWith("./"))
+                    else if (url.StartsWith("./", StringComparison.Ordinal))
                     {
                         url = httpRoot + localFilePath.Substring(0, localFilePath.LastIndexOf('/')) + url.Substring(1);
                     }
-                    else if (url.StartsWith("/"))
+                    else if (url.StartsWith("/", StringComparison.Ordinal))
                     {
                         url = httpRoot + url;
                     }
-                    else if (url.StartsWith("#"))
+                    else if (url.StartsWith("#", StringComparison.Ordinal))
                     {
                         url = httpRoot + localFilePath + url;
                     }
@@ -212,6 +212,7 @@ namespace Microsoft.Templates.Test
         public async Task CommentLinksAreCorrectAsync()
         {
             var filesWithBrokenLinks = new List<(string file, string uri, int statusCode)>();
+            var insideCommentBlock = false;
 
             // Just check C# files. A separate test verifies that VB & C# comments are the same.
             foreach (var file in GetFiles(TemplatesRoot, "*.cs"))
@@ -222,9 +223,15 @@ namespace Microsoft.Templates.Test
 
                 foreach (var line in fileContents)
                 {
-                    if (line.TrimStart().StartsWith("// ") && line.Contains("http"))
+                    if (line.TrimStart().StartsWith("/*", StringComparison.Ordinal))
                     {
-                        var httpPos = line.IndexOf("http");
+                        insideCommentBlock = true;
+                    }
+
+                    
+                    if ((line.TrimStart().StartsWith("// ", StringComparison.Ordinal) || insideCommentBlock) && line.Contains("http"))
+                    {
+                        var httpPos = line.IndexOf("http", StringComparison.Ordinal);
 
                         var nextSpacePos = line.IndexOf(' ', httpPos);
 
@@ -237,11 +244,18 @@ namespace Microsoft.Templates.Test
                             links.Add(line.Substring(httpPos));
                         }
                     }
+
+                    if (line.TrimEnd().EndsWith("*/", StringComparison.Ordinal))
+                    {
+                        insideCommentBlock = false;
+                    }
                 }
 
                 foreach (var url in links)
                 {
-                    if (url == "https://YourPrivacyUrlGoesHere")
+                    // The login.microsoftonline address is from the SecureWebAPI code and calls to it may be affected by proxy settings
+                    if (url == "https://YourPrivacyUrlGoesHere"
+                     || url.StartsWith("https://login.microsoftonline.com/common/discovery/instance?authorization_endpoint=https", StringComparison.Ordinal))
                     {
                         continue;
                     }
@@ -313,7 +327,7 @@ namespace Microsoft.Templates.Test
         {
             try
             {
-                if (url.EndsWith("."))
+                if (url.EndsWith(".", StringComparison.Ordinal))
                 {
                     url = url.TrimEnd('.');
                 }

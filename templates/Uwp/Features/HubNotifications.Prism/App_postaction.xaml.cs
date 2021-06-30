@@ -27,7 +27,6 @@ namespace Param_RootNamespace
 //{[{
             await Container.Resolve<IHubNotificationsFeatureService>().InitializeAsync();
 //}]}
-            await Task.CompletedTask;
         }
 
         protected override async Task OnActivateApplicationAsync(IActivatedEventArgs args)
@@ -42,8 +41,9 @@ namespace Param_RootNamespace
                 await OnLaunchApplicationAsync(args as LaunchActivatedEventArgs);
             }
 //}]}
-
+//{--{
             await Task.CompletedTask;
+//}--}
         }
     }
 }

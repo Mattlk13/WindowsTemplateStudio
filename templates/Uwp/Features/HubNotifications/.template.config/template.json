@@ -1,9 +1,11 @@
 ﻿{
+  "$schema": "http://json.schemastore.org/template",
   "author": "Microsoft",
   "classifications": [
     "Universal"
   ],
   "name": "Azure Notifications",
+  "shortName": "Azure Notifications",
   "groupIdentity": "wts.Feat.HubNotifications",
   "identity": "wts.Feat.HubNotifications",
   "description": "Register to receive and handle messages from Azure Notification Hubs.",
@@ -12,7 +14,7 @@
     "type": "item",
     "wts.type": "feature",
     "wts.projecttype": "all",
-    "wts.frontendframework": "MVVMBasic|MVVMLight|CodeBehind|CaliburnMicro",
+    "wts.frontendframework": "MVVMBasic|MVVMLight|CodeBehind|CaliburnMicro|MVVMToolkit",
     "wts.platform": "Uwp",
     "wts.version": "1.0.0",
     "wts.displayOrder": "2",
@@ -27,7 +29,7 @@
   "preferNameDirectory": true,
   "PrimaryOutputs": [
     {
-      "path": ".\\Services\\HubNotificationsFeatureService.cs"
+      "path": "Services/HubNotificationsFeatureService.cs"
     }
   ],
   "symbols": {
@@ -51,7 +53,7 @@
         "version" : "0.1.7.9",
         "projectPath": "Param_ProjectName.csproj"
       },
-      "continueOnError": "true"
+      "continueOnError": true
     }
   ]
 }

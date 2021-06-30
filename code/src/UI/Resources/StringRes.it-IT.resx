@@ -117,8 +117,133 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
+  <data name="AccessibilityEditPageItem" xml:space="preserve">
+    <value>Nome della pagina</value>
+    <comment>Edit page label to accessibility</comment>
+  </data>
+  <data name="AccessibilityProjectTypesList" xml:space="preserve">
+    <value>Tipi di progetto</value>
+    <comment>Project types list label to accessibility</comment>
+  </data>
+  <data name="AccessibilityDesignPatternList" xml:space="preserve">
+    <value>Design patterns</value>
+    <comment>Design pattern list to accessibility</comment>
+  </data>
+  <data name="NotificationRemoveError_ReadOnly" xml:space="preserve">
+    <value>Non è possibile rimuovere **{0}** perché è necessario per il tipo di progetto selezionato.</value>
+    <comment>Remove error message: Template is read only</comment>
+  </data>
+  <data name="InfoDialogRequiredWorkloadNotFoundMessage" xml:space="preserve">
+    <value>È necessario installare i carichi di lavoro seguenti per creare un progetto {0}: {1}</value>
+  </data>
+  <data name="NotificationValidationError_ProjectNameAndPathDoNotMatch" xml:space="preserve">
+    <value>Il nome del progetto non corrisponde al nome della cartella del progetto. Si prega di regolare per garantire una generazione corretta.</value>
+  </data>
+  <data name="NotificationMissingVersions" xml:space="preserve">
+    <value>Mancano le seguenti versioni, installarle e riavviare Visual Studio: {0}</value>
+  </data>
+  <data name="TemplateDetailsRequiredDotNetVersion" xml:space="preserve">
+    <value>Versione minima di .NET Core:</value>
+  </data>
+  <data name="ErrorInvalidRequirementType" xml:space="preserve">
+    <value>Tipo di requisito non valido {0}</value>
+  </data>
+  <data name="NewProjectTitleUWP" xml:space="preserve">
+    <value>Nuova app per la piattaforma UWP (Universal Windows Platform)</value>
+    <comment>Wizard title on WizardShell page for UWP projects</comment>
+  </data>
+  <data name="NewProjectTitleWPF" xml:space="preserve">
+    <value>Nuova app WPF</value>
+    <comment>Wizard title on WizardShell page for WPF projects</comment>
+  </data>
+  <data name="TemplateGroup_Packaging" xml:space="preserve">
+    <value>Creazione di pacchetti</value>
+    <comment>Group header for Packaging templates</comment>
+  </data>
+  <data name="ValidatorHasHamburgerMenuLink" xml:space="preserve">
+    <value>{0}UWP/projectTypes/updatetonavigationview.md</value>
+    <comment>Has hamburger menu validation link documentation</comment>
+  </data>
+  <data name="ValidatorHasPivotLink" xml:space="preserve">
+    <value>{0}UWP/projectTypes/updatetohorizontalnavview.md</value>
+    <comment>Has pivot validation link documentation</comment>
+  </data>
+  <data name="ValidatorHasOldNavigationViewLink" xml:space="preserve">
+    <value>{0}UWP/projectTypes/updatetowinuinavigationview.md</value>
+    <comment>Has old navigation view validation link documentation</comment>
+  </data>
+  <data name="ValidatorHasOldMvvmLightLocatorLink" xml:space="preserve">
+    <value>{0}UWP/frameworks/updatemvvmlightlocator.md</value>
+    <comment>Has old MvvmLight Locator link documentation</comment>
+  </data>
+  <data name="TemplateDetailsRequirements" xml:space="preserve">
+    <value>Requisiti:</value>
+  </data>
+  <data name="NotificationAdditionError_Exclusion" xml:space="preserve">
+    <value>Impossibile aggiungere **{0}** perché i modelli seguenti non sono compatibili: {1}.</value>
+    <comment>Notification message for can not add template string format. {0}:Template name, {1}:Excluded template name. Character * add bold to word</comment>
+  </data>
+  <data name="TemplateDetailsExclusions" xml:space="preserve">
+    <value>Esclusioni:</value>
+  </data>
+  <data name="NotificationValidationError_Regex" xml:space="preserve">
+    <value>Convalida RegEx {0} non riuscita.</value>
+    <comment>Validation error message: RegEx</comment>
+  </data>
+  <data name="ErrorAddingItemsToProject" xml:space="preserve">
+    <value>Errore durante l'aggiunta di elementi al progetto {0}</value>
+    <comment>Error message for adding items to project</comment>
+  </data>
+  <data name="ErrorAddingProject" xml:space="preserve">
+    <value>Errore durante l'aggiunta del progetto {0}</value>
+    <comment>Error message for adding projects</comment>
+  </data>
+  <data name="ErrorAddingReferencesBetweenProjects" xml:space="preserve">
+    <value>Errore durante l'aggiunta di riferimenti tra i progetti</value>
+    <comment>Error message for adding items to project</comment>
+  </data>
+  <data name="ErrorAddingSdksToProject" xml:space="preserve">
+    <value>Errore durante l'aggiunta di SDK al progetto {0}.</value>
+    <comment>Error message for adding items to project</comment>
+  </data>
+  <data name="TemplateDetailsRequiredSdks" xml:space="preserve">
+    <value>Componenti Windows SDK necessari:</value>
+  </data>
+  <data name="WorkloadDisplayNameManagedDesktop" xml:space="preserve">
+    <value>Sviluppo desktop .NET</value>
+  </data>
+  <data name="WorkloadDisplayNameMsixPackaging" xml:space="preserve">
+    <value>Strumenti per la creazione di pacchetti MSIX</value>
+  </data>
+  <data name="WorkloadDisplayNameNetWeb" xml:space="preserve">
+    <value>ASP.NET e sviluppo Web</value>
+  </data>
+  <data name="WorkloadDisplayNameUniversal" xml:space="preserve">
+    <value>Sviluppo Universal Windows Platform</value>
+  </data>
+  <data name="InfoDialogInvalidVersionTitle" xml:space="preserve">
+    <value>Versione successiva richiesta</value>
+  </data>
+  <data name="InfoDialogMissingWorkloadTitle" xml:space="preserve">
+    <value>Carico di lavoro mancante</value>
+  </data>
+  <data name="InfoDialogMoreInfoLinkText" xml:space="preserve">
+    <value>Altre informazioni</value>
+  </data>
+  <data name="UWP" xml:space="preserve">
+    <value>UWP</value>
+  </data>
+  <data name="WPF" xml:space="preserve">
+    <value>WPF (.NET Core)</value>
+  </data>
+  <data name="TemplateDetailsRequiredVSWorkloads" xml:space="preserve">
+    <value>Carichi di lavoro/componenti Visual Studio necessari:</value>
+  </data>
+  <data name="TemplateDetailsInfoUnavailableDueToMissingVSWorkload" xml:space="preserve">
+    <value>Questo elemento non è attualmente disponibile a causa della mancanza di carichi di lavoro/componenti Visual Studio.</value>
+  </data>
   <data name="AddServiceTitle" xml:space="preserve">
-    <value>Aggiungere servizi</value>
+    <value>Aggiungi servizi</value>
     <comment>AddService title on AddServicePage</comment>
   </data>
   <data name="AddTestingTitle" xml:space="preserve">
@@ -126,11 +251,11 @@
     <comment>AddTesting title on AddTestingPage</comment>
   </data>
   <data name="NewItemHasNoChangesService" xml:space="preserve">
-    <value>L'elemento "{0}" fa già parte del progetto. Si prega di scegliere un altro servizio.</value>
+    <value>{0} fa già parte del progetto. Scegli un altro servizio.</value>
     <comment>Service already added {0}: Service name</comment>
   </data>
   <data name="NewItemHasNoChangesTesting" xml:space="preserve">
-    <value>L'elemento "{0}" fa già parte del progetto. Scegliere un altro progetto di test.</value>
+    <value>{0} fa già parte del progetto. Scegli un altro progetto di test.</value>
     <comment>Testing project already added {0}: Testing project name</comment>
   </data>
   <data name="NewProjectStepFeatures" xml:space="preserve">
@@ -166,23 +291,23 @@
     <comment>Testing list header on project details</comment>
   </data>
   <data name="ProjectDetailsProjectTypeResetDescription" xml:space="preserve">
-    <value>È stata modificata la selezione del tipo di progetto. I modelli selezionati andranno persi. Vuoi continuare?</value>
+    <value>Hai modificato la scelta del tipo di progetto. I modelli selezionati andranno persi. Vuoi continuare?</value>
     <comment>Project type changed message</comment>
   </data>
   <data name="StatusBarNewItemAddServiceCancelled" xml:space="preserve">
-    <value>Aggiungi nuovo servizio annullato</value>
+    <value>Aggiunta nuovo servizio annullata</value>
     <comment>Status bar message for Add new service cancelled</comment>
   </data>
   <data name="StatusBarNewItemAddServiceSuccess" xml:space="preserve">
-    <value>Servizio "{0}" aggiunto correttamente</value>
+    <value>Servizio {0} aggiunto</value>
     <comment>Status bar message for Service successfully added, {0}: Service name</comment>
   </data>
   <data name="StatusBarNewItemAddTestingCancelled" xml:space="preserve">
-    <value>Aggiungi nuovo progetto di test annullato</value>
+    <value>Aggiunta nuovo progetto di test annullata</value>
     <comment>Status bar message for Add new testing project cancelled</comment>
   </data>
   <data name="StatusBarNewItemAddTestingSuccess" xml:space="preserve">
-    <value>Progetto di test "{0}" aggiunto correttamente</value>
+    <value>Progetto di test {0} aggiunto</value>
     <comment>Status bar message for testing project successfully added, {0}: Testing project name</comment>
   </data>
   <data name="TemplateGroup_Data" xml:space="preserve">
@@ -200,6 +325,17 @@
   <data name="NewItemTitleTesting" xml:space="preserve">
     <value>Nuovo progetto di test</value>
     <comment>New item: new testing project title</comment>
+  </data>
+  <data name="NotificationAdditionError_Requirement" xml:space="preserve">
+    <value>Impossibile aggiungere **{0}**. È prima necessario aggiungere uno dei seguenti modelli: {1}</value>
+    <comment>Notification message for can not add template string format. {0}:Template name, {1}:Required template name. Character * add bold to word</comment>
+  </data>
+  <data name="NotificationRemoveError_Requirement" xml:space="preserve">
+    <value>Impossibile rimuovere **{0}** perché è necessario per: {1}</value>
+    <comment>Notification message for can not remove template string format. {0}:Template name, {1}:Required for template name. Character * add bold to word</comment>
+  </data>
+  <data name="SeparatorOr" xml:space="preserve">
+    <value>o</value>
   </data>
   <data name="AddFeaturesTitle" xml:space="preserve">
     <value>Aggiungi funzionalità</value>
@@ -356,10 +492,6 @@
   <data name="NewItemTitlePage" xml:space="preserve">
     <value>Nuova pagina</value>
     <comment>New item: new page title</comment>
-  </data>
-  <data name="NewProjectTitle" xml:space="preserve">
-    <value>Nuova app per la piattaforma UWP (Universal Windows Platform)</value>
-    <comment>Wizard title on WizardShell page</comment>
   </data>
   <data name="NotificationRemoveError_Dependency" xml:space="preserve">
     <value>Impossibile rimuovere **{0}** perché questi modelli dipendono da esso: {1}</value>
@@ -533,10 +665,6 @@
     <value>Impossibile trovare il progetto {0}</value>
     <comment>{0}: projectPath</comment>
   </data>
-  <data name="ErrorUnableAddFilesAndProjects" xml:space="preserve">
-    <value>Impossibile aggiungere file e progetti.</value>
-    <comment>Error message for unable to add files and projects</comment>
-  </data>
   <data name="ErrorVsGenShellCollapseSolutionItemsMessage" xml:space="preserve">
     <value>Errore di compressione dell'albero della soluzione. Es:</value>
     <comment>Error message for VS GenShell collapse solution Items</comment>
@@ -585,17 +713,9 @@
     <value>Pannello notifiche</value>
     <comment> Notification panel label to accessibility</comment>
   </data>
-  <data name="AccessibilityEditPageItem" xml:space="preserve">
-    <value>Modifica pagina</value>
-    <comment>Edit page label to accessibility</comment>
-  </data>
   <data name="AccessibilityNavigationMenu" xml:space="preserve">
     <value>Menu navigazione</value>
     <comment>Navigation menu label</comment>
-  </data>
-  <data name="AccessibilityProjectTypesList" xml:space="preserve">
-    <value>Elenco tipi di progetto</value>
-    <comment>Project types list label to accessibility</comment>
   </data>
   <data name="AccessibilitySequentialFlowControl" xml:space="preserve">
     <value>Controllo di flusso sequenziale</value>
@@ -604,10 +724,6 @@
   <data name="AccessibilityUserSelectionPageList" xml:space="preserve">
     <value>Pagine selezione utente</value>
     <comment>User selection page list to accessibility</comment>
-  </data>
-  <data name="AccessibilityDesignPatternList" xml:space="preserve">
-    <value>Elenco di Design pattern</value>
-    <comment>Design pattern list to accessibility</comment>
   </data>
   <data name="AccessibilityTemplatesList" xml:space="preserve">
     <value>Elenco di modelli</value>
@@ -668,25 +784,13 @@
     <value>nessun contenuto disponibile.</value>
     <comment>Message in no content panel</comment>
   </data>
-  <data name="ValidatorHasHamburgerMenuLink" xml:space="preserve">
-    <value>{0}projectTypes/updatetonavigationview.md</value>
-    <comment>Has hamburger menu validation link documentation</comment>
-  </data>
   <data name="ValidatorHasHamburgerMenuLinkMessage" xml:space="preserve">
     <value>Guarda la documentazione per l'aggiornamento.</value>
     <comment>Has hamburger menu validation link documentation message</comment>
   </data>
-  <data name="ValidatorHasPivotLink" xml:space="preserve">
-    <value>{0}projectTypes/updatetohorizontalnavview.md</value>
-    <comment>Has pivot validation link documentation</comment>
-  </data>
   <data name="ValidatorHasPivotLinkMessage" xml:space="preserve">
     <value>Guarda la documentazione per l'aggiornamento.</value>
     <comment>Has pivot validation link documentation message</comment>
-  </data>
-  <data name="ValidatorHasOldNavigationViewLink" xml:space="preserve">
-    <value>{0}projectTypes/updatetowinuinavigationview.md</value>
-    <comment>Has old navigation view validation link documentation</comment>
   </data>
   <data name="ValidatorHasOldNavigationViewLinkMessage" xml:space="preserve">
     <value>Guarda la documentazione per l'aggiornamento.</value>
@@ -715,10 +819,6 @@
   <data name="ValidatorHasOldMvvmLightLocatorMessage" xml:space="preserve">
     <value>Abbiamo modificato la nostra implementazione di MVVMLight ViewModelLocator per supportate MultiView in MVVMLight. </value>
     <comment>Has old MvvmLight Locator error message</comment>
-  </data>
-  <data name="ValidatorHasOldMvvmLightLocatorLink" xml:space="preserve">
-    <value>{0}frameworks/updatemvvmlightlocator.md</value>
-    <comment>Has old MvvmLight Locator link documentation</comment>
   </data>
   <data name="ValidatorHasOldMvvmLightLocatorLinkMessage" xml:space="preserve">
     <value>Guarda la documentazione per l'aggiornamento.</value>
@@ -763,13 +863,9 @@ Verifica il seguente elenco di pacchetti necessario al codice del progetto e agg
     <value>Windows Template Studio sta ora aggiungendo un progetto core. </value>
     <comment>Has no core project validation error message</comment>
   </data>
-  <data name="NotificationRemoveError_ReadOnly" xml:space="preserve">
-    <value>Impossibile rimuovere **{0}** perché è di sola lettura.</value>
-    <comment>Remove error message: Template is read only</comment>
-  </data>
   <data name="TemplateDetailsLayout" xml:space="preserve">
-    <value>Layout:</value>
-    <comment>Template details: Layout</comment>
+    <value>Include:</value>
+    <comment>Template details: Includes</comment>
   </data>
   <data name="TemplateDetailsFrameworks" xml:space="preserve">
     <value>Framework:</value>
@@ -777,7 +873,7 @@ Verifica il seguente elenco di pacchetti necessario al codice del progetto e agg
   </data>
   <data name="TemplateDetailsLayoutOptional" xml:space="preserve">
     <value>{0} (facoltativo)</value>
-    <comment>The layout is optional</comment>
+    <comment>The include is optional</comment>
   </data>
   <data name="ProjectDetailsAboutSectionIssuesLink" xml:space="preserve">
     <value>Segnala problema</value>
@@ -797,5 +893,35 @@ Verifica il seguente elenco di pacchetti necessario al codice del progetto e agg
   <data name="ValidatorHasActivationServiceBeforeIdentityLinkMessage" xml:space="preserve">
     <value>Guarda la documentazione per l'aggiornamento.</value>
     <comment>Has ActivationService before Identity link documentation message</comment>
+  </data>
+  <data name="NewProjectTitleWinUIDesktop" xml:space="preserve">
+    <value>Nuova app WinUI 3 Desktop</value>
+  </data>
+  <data name="NewProjectTitleWinUIUWP" xml:space="preserve">
+    <value>Nuova app WinUI 3 UWP</value>
+  </data>
+  <data name="WinUI" xml:space="preserve">
+    <value>Windows UI</value>
+  </data>
+  <data name="DeprecatedMessage" xml:space="preserve">
+    <value>Deprecato</value>
+    <comment>Text used to indicate a deprecated option in the wizard</comment>
+  </data>
+  <data name="ErrorUnableToOpenProjectOverview" xml:space="preserve">
+    <value>Impossibile aprire la panoramica del progetto.</value>
+    <comment>Error message for unable to open project overview dialog</comment>
+  </data>
+  <data name="ProjectConfigurationSelectAppModel" xml:space="preserve">
+    <value>Seleziona AppModel</value>
+  </data>
+  <data name="InfoDialogInvalidVSVersion" xml:space="preserve">
+    <value>{0} creazione di progetti richiede che la versione di Visual Studio 2019 {1} o superiore.</value>
+    <comment>Error message for Invalid VS Version</comment>
+  </data>
+  <data name="ButtonMaximize" xml:space="preserve">
+    <value>Massimizzare</value>
+  </data>
+  <data name="ButtonRestore" xml:space="preserve">
+    <value>Restaurare</value>
   </data>
 </root>

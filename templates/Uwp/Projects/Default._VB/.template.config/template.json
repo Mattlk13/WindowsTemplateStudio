@@ -1,7 +1,9 @@
 ﻿{
+  "$schema": "http://json.schemastore.org/template",
   "author": "Microsoft Community",
   "classifications": ["Universal"],
   "name": "Default",
+  "shortName": "Default",
   "groupIdentity": "wts.Proj.Default.VB",
   "identity": "wts.Proj.Default.VB",
   "description": "",
@@ -9,11 +11,12 @@
     "language": "VisualBasic",
     "type": "project",
     "wts.type": "project",
-    "wts.frontendframework": "MVVMBasic|MVVMLight|CodeBehind",
+    "wts.frontendframework": "MVVMBasic|MVVMLight|CodeBehind|MVVMToolkit",
     "wts.projecttype":"Blank|SplitView|TabbedNav|MenuBar",
     "wts.platform": "Uwp",
     "wts.version": "1.0.0",
-    "wts.displayOrder": "1"
+    "wts.displayOrder": "1",
+    "wts.requiredVersions":"UAP, Version=10.0.19041.0"
   },
   "sourceName": "wts.DefaultProject",
   "preferNameDirectory": true,
@@ -85,7 +88,7 @@
       "args": {
         "files" : "0"
       },
-      "continueOnError": "true"
+      "continueOnError": true
     },
     {
       "description": "Add nuget package",
@@ -96,7 +99,7 @@
         "version" : "2.0.1",
         "projectPath": "Param_ProjectName.vbproj"
       },
-      "continueOnError": "true"
+      "continueOnError": true
     }
   ]
 }

@@ -2,6 +2,7 @@
 // The .NET Foundation licenses this file to you under the MIT license.
 // See the LICENSE file in the project root for more information.
 
+using System;
 using System.Collections.Generic;
 using Microsoft.Templates.UI.Mvvm;
 using Microsoft.Templates.UI.Services;
@@ -19,12 +20,15 @@ namespace Microsoft.Templates.UI.ViewModels.Common
         private string _icon;
         private int _order;
         private bool _isHidden;
+        private bool _deprecated;
         private RelayCommand _detailsCommand;
         private RelayCommand _goBackCommand;
 
         public string Identity { get; protected set; }
 
         public string Name { get; protected set; }
+
+        public string DefaultName { get; protected set; }
 
         public string Title
         {
@@ -74,7 +78,23 @@ namespace Microsoft.Templates.UI.ViewModels.Common
             set => SetProperty(ref _isHidden, value);
         }
 
+        public bool Deprecated
+        {
+            get => _deprecated;
+            set => SetProperty(ref _deprecated, value);
+        }
+
         public IEnumerable<BasicInfoViewModel> Dependencies { get; protected set; }
+
+        public IEnumerable<BasicInfoViewModel> Requirements { get; protected set; }
+
+        public IEnumerable<BasicInfoViewModel> Exclusions { get; protected set; }
+
+        public IEnumerable<string> RequiredSdks { get; protected set; }
+
+        public IEnumerable<string> RequiredDotNetVersion { get; protected set; }
+
+        public IEnumerable<string> RequiredVisualStudioWorkloads { get; protected set; }
 
         public IEnumerable<LicenseViewModel> Licenses { get; protected set; }
 
@@ -106,7 +126,7 @@ namespace Microsoft.Templates.UI.ViewModels.Common
             var result = false;
             if (obj is BasicInfoViewModel info)
             {
-                result = Name.Equals(info.Name);
+                result = Name.Equals(info.Name, StringComparison.Ordinal);
             }
 
             return result;

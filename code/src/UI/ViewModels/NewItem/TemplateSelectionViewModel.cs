@@ -2,6 +2,7 @@
 // The .NET Foundation licenses this file to you under the MIT license.
 // See the LICENSE file in the project root for more information.
 
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Windows.Controls;
@@ -11,6 +12,7 @@ using Microsoft.Templates.Core.Gen;
 using Microsoft.Templates.UI.Controls;
 using Microsoft.Templates.UI.Extensions;
 using Microsoft.Templates.UI.Mvvm;
+using Microsoft.Templates.UI.Resources;
 using Microsoft.Templates.UI.Services;
 using Microsoft.Templates.UI.ViewModels.Common;
 
@@ -25,7 +27,6 @@ namespace Microsoft.Templates.UI.ViewModels.NewItem
         private bool _isTextSelected;
         private ICommand _setFocusCommand;
         private ICommand _lostKeyboardFocusCommand;
-        private string _emptyBackendFramework = string.Empty;
 
         public string Name
         {
@@ -81,6 +82,8 @@ namespace Microsoft.Templates.UI.ViewModels.NewItem
 
         public ObservableCollection<BasicInfoViewModel> Dependencies { get; } = new ObservableCollection<BasicInfoViewModel>();
 
+        public ObservableCollection<string> RequiredSdks { get; protected set; } = new ObservableCollection<string>();
+
         public ICommand SetFocusCommand => _setFocusCommand ?? (_setFocusCommand = new RelayCommand(() => IsFocused = true));
 
         public ICommand LostKeyboardFocusCommand => _lostKeyboardFocusCommand ?? (_lostKeyboardFocusCommand = new RelayCommand<KeyboardFocusChangedEventArgs>(OnLostKeyboardFocus));
@@ -94,9 +97,9 @@ namespace Microsoft.Templates.UI.ViewModels.NewItem
             IsTextSelected = true;
         }
 
-        public void LoadData(TemplateType templateType, string platform, string projectTypeName, string frameworkName)
+        public void LoadData(TemplateType templateType, UserSelectionContext context)
         {
-            DataService.LoadTemplatesGroups(Groups, templateType, platform, projectTypeName, frameworkName, true);
+            DataService.LoadTemplatesGroups(Groups, templateType, context, true);
 
             var group = Groups.FirstOrDefault();
             if (group != null)
@@ -116,10 +119,18 @@ namespace Microsoft.Templates.UI.ViewModels.NewItem
 
                 template.IsSelected = true;
                 NameEditable = template.ItemNameEditable;
-                Name = ValidationService.InferTemplateName(template.Name, false, template.ItemNameEditable);
+                if (template.ItemNameEditable)
+                {
+                    Name = ValidationService.InferTemplateName(template.Name);
+                }
+                else
+                {
+                    Name = template.Template.DefaultName;
+                }
+
                 HasErrors = false;
                 Template = template.Template;
-                var licenses = GenContext.ToolBox.Repo.GetAllLicences(template.Template.TemplateId, MainViewModel.Instance.ConfigPlatform, MainViewModel.Instance.ConfigProjectType, MainViewModel.Instance.ConfigFramework, _emptyBackendFramework);
+                var licenses = GenContext.ToolBox.Repo.GetAllLicences(template.Template.TemplateId, MainViewModel.Instance.Context);
                 LicensesService.SyncLicenses(licenses, Licenses);
                 Dependencies.Clear();
                 foreach (var dependency in template.Dependencies)
@@ -127,8 +138,17 @@ namespace Microsoft.Templates.UI.ViewModels.NewItem
                     Dependencies.Add(dependency);
                 }
 
-                OnPropertyChanged("Licenses");
-                OnPropertyChanged("Dependencies");
+                RequiredSdks.Clear();
+                foreach (var requiredSdk in template.RequiredSdks)
+                {
+                    RequiredSdks.Add(requiredSdk);
+                }
+
+                OnPropertyChanged(nameof(Licenses));
+                OnPropertyChanged(nameof(Dependencies));
+                OnPropertyChanged(nameof(RequiredSdks));
+                CheckForMissingSdks();
+
                 NotificationsControl.CleanErrorNotificationsAsync(ErrorCategory.NamingValidation).FireAndForget();
                 WizardStatus.Current.HasValidationErrors = false;
                 if (NameEditable)
@@ -138,11 +158,38 @@ namespace Microsoft.Templates.UI.ViewModels.NewItem
             }
         }
 
+        private void CheckForMissingSdks()
+        {
+            var missingVersions = new List<RequiredVersionInfo>();
+
+            foreach (var requiredVersion in Template.RequiredVersions)
+            {
+                var requirementInfo = RequiredVersionService.GetVersionInfo(requiredVersion);
+                var isInstalled = RequiredVersionService.Instance.IsVersionInstalled(requirementInfo);
+                if (!isInstalled)
+                {
+                    missingVersions.Add(requirementInfo);
+                }
+            }
+
+            if (missingVersions.Any())
+            {
+                var missingSdkVersions = missingVersions.Select(v => RequiredVersionService.GetRequirementDisplayName(v));
+
+                var notification = Notification.Warning(string.Format(StringRes.NotificationMissingVersions, missingSdkVersions.Aggregate((i, j) => $"{i}, {j}")), Category.MissingVersion, TimerType.None);
+                NotificationsControl.AddNotificationAsync(notification).FireAndForget();
+            }
+            else
+            {
+                NotificationsControl.CleanCategoryNotificationsAsync(Category.MissingVersion).FireAndForget();
+            }
+        }
+
         private void SetName(string newName)
         {
             if (NameEditable)
             {
-                var validationResult = ValidationService.ValidateTemplateName(newName, NameEditable, false);
+                var validationResult = ValidationService.ValidateTemplateName(newName);
                 HasErrors = !validationResult.IsValid;
                 MainViewModel.Instance.WizardStatus.HasValidationErrors = !validationResult.IsValid;
                 if (validationResult.IsValid)
@@ -151,7 +198,7 @@ namespace Microsoft.Templates.UI.ViewModels.NewItem
                 }
                 else
                 {
-                    NotificationsControl.AddNotificationAsync(validationResult.GetNotification()).FireAndForget();
+                    NotificationsControl.AddNotificationAsync(validationResult.Errors.FirstOrDefault()?.GetNotification()).FireAndForget();
                 }
             }
 

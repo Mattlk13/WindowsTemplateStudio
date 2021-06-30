@@ -1,9 +1,12 @@
 ﻿{
+  "$schema": "http://json.schemastore.org/template",
   "author": "Microsoft",
   "classifications": [
     "Universal"
   ],
   "name": "Page.InkDraw.AddHeader.VB",
+  "identity": "Page.InkDraw.AddHeader.VB",
+  "shortName": "Page.InkDraw.AddHeader.VB",
   "tags": {
     "language": "VisualBasic",
     "type": "item",
@@ -11,7 +14,7 @@
     "wts.platform" : "Uwp",
     "wts.version": "1.0.0",
     "wts.compositionOrder": "0",
-    "wts.compositionFilter": "$frontendframework == MVVMBasic|MVVMLight & $projectType == Blank|TabbedNav|MenuBar & groupidentity == wts.Page.InkDraw.VB"
+    "wts.compositionFilter": "$frontendframework == MVVMBasic|MVVMLight|MVVMToolkit & $projectType == Blank|TabbedNav|MenuBar & groupidentity == wts.Page.InkDraw.VB"
   },
   "sourceName": "wts.ItemName",
   "preferNameDirectory": true,

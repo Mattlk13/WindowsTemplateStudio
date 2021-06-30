@@ -1,25 +1,28 @@
 ﻿{
+  "$schema": "http://json.schemastore.org/template",
   "author": "Microsoft Community",
   "classifications": [
     "Universal"
   ],
   "name": "Feature.ShareTarget",
+  "identity": "Feature.ShareTarget",
+  "shortName": "Feature.ShareTarget",
   "tags": {
     "language": "C#",
     "type": "item",
     "wts.type": "composition",
     "wts.platform" : "Uwp",
     "wts.version": "1.0.0",
-    "wts.compositionFilter": "$frontendframework == MVVMBasic|MVVMLight|CodeBehind|CaliburnMicro & identity == wts.Feat.ShareTarget|wts.Feat.ShareTarget.CodeBehind"
+    "wts.compositionFilter": "$frontendframework == MVVMBasic|MVVMLight|CodeBehind|CaliburnMicro|MVVMToolkit & identity == wts.Feat.ShareTarget|wts.Feat.ShareTarget.CodeBehind"
   },
   "sourceName": "wts.ItemName",
   "preferNameDirectory": true,
   "PrimaryOutputs": [
     {
-      "path": ".\\Activation\\wts.ItemNameActivationHandler.cs"
+      "path": "Activation/wts.ItemNameActivationHandler.cs"
     },
     {
-    "path": ".\\Helpers\\ShareOperationExtensions.cs"
+    "path": "Helpers/ShareOperationExtensions.cs"
     }
   ],
   "symbols": {

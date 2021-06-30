@@ -9,13 +9,14 @@ using System.Windows;
 using System.Windows.Forms;
 
 using Microsoft.Templates.Core;
+using Microsoft.Templates.Core.Naming;
 using Microsoft.Templates.UI.Mvvm;
 
 namespace Microsoft.Templates.VsEmulator.NewProject
 {
     public class NewProjectViewModel : Observable
     {
-        private const string DefaultName = "App";
+        private const string DefaultName = "EmulatorApp";
 
         private readonly Window _host;
 
@@ -64,11 +65,19 @@ namespace Microsoft.Templates.VsEmulator.NewProject
 
         public void Initialize()
         {
-            Location = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments), "Visual Studio 2017", "Projects");
+            Location = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.UserProfile), "source", "repos");
 
             SetName();
 
             CreateDirectory = true;
+        }
+
+        public static (string name, string solutionName, string location) GetNewProjectInfo()
+        {
+            var location = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.UserProfile), "source", "repos");
+            var validator = new List<Validator>() { new FolderNameValidator(location) };
+            var name = NamingService.Infer(DefaultName, validator);
+            return (name, name, location);
         }
 
         private void SetName()
@@ -87,9 +96,9 @@ namespace Microsoft.Templates.VsEmulator.NewProject
 
         private static string GetSuggestedSolution(string path)
         {
-            var validator = new List<Validator>() { new SuggestedDirectoryNameValidator(path) };
+            var validator = new List<Validator>() { new FolderNameValidator(path) };
 
-            return Naming.Infer(DefaultName, validator);
+            return NamingService.Infer(DefaultName, validator);
         }
 
         private void ShowFileDialog()

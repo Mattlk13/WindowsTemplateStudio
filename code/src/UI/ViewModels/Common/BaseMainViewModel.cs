@@ -14,7 +14,6 @@ using Microsoft.Templates.UI.Controls;
 using Microsoft.Templates.UI.Extensions;
 using Microsoft.Templates.UI.Mvvm;
 using Microsoft.Templates.UI.Services;
-using Microsoft.Templates.UI.Threading;
 
 namespace Microsoft.Templates.UI.ViewModels.Common
 {
@@ -22,11 +21,9 @@ namespace Microsoft.Templates.UI.ViewModels.Common
     {
         public static BaseMainViewModel BaseInstance { get; private set; }
 
-        protected Window MainView { get; private set; }
+        public Window MainView { get; private set; }
 
-        protected string Language { get; private set; }
-
-        protected string Platform { get; private set; }
+        public UserSelectionContext Context { get; private set; }
 
         public WizardStatus WizardStatus { get; }
 
@@ -51,7 +48,7 @@ namespace Microsoft.Templates.UI.ViewModels.Common
 
         public abstract Task ProcessItemAsync(object item);
 
-        protected abstract Task OnTemplatesAvailableAsync();
+        public abstract Task OnTemplatesAvailableAsync();
 
         public virtual void UnsubscribeEventHandlers()
         {
@@ -60,13 +57,16 @@ namespace Microsoft.Templates.UI.ViewModels.Common
             StylesService.UnsubscribeEventHandlers();
         }
 
-        public virtual async Task InitializeAsync(string platform, string language)
+        public virtual void Initialize(UserSelectionContext context)
         {
-            Platform = platform;
-            Language = language;
-
-            GenContext.ToolBox.Repo.Sync.SyncStatusChanged += OnSyncStatusChanged;
+            Context = context;
             SystemService.Initialize();
+        }
+
+        public virtual async Task SynchronizeAsync()
+        {
+            GenContext.ToolBox.Repo.Sync.SyncStatusChanged += OnSyncStatusChanged;
+
             try
             {
                 await GenContext.ToolBox.Repo.SynchronizeAsync();
@@ -80,9 +80,6 @@ namespace Microsoft.Templates.UI.ViewModels.Common
 
         private async void OnSyncStatusChanged(object sender, SyncStatusEventArgs args)
         {
-            await SafeThreading.JoinableTaskFactory.SwitchToMainThreadAsync();
-            WizardStatus.SetVersions();
-
             var notification = args.GetNotification();
             if (notification?.Category == Category.TemplatesSync)
             {
@@ -100,6 +97,8 @@ namespace Microsoft.Templates.UI.ViewModels.Common
 
             if (args.Status == SyncStatus.Updated || args.Status == SyncStatus.Ready)
             {
+                WizardStatus.SetVersions();
+
                 await OnTemplatesAvailableAsync();
             }
         }

@@ -1,7 +1,9 @@
 ﻿{
+  "$schema": "http://json.schemastore.org/template",
   "author": "Microsoft",
   "classifications": [ "Universal" ],
   "name": "Share Target",
+  "shortName": "Share Target",
   "groupIdentity": "wts.Feat.ShareTarget",
   "identity": "wts.Feat.ShareTarget",
   "description": "Allows you to receive data shared by other apps using the share contract in your UWP app.",
@@ -10,7 +12,7 @@
     "type": "item",
     "wts.type": "feature",
     "wts.projecttype": "all",
-    "wts.frontendframework": "MVVMBasic|MVVMLight|CaliburnMicro",
+    "wts.frontendframework": "MVVMBasic|MVVMLight|CaliburnMicro|MVVMToolkit",
     "wts.platform": "Uwp",
     "wts.version": "1.0.0",
     "wts.displayOrder": "2",
@@ -23,13 +25,13 @@
   "preferNameDirectory": true,
   "PrimaryOutputs": [
     {
-      "path": ".\\ViewModels\\SharedDataStorageItemsViewModel.cs"
+      "path": "ViewModels/SharedDataStorageItemsViewModel.cs"
     },
     {
-      "path": ".\\ViewModels\\SharedDataViewModelBase.cs"
+      "path": "ViewModels/SharedDataViewModelBase.cs"
     },
     {
-      "path": ".\\ViewModels\\SharedDataWebLinkViewModel.cs"
+      "path": "ViewModels/SharedDataWebLinkViewModel.cs"
     }
   ],
   "symbols": {

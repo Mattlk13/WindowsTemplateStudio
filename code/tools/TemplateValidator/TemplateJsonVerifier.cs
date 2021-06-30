@@ -108,13 +108,17 @@ namespace TemplateValidator
 
                 var templateRoot = filePath.Replace("\\.template.config\\template.json", string.Empty);
 
+                EnsureValidPrimaryOutputPaths(template, results);
+
                 EnsureAllDefinedPrimaryOutputsExist(template, templateRoot, results);
 
                 EnsureAllDefinedGuidsAreUsed(template, templateRoot, results);
 
                 VerifySymbols(template, results);
 
-                VerifyLicensesAndProjPostactions(template, templateRoot, results);
+                VerifyLicensesAndProjPostactions(template, results);
+
+                VerifyPostactionsPath(template, results);
             }
             catch (Exception ex)
             {
@@ -128,6 +132,11 @@ namespace TemplateValidator
 
         private static void VerifySymbols(ValidationTemplateInfo template, List<string> results)
         {
+            if (template.Symbols == null)
+            {
+                return;
+            }
+
             var type = typeof(GenParams);
             var paramValues = type.GetFields(BindingFlags.Static | BindingFlags.Public)
                                   .Where(f => f.IsLiteral)
@@ -137,7 +146,19 @@ namespace TemplateValidator
             // The explicit values here are the ones that are currently in use.
             // In theory any string could be exported and used as a symbol but currently it's only these
             // If lots of templates start exporting new symbols it might be necessary to change how symbol keys are verified
-            var allValidSymbolKeys = new List<string>(paramValues) { "baseclass", "setter", "wts.Page.Settings", "wts.Page.Settings.CodeBehind", "wts.Page.Settings.Prism", "wts.Page.Settings.CaliburnMicro", "wts.Page.Settings.VB", "wts.Page.Settings.CodeBehind.VB", "copyrightYear" };
+            var allValidSymbolKeys = new List<string>(paramValues)
+            {
+                "baseclass", "setter",
+                "wts.Page.Settings", "wts.Page.Settings.CodeBehind", "wts.Page.Settings.Prism", "wts.Page.Settings.CaliburnMicro", "wts.Page.Settings.VB", "wts.Page.Settings.CodeBehind.VB",
+                "copyrightYear",
+                "wts.safeprojectName",
+                "commandclass",
+                "onNavigatedToParams", "onNavigatedFromParams",
+                "configtype", "configvalue",
+                "pagetype",
+                "canExecuteChangedMethodName",
+                "wts.generation.appmodel",
+            };
 
             foreach (var symbol in template.Symbols)
             {
@@ -165,7 +186,7 @@ namespace TemplateValidator
                         VerifyWtsTypeFeatureMultipleInstancesRule(tag, template, results);
                         break;
                     case "wts.order":
-                        VerifyWtsOrderTagValue(tag, results);
+                        VerifyWtsOrderTagValue(results);
                         break;
                     case "wts.displayOrder":
                         VerifyWtsDisplayOrderTagValue(tag, results);
@@ -208,14 +229,13 @@ namespace TemplateValidator
                     case "wts.dependencies":
                         // This value is checked with the TemplateFolderVerifier
                         break;
+                    case "wts.requirements":
+                        // This value is checked with the TemplateFolderVerifier
+                        break;
+                    case "wts.exclusions":
+                    // This value is checked with the TemplateFolderVerifier
                     case "wts.defaultInstance":
                         VerifyWtsDefaultinstanceTagValue(tag, results);
-                        break;
-                    case "wts.export.baseclass":
-                        VerifyWtsExportBaseclassTagValue(tag, results);
-                        break;
-                    case "wts.export.setter":
-                        VerifyWtsExportSetterTagValue(tag, results);
                         break;
                     case "wts.isHidden":
                         VerifyWtsIshiddenTagValue(tag, results);
@@ -230,10 +250,46 @@ namespace TemplateValidator
                         VerifyWtsOutputToParentTagValue(tag, results);
                         break;
                     case "wts.requiredVsWorkload":
-                        // No validation done here as we don't know all workload IDs.
+                        VerifyRequiredVsWorkloadTagValue(tag, results);
+                        break;
+                    case "wts.requiredSdks":
+                        VerifyRequiredSdkTagValue(results);
+                        break;
+                    case "wts.requiredVersions":
+                        VerifyRequiredVersionsTagValue(tag, results);
+                        break;
+                    case "wts.export.baseclass":
+                        VerifyWtsExportBaseclassTagValue(tag, results);
+                        break;
+                    case "wts.export.setter":
+                        VerifyWtsExportSetterTagValue(tag, results);
+                        break;
+                    case "wts.export.configtype":
+                        VerifyWtsExportConfigTypeTagValue(tag, results);
+                        break;
+                    case "wts.export.configvalue":
+                        VerifyWtsExportConfigValueTagValue(tag, results);
+                        break;
+                    case "wts.export.commandclass":
+                        VerifyWtsExportCommandClassTagValue(tag, results);
+                        break;
+                    case "wts.export.pagetype":
+                        VerifyWtsExportPageTypeTagValue(tag, results);
+                        break;
+                    case "wts.export.canExecuteChangedMethodName":
+                        VerifyWtsExportCanExecuteChangedMethodNameTagValue(tag, results);
+                        break;
+                    case "wts.export.onNavigatedToParams":
+                        VerifyWtsExportOnNavigatedToParamsTagValue(tag, results);
+                        break;
+                    case "wts.export.onNavigatedFromParams":
+                        VerifyWtsExportOnNavigatedFromParamsTagValue(tag, results);
+                        break;
+                    case "wts.appmodel":
+                        VerifyWtsAppModelTagValue(tag, results);
                         break;
                     default:
-                        results.Add($"Unknown tag '{tag.Value}' specified in the file.");
+                        results.Add($"Unknown tag '{tag.Key}' specified in the file.");
                         break;
                 }
             }
@@ -262,7 +318,7 @@ namespace TemplateValidator
 
         private static void VerifyPlatformTagValue(KeyValuePair<string, string> tag, List<string> results)
         {
-            if (!new[] { Platforms.Uwp }.Contains(tag.Value))
+            if (!new[] { Platforms.Uwp, Platforms.Wpf, Platforms.WinUI }.Contains(tag.Value))
             {
                 results.Add($"Invalid value '{tag.Value}' specified in the platform tag.");
             }
@@ -284,6 +340,14 @@ namespace TemplateValidator
             }
         }
 
+        private static void VerifyWtsExportBaseclassTagValue(KeyValuePair<string, string> tag, List<string> results)
+        {
+            if (!new[] { "Observable", "ObservableObject", "ViewModelBase", "INotifyPropertyChanged", "Screen", "PropertyChangedBase", "BindableBase", "ObservableRecipient" }.Contains(tag.Value))
+            {
+                results.Add($"Unexpected value '{tag.Value}' specified in the wts.export.baseclass tag.");
+            }
+        }
+
         private static void VerifyWtsExportSetterTagValue(KeyValuePair<string, string> tag, List<string> results)
         {
             if (!new[] { "Set", "SetProperty" }.Contains(tag.Value))
@@ -292,11 +356,67 @@ namespace TemplateValidator
             }
         }
 
-        private static void VerifyWtsExportBaseclassTagValue(KeyValuePair<string, string> tag, List<string> results)
+        private static void VerifyWtsExportConfigTypeTagValue(KeyValuePair<string, string> tag, List<string> results)
         {
-            if (!new[] { "Observable", "ViewModelBase", "INotifyPropertyChanged", "Screen", "PropertyChangedBase" }.Contains(tag.Value))
+            if (!new[] { "IOptions<AppConfig>", "AppConfig" }.Contains(tag.Value))
             {
-                results.Add($"Unexpected value '{tag.Value}' specified in the wts.export.baseclass tag.");
+                results.Add($"Unexpected value '{tag.Value}' specified in the wts.export.configtype tag.");
+            }
+        }
+
+        private static void VerifyWtsExportConfigValueTagValue(KeyValuePair<string, string> tag, List<string> results)
+        {
+            if (!new[] { "appConfig.Value", "appConfig" }.Contains(tag.Value))
+            {
+                results.Add($"Unexpected value '{tag.Value}' specified in the wts.export.configvalue tag.");
+            }
+        }
+
+        private static void VerifyWtsExportCommandClassTagValue(KeyValuePair<string, string> tag, List<string> results)
+        {
+            if (!new[] { "RelayCommand", "DelegateCommand" }.Contains(tag.Value))
+            {
+                results.Add($"Unexpected value '{tag.Value}' specified in the wts.export.commandclass tag.");
+            }
+        }
+
+        private static void VerifyWtsExportPageTypeTagValue(KeyValuePair<string, string> tag, List<string> results)
+        {
+            if (!new[] { "Page", "UserControl" }.Contains(tag.Value))
+            {
+                results.Add($"Unexpected value '{tag.Value}' specified in the wts.export.pageType tag.");
+            }
+        }
+
+        private static void VerifyWtsExportCanExecuteChangedMethodNameTagValue(KeyValuePair<string, string> tag, List<string> results)
+        {
+            if (!new[] { "OnCanExecuteChanged", "RaiseCanExecuteChanged", "NotifyCanExecuteChanged" }.Contains(tag.Value))
+            {
+                results.Add($"Unexpected value '{tag.Value}' specified in the wts.export.canExecuteChangedMethodName tag.");
+            }
+        }
+
+        private static void VerifyWtsExportOnNavigatedToParamsTagValue(KeyValuePair<string, string> tag, List<string> results)
+        {
+            if (!new[] { "object parameter", "NavigationContext navigationContext" }.Contains(tag.Value))
+            {
+                results.Add($"Unexpected value '{tag.Value}' specified in the wts.export.onNavigatedToParams tag.");
+            }
+        }
+
+        private static void VerifyWtsExportOnNavigatedFromParamsTagValue(KeyValuePair<string, string> tag, List<string> results)
+        {
+            if (!new[] { string.Empty, "NavigationContext navigationContext" }.Contains(tag.Value))
+            {
+                results.Add($"Unexpected value '{tag.Value}' specified in the wts.export.onNavigatedFromParams tag.");
+            }
+        }
+
+        private static void VerifyWtsAppModelTagValue(KeyValuePair<string, string> tag, List<string> results)
+        {
+            if (!new[] { "all", "Desktop", "Uwp" }.Contains(tag.Value))
+            {
+                results.Add($"Unexpected value '{tag.Value}' specified in the wts.appmodel tag.");
             }
         }
 
@@ -318,7 +438,7 @@ namespace TemplateValidator
 
         private static void VerifyWtsGroupTagValue(KeyValuePair<string, string> tag, List<string> results)
         {
-            if (!new[] { "Analytics", "BackgroundWork", "UserInteraction", "ApplicationLifecycle", "ApplicationLaunching", "ConnectedExperiences", "Identity", "Testing", "Data", "Tools" }.Contains(tag.Value))
+            if (!new[] { "Analytics", "BackgroundWork", "UserInteraction", "ApplicationLifecycle", "ApplicationLaunching", "ConnectedExperiences", "Identity", "Testing", "Data", "Tools", "Packaging" }.Contains(tag.Value))
             {
                 results.Add($"Invalid value '{tag.Value}' specified in the wts.group tag.");
             }
@@ -359,7 +479,7 @@ namespace TemplateValidator
                 // This can't catch everything but is better than nothing
                 if (tag.Value.Contains("identity") && !tag.Value.Contains(".VB"))
                 {
-                    results.Add($" wts.compositionFilter identitiy vlaue does not match the language. ({tag.Value}).");
+                    results.Add($" wts.compositionFilter identitiy value does not match the language. ({tag.Value}).");
                 }
             }
         }
@@ -395,27 +515,30 @@ namespace TemplateValidator
             // This tag may contain a single value or multiple ones separated by the pipe character
             foreach (var projectType in tag.Value.Split('|'))
             {
-                if (!new[] { "Blank", "SplitView", "TabbedNav", "MenuBar", "all" }.Contains(projectType))
+                if (!new[] { "Blank", "BlankAdvanced", "SplitView", "TabbedNav", "MenuBar", "all" }.Contains(projectType))
                 {
                     results.Add($"Invalid value '{tag.Value}' specified in the wts.projecttype tag.");
                 }
             }
         }
 
-        private static string[] VbFrameworks { get; } = new[] { "MVVMBasic", "MVVMLight", "CodeBehind" };
+        private static string[] VbFrameworks { get; } = new[] { "MVVMBasic", "MVVMLight", "CodeBehind", "MVVMToolkit" };
 
-        private static string[] CsFrameworks { get; } = new[] { "MVVMBasic", "MVVMLight", "CodeBehind", "CaliburnMicro", "Prism" };
+        private static string[] CsFrameworks { get; } = new[] { "MVVMBasic", "MVVMLight", "CodeBehind", "CaliburnMicro", "Prism", "MVVMToolkit" };
 
-        private static string[] AllFrameworks { get; } = new[] { "MVVMBasic", "MVVMLight", "CodeBehind", "CaliburnMicro", "Prism" };
+        private static string[] AllFrameworks { get; } = new[] { "MVVMBasic", "MVVMLight", "CodeBehind", "CaliburnMicro", "Prism", "MVVMToolkit" };
 
         private static void VerifyWtsFrameworkTagValue(KeyValuePair<string, string> tag, List<string> results)
         {
             // This tag may contain a single value or multiple ones separated by the pipe character
-            foreach (var frameworkValue in tag.Value.Split('|'))
+            if (tag.Value != "all")
             {
-                if (!AllFrameworks.Contains(frameworkValue))
+                foreach (var frameworkValue in tag.Value.Split('|'))
                 {
-                    results.Add($"Invalid value '{tag.Value}' specified in the wts.framework tag.");
+                    if (!AllFrameworks.Contains(frameworkValue))
+                    {
+                        results.Add($"Invalid value '{tag.Value}' specified in the wts.framework tag.");
+                    }
                 }
             }
         }
@@ -427,9 +550,12 @@ namespace TemplateValidator
             {
                 if (language == ProgrammingLanguages.CSharp)
                 {
-                    if (!CsFrameworks.Contains(frameworkValue))
+                    if (frameworkValue != "all")
                     {
-                        results.Add($"Invalid framework '{frameworkValue}' is not supported in templates for C# projects.");
+                        if (!CsFrameworks.Contains(frameworkValue))
+                        {
+                            results.Add($"Invalid framework '{frameworkValue}' is not supported in templates for C# projects.");
+                        }
                     }
                 }
                 else if (language == ProgrammingLanguages.VisualBasic)
@@ -442,7 +568,7 @@ namespace TemplateValidator
             }
         }
 
-        private static void VerifyWtsOrderTagValue(KeyValuePair<string, string> tag, List<string> results)
+        private static void VerifyWtsOrderTagValue(List<string> results)
         {
             results.Add($"The wts.order tag is no longer supported. Please use the wts.displayOrder or the wts.compositionOrder tag.");
         }
@@ -473,7 +599,7 @@ namespace TemplateValidator
 
         private static void VerifyWtsTypeFeatureMultipleInstancesRule(KeyValuePair<string, string> tag, ValidationTemplateInfo template, List<string> results)
         {
-            if ("feature".Equals(tag.Value))
+            if ("feature".Equals(tag.Value, StringComparison.Ordinal))
             {
                 if (template.TemplateTags.Keys.Contains("wts.multipleInstance"))
                 {
@@ -499,9 +625,40 @@ namespace TemplateValidator
 
         private static void VerifyLanguageTagValue(KeyValuePair<string, string> tag, List<string> results)
         {
-            if (!new[] { ProgrammingLanguages.CSharp, ProgrammingLanguages.VisualBasic }.Contains(tag.Value))
+            if (!new[] { ProgrammingLanguages.CSharp, ProgrammingLanguages.VisualBasic, ProgrammingLanguages.Cpp }.Contains(tag.Value))
             {
                 results.Add($"Invalid value '{tag.Value}' specified in the language tag.");
+            }
+        }
+
+        private static void VerifyRequiredVsWorkloadTagValue(KeyValuePair<string, string> tag, List<string> results)
+        {
+            string[] allRequiredWorkloads = new[] { "Microsoft.VisualStudio.ComponentGroup.MSIX.Packaging", "Microsoft.VisualStudio.Workload.NetWeb", "Microsoft.VisualStudio.Workload.Universal" };
+
+            foreach (var requiredWorkload in tag.Value.Split('|'))
+            {
+                if (!allRequiredWorkloads.Contains(requiredWorkload))
+                {
+                    results.Add($"Invalid value '{requiredWorkload}' specified in the wts.requiredVsWorkload tag.");
+                }
+            }
+        }
+
+        private static void VerifyRequiredSdkTagValue(List<string> results)
+        {
+            results.Add($"The wts.requiredSdks tag is no longer supported. Please use the wts.requiredVersions tag.");
+        }
+
+        private static void VerifyRequiredVersionsTagValue(KeyValuePair<string, string> tag, List<string> results)
+        {
+            string[] allVersions = new[] { "UAP, Version=10.0.19041.0", "dotnet, Version=3.1.7" };
+
+            foreach (var version in tag.Value.Split('|'))
+            {
+                if (!allVersions.Contains(version))
+                {
+                    results.Add($"Invalid value '{version}' specified in the wts.requiredVersions tag.");
+                }
             }
         }
 
@@ -539,7 +696,7 @@ namespace TemplateValidator
             }
         }
 
-        private static void VerifyLicensesAndProjPostactions(ValidationTemplateInfo template, string templateRoot, List<string> results)
+        private static void VerifyLicensesAndProjPostactions(ValidationTemplateInfo template, List<string> results)
         {
             if (template.TemplateTags.ContainsKey("wts.licenses") && !string.IsNullOrEmpty(template.TemplateTags["wts.licenses"]))
             {
@@ -553,6 +710,28 @@ namespace TemplateValidator
                 if (template.PostActions != null && template.PostActions.Any(p => p.ActionId == "0B814718-16A3-4F7F-89F1-69C0F9170EAD"))
                 {
                     results.Add($"Missing license on template {template.Identity}");
+                }
+            }
+        }
+
+        private static void VerifyPostactionsPath(ValidationTemplateInfo template, List<string> results)
+        {
+            if (template.PostActions != null && template.PostActions.Any(p => p.Args.Any(a => a.Key == "projectPath" && a.Value.Contains("/"))))
+            {
+                results.Add("Post-action projectPath should use '\\' instead of '/' to indicate the project file path");
+            }
+        }
+
+        private static void EnsureValidPrimaryOutputPaths(ValidationTemplateInfo template, List<string> results)
+        {
+            if (template.PrimaryOutputs != null)
+            {
+                foreach (var primaryOutput in template.PrimaryOutputs)
+                {
+                    if (primaryOutput.Path.Contains("\\"))
+                    {
+                        results.Add($"Primary output '{primaryOutput.Path}' should use '/' instead of '\\'.");
+                    }
                 }
             }
         }

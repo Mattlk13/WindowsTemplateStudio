@@ -10,13 +10,13 @@ using System.IO;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
-using System.Windows;
 using System.Windows.Threading;
 using Microsoft.Templates.Core;
 using Microsoft.Templates.Core.Gen;
 using Microsoft.Templates.Core.Helpers;
 using Microsoft.Templates.Core.Locations;
-using Microsoft.Templates.Fakes;
+using Microsoft.Templates.Fakes.GenShell;
+using Microsoft.Templates.UI;
 using Microsoft.Templates.UI.Launcher;
 using Microsoft.Templates.UI.Mvvm;
 using Microsoft.Templates.UI.Services;
@@ -32,11 +32,17 @@ namespace Microsoft.Templates.VsEmulator.Main
     public class MainViewModel : Observable
     {
         private readonly MainView _host;
+        private readonly GenerationService _generationService = GenerationService.Instance;
         private bool _canRefreshTemplateCache;
+        private bool _canRecreateUwpProject;
+        private bool _canRecreateWpfProject;
+        private bool _canRecreateWinUIProject;
         private string _selectedTheme;
         private bool _useStyleCop;
-
-        private GenerationService _generationService = GenerationService.Instance;
+        private UserSelection _userSelectionUwp;
+        private UserSelection _userSelectionWpf;
+        private UserSelection _userSelectionWinUI;
+        private (string name, string solutionName, string location) _projectLocation;
 
         private RelayCommand _refreshTemplateCacheCommand;
 
@@ -73,15 +79,17 @@ namespace Microsoft.Templates.VsEmulator.Main
 
         public ObservableCollection<GeneratedProjectInfo> Projects { get; } = new ObservableCollection<GeneratedProjectInfo>();
 
-        public RelayCommand NewUwpCSharpProjectCommand => new RelayCommand(NewUwpCSharpProject);
+        public RelayCommand<string> NewProjectCommand => new RelayCommand<string>(NewProject);
 
-        public RelayCommand AnalyzeCSharpSelectionCommand => new RelayCommand(AnalyzeCSharpSelection);
-
-        public RelayCommand AnalyzeVisualBasicSelectionCommand => new RelayCommand(AnalyzeVisualBasicSelection);
-
-        public RelayCommand NewUwpVisualBasicProjectCommand => new RelayCommand(NewUwpVisualBasicProject);
+        public RelayCommand<string> AnalyzeSelectionCommand => new RelayCommand<string>(AnalyzeSelection);
 
         public RelayCommand LoadProjectCommand => new RelayCommand(LoadProject);
+
+        public RelayCommand RecreateUwpProjectCommand => new RelayCommand(RecreateUwpProject, () => _canRecreateUwpProject);
+
+        public RelayCommand RecreateWpfProjectCommand => new RelayCommand(RecreateWpfProject, () => _canRecreateWpfProject);
+
+        public RelayCommand RecreateWinUIProjectCommand => new RelayCommand(RecreateWinUIProject, () => _canRecreateWinUIProject);
 
         public RelayCommand RefreshTemplateCacheCommand => _refreshTemplateCacheCommand ?? (_refreshTemplateCacheCommand = new RelayCommand(
             () => SafeThreading.JoinableTaskFactory.RunAsync(async () => await RefreshTemplateCacheAsync()), () => _canRefreshTemplateCache));
@@ -127,99 +135,212 @@ namespace Microsoft.Templates.VsEmulator.Main
             await ConfigureGenContextAsync();
         }
 
-        private void NewUwpCSharpProject()
+        private void NewProject(string parameter)
         {
             SafeThreading.JoinableTaskFactory.Run(async () =>
             {
                 await SafeThreading.JoinableTaskFactory.SwitchToMainThreadAsync();
-                await NewProjectAsync(Platforms.Uwp, ProgrammingLanguages.CSharp);
+                var parameters = parameter.Split(',');
+                var appModel = parameters.Length == 3 ? parameters[2] : string.Empty;
+                var userSelection = await NewProjectAsync(parameters[0], parameters[1], appModel);
+                if (parameters[0] == Platforms.Uwp)
+                {
+                    _userSelectionUwp = userSelection;
+                }
+                else if (parameters[0] == Platforms.Wpf)
+                {
+                    _userSelectionWpf = userSelection;
+                }
+                else if (parameters[0] == Platforms.WinUI)
+                {
+                    _userSelectionWinUI = userSelection;
+                }
             });
         }
 
-
-
-        private void AnalyzeCSharpSelection()
+        private void RecreateUwpProject()
         {
             SafeThreading.JoinableTaskFactory.Run(async () =>
             {
                 await SafeThreading.JoinableTaskFactory.SwitchToMainThreadAsync();
-                AnalyzeNewProject(Platforms.Uwp, ProgrammingLanguages.CSharp);
+                _projectLocation = NewProjectViewModel.GetNewProjectInfo();
+                _userSelectionUwp = await RecreateProjectAsync(_userSelectionUwp);
             });
         }
 
-        private void AnalyzeVisualBasicSelection()
+        private void RecreateWpfProject()
         {
             SafeThreading.JoinableTaskFactory.Run(async () =>
             {
                 await SafeThreading.JoinableTaskFactory.SwitchToMainThreadAsync();
-                AnalyzeNewProject(Platforms.Uwp, ProgrammingLanguages.VisualBasic);
+                _projectLocation = NewProjectViewModel.GetNewProjectInfo();
+                _userSelectionWpf = await RecreateProjectAsync(_userSelectionWpf);
             });
         }
 
-        private void NewUwpVisualBasicProject()
+        private void RecreateWinUIProject()
         {
             SafeThreading.JoinableTaskFactory.Run(async () =>
             {
                 await SafeThreading.JoinableTaskFactory.SwitchToMainThreadAsync();
-                await NewProjectAsync(Platforms.Uwp, ProgrammingLanguages.VisualBasic);
+                _projectLocation = NewProjectViewModel.GetNewProjectInfo();
+                _userSelectionWinUI = await RecreateProjectAsync(_userSelectionWinUI);
             });
         }
 
-        private async Task NewProjectAsync(string platform, string language)
+        private void AnalyzeSelection(string parameter)
         {
+            SafeThreading.JoinableTaskFactory.Run(async () =>
+            {
+                await SafeThreading.JoinableTaskFactory.SwitchToMainThreadAsync();
+                var parameters = parameter.Split(',');
+                AnalyzeNewProject(parameters[0], parameters[1]);
+            });
+        }
+
+        private async Task<UserSelection> NewProjectAsync(string platform, string language, string appmodel = null)
+        {
+
             SetCurrentLanguage(language);
             SetCurrentPlatform(platform);
 
+            if (!string.IsNullOrEmpty(appmodel))
+            {
+                SetCurrentAppModel(appmodel);
+            }
+            
+
             try
             {
-                var newProjectInfo = ShowNewProjectDialog();
+                _projectLocation = ShowNewProjectDialog();
 
-                if (!string.IsNullOrEmpty(newProjectInfo.name))
+                if (!string.IsNullOrEmpty(_projectLocation.name))
                 {
                     var newProject = new GeneratedProjectInfo();
-                    newProject.SetBasicInfo(newProjectInfo);
+                    newProject.SetBasicInfo(_projectLocation);
                     newProject.SetContext();
-                    var userSelection = WizardLauncher.Instance.StartNewProject(platform, language, Services.FakeStyleValuesProvider.Instance);
+
+                    var context = new UserSelectionContext(language, platform);
+                    if (!string.IsNullOrEmpty(appmodel))
+                    {
+                        context.AddAppModel(appmodel);
+                    }
+                    
+                    var userSelection = WizardLauncher.Instance.StartNewProject(context, string.Empty, string.Empty, Services.FakeStyleValuesProvider.Instance);
+                    switch (platform)
+                    {
+                        case Platforms.Uwp:
+                            _canRecreateUwpProject = true;
+                            break;
+                        case Platforms.Wpf:
+                            _canRecreateWpfProject = true;
+                            break;
+                        case Platforms.WinUI:
+                            _canRecreateWinUIProject = true;
+                            break;
+                    }
 
                     if (userSelection != null)
                     {
                         if (UseStyleCop)
                         {
-                            AddStyleCop(userSelection, language);
+                            AddStyleCop(userSelection, platform, language, appmodel);
                         }
                         await _generationService.GenerateProjectAsync(userSelection);
-                        GenContext.ToolBox.Shell.ShowStatusBarMessage("Project created!!!");
-                        newProject.SetProjectData(userSelection.ProjectType, userSelection.FrontEndFramework, platform, language, UseStyleCop);
+                        GenContext.ToolBox.Shell.UI.ShowStatusBarMessage("Project created!!!");
+                        newProject.SetProjectData(userSelection.Context, UseStyleCop);
                         newProject.SetContextInfo();
                         Projects.Insert(0, newProject);
                     }
+
+                    return userSelection;
                 }
             }
             catch (WizardBackoutException)
             {
                 CleanUp();
-                GenContext.ToolBox.Shell.ShowStatusBarMessage("Wizard back out");
+                GenContext.ToolBox.Shell.UI.ShowStatusBarMessage("Wizard back out");
             }
             catch (WizardCancelledException)
             {
-                GenContext.ToolBox.Shell.ShowStatusBarMessage("Wizard cancelled");
+                GenContext.ToolBox.Shell.UI.ShowStatusBarMessage("Wizard cancelled");
             }
+
+            return null;
         }
 
-        private void AddStyleCop(UserSelection userSelection, string language)
+        private async Task<UserSelection> RecreateProjectAsync(UserSelection userSelection)
+        {
+            try
+            {
+                if (userSelection != null && !string.IsNullOrEmpty(_projectLocation.name))
+                {
+                    var newProject = new GeneratedProjectInfo();
+                    newProject.SetBasicInfo(_projectLocation);
+                    newProject.SetContext();
+                    SetCurrentLanguage(userSelection.Context.Language);
+                    SetCurrentPlatform(userSelection.Context.Platform);
+                    SetCurrentAppModel(userSelection.Context.GetAppModel());
+
+                    if (UseStyleCop)
+                    {
+                        AddStyleCop(userSelection, userSelection.Context.Platform, userSelection.Context.Language, userSelection.Context.GetAppModel());
+                    }
+                    await _generationService.GenerateProjectAsync(userSelection);
+                    GenContext.ToolBox.Shell.UI.ShowStatusBarMessage("Project created!!!");
+                    newProject.SetProjectData(userSelection.Context, UseStyleCop);
+                    newProject.SetContextInfo();
+                    Projects.Insert(0, newProject);
+                    return userSelection;
+                }
+            }
+            catch (WizardBackoutException)
+            {
+                CleanUp();
+                GenContext.ToolBox.Shell.UI.ShowStatusBarMessage("Wizard back out");
+            }
+            catch (WizardCancelledException)
+            {
+                GenContext.ToolBox.Shell.UI.ShowStatusBarMessage("Wizard cancelled");
+            }
+
+            return null;
+        }
+
+        private void AddStyleCop(UserSelection userSelection, string platform, string language, string appmodel = null)
         {
             var styleCopTemplate = string.Empty;
-            switch (language)
+            switch (platform)
             {
-                case "C#":
-                    styleCopTemplate = "wts.Feat.StyleCop";
+                case Platforms.Uwp:
+                    switch (language)
+                    {
+                        case "C#":
+                            styleCopTemplate = "wts.Feat.StyleCop";
+                            break;
+                        case "VisualBasic":
+                            styleCopTemplate = "wts.Feat.VBStyleAnalysis";
+                            break;
+                        default:
+                            return;
+                    }
                     break;
-                case "VisualBasic":
-                    styleCopTemplate = "wts.Feat.VBStyleAnalysis";
+                case Platforms.Wpf:
+                    styleCopTemplate = "wts.Wpf.Feat.StyleCop";
                     break;
-                default:
-                    return;
+                case Platforms.WinUI:
+                    switch (appmodel)
+                    {
+                        case AppModels.Desktop:
+                            styleCopTemplate = "wts.WinUI.Feat.StyleCop";
+                            break;
+                        case AppModels.Uwp:
+                            styleCopTemplate = "wts.WinUI.UWP.Feat.StyleCop";
+                            break;
+                    }                    
+                    break;
             }
+
 
             var testingFeature = GenContext.ToolBox.Repo.GetAll().FirstOrDefault(t => t.Identity == styleCopTemplate);
             if (testingFeature != null)
@@ -237,6 +358,7 @@ namespace Microsoft.Templates.VsEmulator.Main
         private void AnalyzeNewProject(string platform, string language)
         {
             SetCurrentLanguage(language);
+            SetCurrentPlatform(platform);
             try
             {
                 var newProjectName = "AnalyzeSelection" + Path.GetFileNameWithoutExtension(Path.GetTempFileName());
@@ -244,7 +366,10 @@ namespace Microsoft.Templates.VsEmulator.Main
                 var newProject = new GeneratedProjectInfo();
                 newProject.SetBasicInfo((newProjectName, newProjectName, newProjectLocation));
                 newProject.SetContext();
-                var userSelection = WizardLauncher.Instance.StartNewProject(platform, language, Services.FakeStyleValuesProvider.Instance);
+
+                var context = new UserSelectionContext(language, platform);
+
+                var userSelection = WizardLauncher.Instance.StartNewProject(context, string.Empty, string.Empty, Services.FakeStyleValuesProvider.Instance);
 
                 if (userSelection != null)
                 {
@@ -255,11 +380,11 @@ namespace Microsoft.Templates.VsEmulator.Main
             catch (WizardBackoutException)
             {
                 CleanUp();
-                GenContext.ToolBox.Shell.ShowStatusBarMessage("Wizard back out");
+                GenContext.ToolBox.Shell.UI.ShowStatusBarMessage("Wizard back out");
             }
             catch (WizardCancelledException)
             {
-                GenContext.ToolBox.Shell.ShowStatusBarMessage("Wizard cancelled");
+                GenContext.ToolBox.Shell.UI.ShowStatusBarMessage("Wizard cancelled");
             }
         }
 
@@ -344,16 +469,43 @@ namespace Microsoft.Templates.VsEmulator.Main
                 var solutionName = Path.GetFileNameWithoutExtension(solutionFilePath);
                 var destinationParent = Path.GetDirectoryName(solutionFilePath);
                 var projFile = Directory.EnumerateFiles(destinationParent, "*.csproj", SearchOption.AllDirectories)
-                        .Union(Directory.EnumerateFiles(destinationParent, "*.vbproj", SearchOption.AllDirectories)).FirstOrDefault();
+                        .Union(Directory.EnumerateFiles(destinationParent, "*.vbproj", SearchOption.AllDirectories))
+                        .Union(Directory.EnumerateFiles(destinationParent, "*.vcxproj", SearchOption.AllDirectories)).FirstOrDefault();
 
-                var language = Path.GetExtension(projFile) == ".vbproj" ? ProgrammingLanguages.VisualBasic : ProgrammingLanguages.CSharp;
+                string language = String.Empty;
+                switch (Path.GetExtension(projFile))
+                {
+                    case ".vbproj":
+                        language = ProgrammingLanguages.VisualBasic;
+                        break;
+                    case ".csproj":
+                        language = ProgrammingLanguages.CSharp;
+                        break;
+                    case ".vcxproj":
+                        language = ProgrammingLanguages.Cpp;
+                        break;
+                }
                 var projectName = Path.GetFileNameWithoutExtension(projFile);
                 var destinationPath = Path.GetDirectoryName(projFile);
                 newProject.SetBasicInfo(projectName, destinationPath);
-                var config = ProjectConfigInfo.ReadProjectConfiguration();
+                var projectConfigInfoService = new ProjectConfigInfoService(GenContext.ToolBox.Shell);
+                var config = projectConfigInfoService.ReadProjectConfiguration();
                 SetCurrentLanguage(language);
                 SetCurrentPlatform(config.Platform);
-                newProject.SetProjectData(config.ProjectType, config.Framework, string.Empty, language, false);
+
+                if (!string.IsNullOrEmpty(config.AppModel))
+                {
+                    SetCurrentAppModel(config.AppModel);
+                }
+
+                var context = new UserSelectionContext(language, config.Platform)
+                {
+                    FrontEndFramework = config.Framework,
+                    ProjectType = config.ProjectType
+                };
+
+                context.AddAppModel(config.AppModel);
+                newProject.SetProjectData(context, false);
                 newProject.SetContextInfo();
                 Projects.Insert(0, newProject);
             }
@@ -362,11 +514,13 @@ namespace Microsoft.Templates.VsEmulator.Main
         private async Task RefreshTemplateCacheAsync()
         {
             UpdateCanRefreshTemplateCache(false);
+            GenContext.ToolBox.Shell.UI.ShowStatusBarMessage("Refreshing template cache ...");
 
             await GenContext.ToolBox.Repo.RefreshAsync(true);
             AddLog($"{DateTime.Now.FormatAsTime()} - Template cache refreshed");
 
             UpdateCanRefreshTemplateCache(true);
+            GenContext.ToolBox.Shell.UI.ShowStatusBarMessage("Template cache refresh completed");
         }
 
         private void ConfigureVersions()
@@ -434,8 +588,15 @@ namespace Microsoft.Templates.VsEmulator.Main
 
         private void SetCurrentPlatform(string platform)
         {
+            GenContext.SetCurrentPlatform(platform);
             var fakeShell = GenContext.ToolBox.Shell as FakeGenShell;
             fakeShell.SetCurrentPlatform(platform);
+        }
+
+        private void SetCurrentAppModel(string appModel)
+        {
+            var fakeShell = GenContext.ToolBox.Shell as FakeGenShell;
+            fakeShell.SetCurrentAppModel(appModel);
         }
 
         private async Task ConfigureGenContextAsync()
@@ -497,7 +658,7 @@ namespace Microsoft.Templates.VsEmulator.Main
 
         private string GetTemplatesFolder()
         {
-            return Path.Combine(SpecialFolder.LocalApplicationData.ToString(), @"\WinTS\Templates\LocalEnv");
+            return Path.Combine(SpecialFolder.LocalApplicationData.ToString(), @"\WinTS\Templates\LocalEnvWinTS");
         }
     }
 }

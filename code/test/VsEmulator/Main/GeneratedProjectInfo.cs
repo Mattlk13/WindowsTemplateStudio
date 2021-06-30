@@ -11,6 +11,7 @@ using Microsoft.Templates.Core.Extensions;
 using Microsoft.Templates.Core.Gen;
 using Microsoft.Templates.Core.PostActions.Catalog.Merge;
 using Microsoft.Templates.Fakes;
+using Microsoft.Templates.Fakes.GenShell;
 using Microsoft.Templates.UI.Launcher;
 using Microsoft.Templates.UI.Mvvm;
 using Microsoft.Templates.UI.Services;
@@ -25,10 +26,15 @@ namespace Microsoft.Templates.VsEmulator.Main
         private string _framework;
         private string _platform;
         private string _language;
+        private string _appModel;
         private string _time;
+        private bool _useStyleCop;
         private GenerationService _generationService = GenerationService.Instance;
-        private Visibility _isWtsProject;
-        private Visibility _styleCopTextVisibility = Visibility.Visible;
+        private Visibility _isAddNewPageCommandVisible;
+        private Visibility _isAddNewFeatureCommandVisible;
+        private Visibility _isAddNewServiceCommandVisible;
+        private Visibility _isAddNewTestingCommandVisible;
+        private const string BlankProjectType = "Blank";
 
         public string ProjectName { get; private set; }
 
@@ -66,16 +72,30 @@ namespace Microsoft.Templates.VsEmulator.Main
 
         public RelayCommand OpenTempInExplorerCommand { get; }
 
-        public Visibility IsWtsProject
+        public Visibility IsAddNewPageCommandVisible
         {
-            get => _isWtsProject;
-            set => SetProperty(ref _isWtsProject, value);
+            get => _isAddNewPageCommandVisible;
+            set => SetProperty(ref _isAddNewPageCommandVisible, value);
         }
 
-        public Visibility StyleCopTextVisibility
+        public Visibility IsAddNewFeatureCommandVisible
         {
-            get => _styleCopTextVisibility;
-            set => SetProperty(ref _styleCopTextVisibility, value);
+            get => _isAddNewFeatureCommandVisible;
+            set => SetProperty(ref _isAddNewFeatureCommandVisible, value);
+        }
+
+
+        public Visibility IsAddNewServiceCommandVisible
+        {
+            get => _isAddNewServiceCommandVisible;
+            set => SetProperty(ref _isAddNewServiceCommandVisible, value);
+        }
+
+
+        public Visibility IsAddNewTestingCommandVisible
+        {
+            get => _isAddNewTestingCommandVisible;
+            set => SetProperty(ref _isAddNewTestingCommandVisible, value);
         }
 
         public Visibility TempFolderAvailable
@@ -107,10 +127,22 @@ namespace Microsoft.Templates.VsEmulator.Main
             set => SetProperty(ref _language, value);
         }
 
+        public string AppModel
+        {
+            get => _appModel;
+            set => SetProperty(ref _appModel, value);
+        }
+
         public string Time
         {
             get => _time;
             set => SetProperty(ref _time, value);
+        }
+
+        public bool UseStyleCop
+        {
+            get => _useStyleCop;
+            set => SetProperty(ref _useStyleCop, value);
         }
 
         public GeneratedProjectInfo()
@@ -140,33 +172,54 @@ namespace Microsoft.Templates.VsEmulator.Main
             GenerationOutputPath = destinationPath;
         }
 
-        public void SetProjectData(string projectType, string framework, string platform, string language, bool useStyleCop)
+        public void SetProjectData(UserSelectionContext context, bool useStyleCop)
         {
-            ProjectType = projectType;
-            Framework = framework;
-            Platform = platform;
-            Language = language;
-            StyleCopTextVisibility = useStyleCop ? Visibility.Visible : Visibility.Collapsed;
+            ProjectType = context.ProjectType;
+            Framework = context.FrontEndFramework;
+            Platform = context.Platform;
+            Language = context.Language;
+            AppModel = context.GetAppModel();
+            UseStyleCop = useStyleCop;
             Time = DateTime.Now.ToShortTimeString();
         }
 
         public void SetContextInfo()
         {
-            SolutionFilePath = ((FakeGenShell)GenContext.ToolBox.Shell).SolutionPath;
-            IsWtsProject = GenContext.ToolBox.Shell.GetActiveProjectIsWts() ? Visibility.Visible : Visibility.Collapsed;
+            SolutionFilePath = FakeGenShellHelper.SolutionPath;
+            IsAddNewPageCommandVisible = HasTemplates(TemplateType.Page) ? Visibility.Visible : Visibility.Collapsed;
+            IsAddNewFeatureCommandVisible = HasTemplates(TemplateType.Feature) ? Visibility.Visible : Visibility.Collapsed;
+            IsAddNewServiceCommandVisible = HasTemplates(TemplateType.Service) ? Visibility.Visible : Visibility.Collapsed;
+            IsAddNewTestingCommandVisible = HasTemplates(TemplateType.Testing) ? Visibility.Visible : Visibility.Collapsed;
         }
+
+        private bool HasTemplates(TemplateType templateType)
+        {
+            if (Platform == Platforms.WinUI && ProjectType == BlankProjectType)
+            {
+                return false;
+            }
+            return GenContext.ToolBox.Repo.GetAll().Any(t => t.GetRightClickEnabled() && t.GetTemplateType() == templateType);
+           
+        }
+            
 
         public void SetContext()
         {
             GenContext.Current = this;
+            if (!string.IsNullOrEmpty(Language) && GenContext.CurrentLanguage != Language)
+            {
+                GenContext.SetCurrentLanguage(Language);
+            }
+
+            if (!string.IsNullOrEmpty(Platform) && GenContext.CurrentPlatform != Platform)
+            {
+                GenContext.SetCurrentPlatform(Platform);
+            }
         }
 
         private void OpenInVs()
         {
-            if (!string.IsNullOrEmpty(SolutionFilePath))
-            {
-                Process.Start(SolutionFilePath);
-            }
+            Process.Start(SolutionFilePath);
         }
 
         private void OpenInVsCode()
@@ -207,16 +260,16 @@ namespace Microsoft.Templates.VsEmulator.Main
                 {
                     FinishGeneration(userSelection);
                     OnPropertyChanged(nameof(TempFolderAvailable));
-                    GenContext.ToolBox.Shell.ShowStatusBarMessage("Item created!!!");
+                    GenContext.ToolBox.Shell.UI.ShowStatusBarMessage("Item created!!!");
                 }
             }
             catch (WizardBackoutException)
             {
-                GenContext.ToolBox.Shell.ShowStatusBarMessage("Wizard back out");
+                GenContext.ToolBox.Shell.UI.ShowStatusBarMessage("Wizard back out");
             }
             catch (WizardCancelledException)
             {
-                GenContext.ToolBox.Shell.ShowStatusBarMessage("Wizard cancelled");
+                GenContext.ToolBox.Shell.UI.ShowStatusBarMessage("Wizard cancelled");
             }
         }
 
@@ -253,7 +306,7 @@ namespace Microsoft.Templates.VsEmulator.Main
 
             var path = Path.Combine(Path.GetTempPath(), Configuration.Current.TempGenerationFolderPath);
 
-            Guid guid = GenContext.ToolBox.Shell.GetVsProjectId();
+            Guid guid = GenContext.ToolBox.Shell.Project.GetProjectGuidByName(GenContext.Current.ProjectName);
             return Path.Combine(path, guid.ToString());
         }
     }

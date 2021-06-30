@@ -5,6 +5,9 @@
 using System.Linq;
 using Microsoft.Templates.Core;
 using Microsoft.Templates.Core.Gen;
+using Microsoft.Templates.UI.Extensions;
+using Microsoft.Templates.UI.Resources;
+using Microsoft.Templates.UI.Services;
 
 namespace Microsoft.Templates.UI.ViewModels.Common
 {
@@ -15,7 +18,8 @@ namespace Microsoft.Templates.UI.ViewModels.Common
         private bool _hasMoreThanTwo;
         private bool _showAddedText;
         private bool _canBeAdded;
-        private string _emptyBackendFramework = string.Empty;
+        private bool _disabled;
+        private string _disabledMessage;
 
         public TemplateInfo Template { get; }
 
@@ -36,11 +40,11 @@ namespace Microsoft.Templates.UI.ViewModels.Common
             get => _count;
             private set
             {
-                HasMoreThanOne = value > 1;
-                HasMoreThanTwo = value > 2;
+                HasMoreThanOne = MultipleInstance && value > 1;
+                HasMoreThanTwo = MultipleInstance && value > 2;
                 ShowAddedText = !MultipleInstance && value > 0;
                 CanBeAdded = MultipleInstance || value == 0;
-                if (MultipleInstance)
+                if (MultipleInstance || value <= 1)
                 {
                     SetProperty(ref _count, value);
                 }
@@ -49,29 +53,41 @@ namespace Microsoft.Templates.UI.ViewModels.Common
 
         public bool HasMoreThanOne
         {
-            private get => _hasMoreThanOne;
-            set => SetProperty(ref _hasMoreThanOne, value);
+            get => _hasMoreThanOne;
+            private set => SetProperty(ref _hasMoreThanOne, value);
         }
 
         public bool HasMoreThanTwo
         {
-            private get => _hasMoreThanTwo;
-            set => SetProperty(ref _hasMoreThanTwo, value);
+            get => _hasMoreThanTwo;
+            private set => SetProperty(ref _hasMoreThanTwo, value);
         }
 
         public bool ShowAddedText
         {
-            private get => _showAddedText;
-            set => SetProperty(ref _showAddedText, value);
+            get => _showAddedText;
+            private set => SetProperty(ref _showAddedText, value);
         }
 
         public bool CanBeAdded
         {
-            private get => _canBeAdded;
+            get => _canBeAdded;
             set => SetProperty(ref _canBeAdded, value);
         }
 
-        public TemplateInfoViewModel(TemplateInfo template,  string platform, string projectType, string frameworkName)
+        public bool Disabled
+        {
+            get => _disabled;
+            set => SetProperty(ref _disabled, value);
+        }
+
+        public string DisabledMessage
+        {
+            get => _disabledMessage;
+            set => SetProperty(ref _disabledMessage, value);
+        }
+
+        public TemplateInfoViewModel(TemplateInfo template,  UserSelectionContext context)
         {
             // BasicInfo properties
             Name = template.Name;
@@ -84,8 +100,16 @@ namespace Microsoft.Templates.UI.ViewModels.Common
             Icon = template.Icon;
             Order = template.DisplayOrder;
             IsHidden = template.IsHidden;
-            Dependencies = template.Dependencies.Select(d => new TemplateInfoViewModel(d, platform, projectType, frameworkName));
+            DefaultName = template.DefaultName;
+            Dependencies = template.Dependencies.Select(d => new TemplateInfoViewModel(d, context));
+            Requirements = template.Requirements.Select(d => new TemplateInfoViewModel(d, context));
+            Exclusions = template.Exclusions.Select(d => new TemplateInfoViewModel(d, context));
+            RequiredVisualStudioWorkloads = template.RequiredVisualStudioWorkloads.Select(r => r.GetRequiredWorkloadDisplayName());
             Licenses = template.Licenses.Select(l => new LicenseViewModel(l));
+
+            var requiredVersions = template.RequiredVersions.Select(s => RequiredVersionService.GetVersionInfo(s));
+            RequiredSdks = requiredVersions.Where(s => s.RequirementType == RequirementType.WindowsSDK).Select(s => s.Version.ToString());
+            RequiredDotNetVersion = requiredVersions.Where(s => s.RequirementType == RequirementType.DotNetRuntime).Select(s => s.Version.ToString());
 
             // ITemplateInfo properties
             Template = template;
@@ -96,6 +120,11 @@ namespace Microsoft.Templates.UI.ViewModels.Common
             MultipleInstance = template.MultipleInstance;
             ItemNameEditable = template.ItemNameEditable;
             CanBeAdded = MultipleInstance || Count == 0;
+            if (!DataService.HasAllVisualStudioWorkloads(template.RequiredVisualStudioWorkloads))
+            {
+                Disabled = true;
+                DisabledMessage = StringRes.TemplateDetailsInfoUnavailableDueToMissingVSWorkload;
+            }
         }
 
         public void IncreaseSelection()

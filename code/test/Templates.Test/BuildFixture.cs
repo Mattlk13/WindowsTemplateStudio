@@ -6,11 +6,10 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.IO;
-using System.Linq;
 using Microsoft.Templates.Core;
 using Microsoft.Templates.Core.Gen;
 using Microsoft.Templates.Core.Locations;
-using Microsoft.Templates.Fakes;
+using Microsoft.Templates.Fakes.GenShell;
 
 namespace Microsoft.Templates.Test
 {
@@ -36,10 +35,10 @@ namespace Microsoft.Templates.Test
          Justification = "Required for unit testing.")]
         private static void InitializeTemplates(TemplatesSource source)
         {
-            GenContext.Bootstrap(source, new FakeGenShell(Platforms.Uwp, ProgrammingLanguages.CSharp), Platforms.Uwp, ProgrammingLanguages.CSharp);
-
             if (!syncExecuted)
             {
+                GenContext.Bootstrap(source, new FakeGenShell(Platforms.Uwp, ProgrammingLanguages.CSharp), Platforms.Uwp, ProgrammingLanguages.CSharp);
+
                 GenContext.ToolBox.Repo.SynchronizeAsync(true).Wait();
                 syncExecuted = true;
             }

@@ -20,6 +20,9 @@ namespace TemplateValidator
     /// </summary>
     public class ValidationTemplateInfo : ITemplateInfo
     {
+        [JsonProperty("$schema")]
+        public string Schema { get; set; }
+
         [ApiAnalysisValidValues("Microsoft", "Microsoft Community", "Laurent Bugnion", "Laurent Bugnion + Community Contribution", "Nigel Sampson")]
         public string Author { get; set; }
 
@@ -31,7 +34,6 @@ namespace TemplateValidator
         [ApiAnalysisShouldNotBeInJson("We don't use it.")]
         public string DefaultName { get; set; }
 
-        [ApiAnalysisOptional]
         public string Identity { get; set; }
 
         [ApiAnalysisShouldNotBeInJson("We don't use it.")]
@@ -45,7 +47,6 @@ namespace TemplateValidator
 
         public string Name { get; set; }
 
-        [ApiAnalysisShouldNotBeInJson("Is not used. We use `Name` for identifying purposes.")]
         public string ShortName { get; set; }
 
         // This is how the interface defines the Tags property
@@ -62,7 +63,7 @@ namespace TemplateValidator
 
         // We just use strings for tags. The template engine uses a converter but this is fine for testing purposes
         [ApiAnalysisMandatoryKeys("language", "type", "wts.type", "wts.platform")]
-        [ApiAnalysisOptionalKeys("wts.displayOrder", "wts.compositionOrder", "wts.frontendframework", "wts.backendframework", "wts.projecttype", "wts.version", "wts.genGroup", "wts.rightClickEnabled", "wts.compositionFilter", "wts.licenses", "wts.group", "wts.multipleInstance", "wts.dependencies", "wts.defaultInstance", "wts.export.baseclass", "wts.export.setter", "wts.isHidden", "wts.telemName", "wts.outputToParent", "wts.isGroupExclusiveSelection", "wts.requiredVsWorkload")]
+        [ApiAnalysisOptionalKeys("wts.displayOrder", "wts.compositionOrder", "wts.frontendframework", "wts.backendframework", "wts.projecttype", "wts.version", "wts.genGroup", "wts.rightClickEnabled", "wts.compositionFilter", "wts.licenses", "wts.group", "wts.multipleInstance", "wts.dependencies", "wts.requirements", "wts.exclusions", "wts.defaultInstance", "wts.export.baseclass", "wts.export.setter", "wts.isHidden", "wts.telemName", "wts.outputToParent", "wts.isGroupExclusiveSelection", "wts.requiredVsWorkload", "wts.requiredVersions", "wts.export.configtype", "wts.export.configvalue", "wts.export.commandclass", "wts.export.pagetype", "wts.export.canExecuteChangedMethodName", "wts.export.onNavigatedToParams", "wts.export.onNavigatedFromParams", "wts.appmodel")]
         [JsonProperty("tags")]
         public IReadOnlyDictionary<string, string> TemplateTags { get; set; }
 
@@ -115,5 +116,8 @@ namespace TemplateValidator
 
         [ApiAnalysisOptional]
         public List<string> Guids { get; set; }
+
+        [JsonIgnore]
+        public bool HasScriptRunningPostActions { get; set; }
     }
 }

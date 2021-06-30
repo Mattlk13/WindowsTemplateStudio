@@ -9,25 +9,27 @@ using Microsoft.Templates.Core;
 using Microsoft.Templates.Core.Gen;
 using Microsoft.Templates.UI.ViewModels.Common;
 using Microsoft.Templates.UI.VisualStudio;
+using Microsoft.Templates.UI.VisualStudio.GenShell;
 
 namespace Microsoft.Templates.UI.Services
 {
     public static class DataService
     {
-        public static bool LoadProjectTypes(ObservableCollection<ProjectTypeMetaDataViewModel> projectTypes, string platform)
+        public static bool LoadProjectTypes(ObservableCollection<ProjectTypeMetaDataViewModel> projectTypes, UserSelectionContext context)
         {
-            var newProjectTypes = GenContext.ToolBox.Repo.GetProjectTypes(platform)
+            var newProjectTypes = GenContext.ToolBox.Repo.GetProjectTypes(context)
                                     .Where(m => !string.IsNullOrEmpty(m.Description));
 
             var data = newProjectTypes
                         .Select(m =>
                         {
-                            var targetFrameworks = GenContext.ToolBox.Repo.GetFrontEndFrameworks(platform, m.Name)
-                                        .Select(fx => new FrameworkMetaDataViewModel(fx, platform))
+                            context.ProjectType = m.Name;
+                            var targetFrameworks = GenContext.ToolBox.Repo.GetFrontEndFrameworks(context)
+                                        .Select(fx => new FrameworkMetaDataViewModel(fx))
                                         .OrderBy(f => f.Order)
                                         .ToList();
 
-                            return new ProjectTypeMetaDataViewModel(m, platform, targetFrameworks);
+                            return new ProjectTypeMetaDataViewModel(m, context, targetFrameworks);
                         })
                         .OrderBy(pt => pt.Order).ToList();
 
@@ -48,10 +50,10 @@ namespace Microsoft.Templates.UI.Services
             }
         }
 
-        public static bool LoadFrameworks(ObservableCollection<FrameworkMetaDataViewModel> frameworks, string projectTypeName, string platform)
+        public static bool LoadFrameworks(ObservableCollection<FrameworkMetaDataViewModel> frameworks, UserSelectionContext context)
         {
-            var targetFrameworks = GenContext.ToolBox.Repo.GetFrontEndFrameworks(platform, projectTypeName)
-                                        .Select(m => new FrameworkMetaDataViewModel(m, platform))
+            var targetFrameworks = GenContext.ToolBox.Repo.GetFrontEndFrameworks(context)
+                                        .Select(m => new FrameworkMetaDataViewModel(m))
                                         .OrderBy(f => f.Order)
                                         .ToList();
 
@@ -65,27 +67,26 @@ namespace Microsoft.Templates.UI.Services
             return frameworks.Any();
         }
 
-        public static bool HasTemplatesFromType(TemplateType templateType, string platform, string projectType, string frameworkName)
+        public static bool HasTemplatesFromType(TemplateType templateType, UserSelectionContext context)
         {
-            return GenContext.ToolBox.Repo.GetTemplatesInfo(templateType, platform, projectType, frameworkName)
-                                .Where(t => !t.IsHidden)
-                                .Any();
+            return GenContext.ToolBox.Repo.GetTemplatesInfo(templateType, context)
+                .Where(t => !t.IsHidden)
+                .Any();
         }
 
-        public static int LoadTemplatesGroups(ObservableCollection<TemplateGroupViewModel> templatesGroups, TemplateType templateType, string platform, string projectType, string frameworkName, bool loadFromRightClick = false)
+        public static int LoadTemplatesGroups(ObservableCollection<TemplateGroupViewModel> templatesGroups, TemplateType templateType, UserSelectionContext context, bool loadFromRightClick = false)
         {
             if (!templatesGroups.Any())
             {
-                var templates = GenContext.ToolBox.Repo.GetTemplatesInfo(templateType, platform, projectType, frameworkName)
-                    .Where(t => !t.IsHidden
-                             && (!t.RequiredVisualStudioWorkloads.Any() || HasAllVisualStudioWorkloads(t.RequiredVisualStudioWorkloads)));
+                var templates = GenContext.ToolBox.Repo.GetTemplatesInfo(templateType, context)
+                    .Where(t => !t.IsHidden);
 
                 if (loadFromRightClick)
                 {
                     templates = templates.Where(t => t.RightClickEnabled);
                 }
 
-                var templateViewModel = templates.Select(t => new TemplateInfoViewModel(t, platform, projectType, frameworkName));
+                var templateViewModel = templates.Select(t => new TemplateInfoViewModel(t, context));
                 var groups = templateViewModel
                     .OrderBy(t => t.Order)
                     .GroupBy(t => t.Group)
@@ -99,14 +100,12 @@ namespace Microsoft.Templates.UI.Services
             return 0;
         }
 
-        private static bool HasAllVisualStudioWorkloads(IEnumerable<string> workloadIds)
+        public static bool HasAllVisualStudioWorkloads(IEnumerable<string> workloadIds)
         {
-            var vsShell = GenContext.ToolBox.Shell as VsGenShell;
-
             // If not in VS then assume all workloads are available.
-            if (vsShell != null)
+            if (GenContext.ToolBox.Shell is VsGenShell vsShell && vsShell.VisualStudio.GetInstalledPackageIds().Any())
             {
-                var installedIds = vsShell.GetInstalledPackageIds();
+                var installedIds = vsShell.VisualStudio.GetInstalledPackageIds();
 
                 foreach (var workloadId in workloadIds)
                 {

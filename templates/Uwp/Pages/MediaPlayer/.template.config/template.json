@@ -1,9 +1,11 @@
 ﻿{
+  "$schema": "http://json.schemastore.org/template",
   "author": "Microsoft Community",
   "classifications": [
     "Universal"
   ],
-  "name": "Media Player",
+  "name": "MediaPlayer",
+  "shortName": "MediaPlayer",
   "groupIdentity": "wts.Page.MediaPlayer",
   "identity": "wts.Page.MediaPlayer",
   "description": "A page for showing video with system media controls enabled.",
@@ -11,9 +13,10 @@
     "language": "C#",
     "type": "item",
     "wts.type": "page",
+    "wts.telemName": "MediaPlayer",
     "wts.projecttype": "all",
-    "wts.frontendframework": "MVVMBasic|MVVMLight|CaliburnMicro",
-	"wts.platform": "Uwp",
+    "wts.frontendframework": "MVVMBasic|MVVMLight|CaliburnMicro|MVVMToolkit",
+    "wts.platform": "Uwp",
     "wts.version": "1.0.0",
     "wts.displayOrder": "4",
     "wts.genGroup": "0",
@@ -23,13 +26,13 @@
   "preferNameDirectory": true,
   "PrimaryOutputs": [
     {
-      "path": ".\\Views\\MediaPlayerViewPage.xaml"
+      "path": "Views/MediaPlayerViewPage.xaml"
     },
     {
-      "path": ".\\Views\\MediaPlayerViewPage.xaml.cs"
+      "path": "Views/MediaPlayerViewPage.xaml.cs"
     },
     {
-      "path": ".\\ViewModels\\MediaPlayerViewViewModel.cs"
+      "path": "ViewModels/MediaPlayerViewViewModel.cs"
     }
   ],
   "symbols": {

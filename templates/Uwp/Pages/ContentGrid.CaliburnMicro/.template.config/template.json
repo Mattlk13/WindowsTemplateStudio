@@ -1,9 +1,11 @@
 ﻿{
+  "$schema": "http://json.schemastore.org/template",
   "author": "Microsoft",
   "classifications": [
     "Universal"
   ],
   "name": "Content Grid",
+  "shortName": "Content Grid",
   "groupIdentity": "wts.Page.ContentGrid",
   "identity": "wts.Page.ContentGrid.CaliburnMicro",
   "description": "This page allows you to add custom items in the form of an Adaptive Grid.",
@@ -15,32 +17,32 @@
     "wts.frontendframework": "CaliburnMicro",
     "wts.platform": "Uwp",
     "wts.version": "1.0.0",
-    "wts.displayOrder": "7",
+    "wts.displayOrder": "8",
     "wts.dependencies": "wts.Service.SampleDataService",
     "wts.genGroup": "0",
     "wts.rightClickEnabled":"true",
-    "wts.licenses": "[Microsoft.Toolkit.Uwp](https://github.com/Microsoft/WindowsCommunityToolkit/blob/master/license.md)"
+    "wts.licenses": "[Microsoft.Toolkit.Uwp](https://github.com/windows-toolkit/WindowsCommunityToolkit/blob/main/License.md)"
   },
   "sourceName": "ContentGridView",
   "preferNameDirectory": true,
   "PrimaryOutputs": [
     {
-      "path": ".\\Views\\ContentGridViewDetailPage.xaml"
+      "path": "Views/ContentGridViewDetailPage.xaml"
     },
     {
-      "path": ".\\Views\\ContentGridViewDetailPage.xaml.cs"
+      "path": "Views/ContentGridViewDetailPage.xaml.cs"
     },
     {
-      "path": ".\\Views\\ContentGridViewPage.xaml"
+      "path": "Views/ContentGridViewPage.xaml"
     },
     {
-      "path": ".\\Views\\ContentGridViewPage.xaml.cs"
+      "path": "Views/ContentGridViewPage.xaml.cs"
     },
     {
-      "path": ".\\ViewModels\\ContentGridViewDetailViewModel.cs"
+      "path": "ViewModels/ContentGridViewDetailViewModel.cs"
     },
     {
-      "path": ".\\ViewModels\\ContentGridViewViewModel.cs"
+      "path": "ViewModels/ContentGridViewViewModel.cs"
     }
   ],
   "symbols": {
@@ -69,10 +71,10 @@
       "actionId": "0B814718-16A3-4F7F-89F1-69C0F9170EAD",
       "args": {
         "packageId": "Microsoft.Toolkit.Uwp.UI.Controls",
-        "version": "5.1.1",
+        "version" : "7.0.2",
         "projectPath": "Param_ProjectName.csproj"
       },
-      "continueOnError": "true"
+      "continueOnError": true
     },
     {
       "description": "Add nuget package",
@@ -80,10 +82,10 @@
       "actionId": "0B814718-16A3-4F7F-89F1-69C0F9170EAD",
       "args": {
         "packageId": "Microsoft.Toolkit.Uwp.UI.Animations",
-        "version": "5.1.1",
+        "version": "7.0.2",
         "projectPath": "Param_ProjectName.csproj"
       },
-      "continueOnError": "true"
+      "continueOnError": true
     }
   ]
 }

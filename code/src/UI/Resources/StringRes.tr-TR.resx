@@ -117,20 +117,145 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
+  <data name="AccessibilityEditPageItem" xml:space="preserve">
+    <value>Sayfa adı</value>
+    <comment>Edit page label to accessibility</comment>
+  </data>
+  <data name="AccessibilityProjectTypesList" xml:space="preserve">
+    <value>Proje türleri</value>
+    <comment>Project types list label to accessibility</comment>
+  </data>
+  <data name="AccessibilityDesignPatternList" xml:space="preserve">
+    <value>Design patterns</value>
+    <comment>Design pattern list to accessibility</comment>
+  </data>
+  <data name="NotificationRemoveError_ReadOnly" xml:space="preserve">
+    <value>Seçili proje türü için gerekli olduğundan **{0}** kaldıramazsınız.</value>
+    <comment>Remove error message: Template is read only</comment>
+  </data>
+  <data name="InfoDialogRequiredWorkloadNotFoundMessage" xml:space="preserve">
+    <value>{0} bir proje oluşturmak için aşağıdaki iş yüklerini yüklemeniz gerekir: {1} </value>
+  </data>
+  <data name="NotificationValidationError_ProjectNameAndPathDoNotMatch" xml:space="preserve">
+    <value>Proje adı proje klasöradıyla eşleşmiyor. Doğru bir nesil sağlamak için lütfen ayarlayın.</value>
+  </data>
+  <data name="NotificationMissingVersions" xml:space="preserve">
+    <value>Aşağıdaki sürümler eksik, lütfen yükleyin ve Visual Studio yeniden başlatın: {0}</value>
+  </data>
+  <data name="TemplateDetailsRequiredDotNetVersion" xml:space="preserve">
+    <value>Minimum .NET Çekirdek Versiyonu:</value>
+  </data>
+  <data name="ErrorInvalidRequirementType" xml:space="preserve">
+    <value>Geçersiz Gereksinim Türü {0}</value>
+  </data>
+  <data name="NewProjectTitleUWP" xml:space="preserve">
+    <value>Yeni Evrensel Windows Platformu uygulaması</value>
+    <comment>Wizard title on WizardShell page for UWP projects</comment>
+  </data>
+  <data name="NewProjectTitleWPF" xml:space="preserve">
+    <value>Yeni WPF uygulaması</value>
+    <comment>Wizard title on WizardShell page for WPF projects</comment>
+  </data>
+  <data name="TemplateGroup_Packaging" xml:space="preserve">
+    <value>Paket Oluşturma</value>
+    <comment>Group header for Packaging templates</comment>
+  </data>
+  <data name="ValidatorHasHamburgerMenuLink" xml:space="preserve">
+    <value>{0}UWP/projectTypes/updatetonavigationview.md</value>
+    <comment>Has hamburger menu validation link documentation</comment>
+  </data>
+  <data name="ValidatorHasPivotLink" xml:space="preserve">
+    <value>{0}UWP/projectTypes/updatetohorizontalnavview.md</value>
+    <comment>Has pivot validation link documentation</comment>
+  </data>
+  <data name="ValidatorHasOldNavigationViewLink" xml:space="preserve">
+    <value>{0}UWP/projectTypes/updatetowinuinavigationview.md</value>
+    <comment>Has old navigation view validation link documentation</comment>
+  </data>
+  <data name="ValidatorHasOldMvvmLightLocatorLink" xml:space="preserve">
+    <value>{0}UWP/frameworks/updatemvvmlightlocator.md</value>
+    <comment>Has old MvvmLight Locator link documentation</comment>
+  </data>
+  <data name="TemplateDetailsRequirements" xml:space="preserve">
+    <value>Gereksinimler:</value>
+  </data>
+  <data name="NotificationAdditionError_Exclusion" xml:space="preserve">
+    <value>Aşağıdaki şablonlar uyumlu olmadığından **{0}** şablonunu ekleyemezsiniz: {1}.</value>
+    <comment>Notification message for can not add template string format. {0}:Template name, {1}:Excluded template name. Character * add bold to word</comment>
+  </data>
+  <data name="TemplateDetailsExclusions" xml:space="preserve">
+    <value>Dışlamalar:</value>
+  </data>
+  <data name="NotificationValidationError_Regex" xml:space="preserve">
+    <value>RegEx doğrulaması {0} başarısız oldu.</value>
+    <comment>Validation error message: RegEx</comment>
+  </data>
+  <data name="ErrorAddingItemsToProject" xml:space="preserve">
+    <value>{0} projesine öğe eklenirken hata oluştu</value>
+    <comment>Error message for adding items to project</comment>
+  </data>
+  <data name="ErrorAddingProject" xml:space="preserve">
+    <value>{0} projesi eklenirken hata oluştu</value>
+    <comment>Error message for adding projects</comment>
+  </data>
+  <data name="ErrorAddingReferencesBetweenProjects" xml:space="preserve">
+    <value>Projeler arasında başvurular eklenirken hata oluştu</value>
+    <comment>Error message for adding items to project</comment>
+  </data>
+  <data name="ErrorAddingSdksToProject" xml:space="preserve">
+    <value>{0} projesine SDK'ler eklenirken hata oluştu.</value>
+    <comment>Error message for adding items to project</comment>
+  </data>
+  <data name="TemplateDetailsRequiredSdks" xml:space="preserve">
+    <value>Gerekli Windows SDK'leri:</value>
+  </data>
+  <data name="WorkloadDisplayNameManagedDesktop" xml:space="preserve">
+    <value>.NET masaüstü geliştirme</value>
+  </data>
+  <data name="WorkloadDisplayNameMsixPackaging" xml:space="preserve">
+    <value>MSIX Paket Oluşturma Araçları</value>
+  </data>
+  <data name="WorkloadDisplayNameNetWeb" xml:space="preserve">
+    <value>ASP.NET ve web geliştirme</value>
+  </data>
+  <data name="WorkloadDisplayNameUniversal" xml:space="preserve">
+    <value>Evrensel Windows Platformu geliştirme</value>
+  </data>
+  <data name="InfoDialogInvalidVersionTitle" xml:space="preserve">
+    <value>Daha yüksek bir sürüm gerekli</value>
+  </data>
+  <data name="InfoDialogMissingWorkloadTitle" xml:space="preserve">
+    <value>İş yükü eksik</value>
+  </data>
+  <data name="InfoDialogMoreInfoLinkText" xml:space="preserve">
+    <value>Diğer bilgiler</value>
+  </data>
+  <data name="UWP" xml:space="preserve">
+    <value>UWP</value>
+  </data>
+  <data name="WPF" xml:space="preserve">
+    <value>WPF (.NET Core)</value>
+  </data>
+  <data name="TemplateDetailsRequiredVSWorkloads" xml:space="preserve">
+    <value>Gerekli Visual Studio İş Yükleri / Bileşenleri:</value>
+  </data>
+  <data name="TemplateDetailsInfoUnavailableDueToMissingVSWorkload" xml:space="preserve">
+    <value>Eksik Visual Studio İş Yükleri / Bileşenleri nedeniyle bu öğe şu anda kullanılamıyor.</value>
+  </data>
   <data name="AddServiceTitle" xml:space="preserve">
-    <value>Hizmetler Ekle</value>
+    <value>Hizmet ekle</value>
     <comment>AddService title on AddServicePage</comment>
   </data>
   <data name="AddTestingTitle" xml:space="preserve">
-    <value>Test Ekle</value>
+    <value>Test ekle</value>
     <comment>AddTesting title on AddTestingPage</comment>
   </data>
   <data name="NewItemHasNoChangesService" xml:space="preserve">
-    <value>{0} zaten projenizin bir parçasıdır. Lütfen başka bir hizmet seçin.</value>
+    <value>{0} zaten projenizin bir parçası. Lütfen başka bir hizmet seçin.</value>
     <comment>Service already added {0}: Service name</comment>
   </data>
   <data name="NewItemHasNoChangesTesting" xml:space="preserve">
-    <value>{0} zaten projenizin bir parçasıdır. Lütfen başka bir test projesi seçin.</value>
+    <value>{0} zaten projenizin bir parçası. Lütfen başka bir test projesi seçin.</value>
     <comment>Testing project already added {0}: Testing project name</comment>
   </data>
   <data name="NewProjectStepFeatures" xml:space="preserve">
@@ -138,7 +263,7 @@
     <comment>New project: Navigation step features</comment>
   </data>
   <data name="NewProjectStepServices" xml:space="preserve">
-    <value>Hizmetleri</value>
+    <value>Hizmetler</value>
     <comment>New project: Navigation step services</comment>
   </data>
   <data name="NewProjectStepTesting" xml:space="preserve">
@@ -158,7 +283,7 @@
     <comment>New project: Navigation step design pattern</comment>
   </data>
   <data name="ProjectDetailsServicesSectionTitle" xml:space="preserve">
-    <value>Hizmetleri</value>
+    <value>Hizmetler</value>
     <comment>Services list header on project details</comment>
   </data>
   <data name="ProjectDetailsTestingSectionTitle" xml:space="preserve">
@@ -166,11 +291,11 @@
     <comment>Testing list header on project details</comment>
   </data>
   <data name="ProjectDetailsProjectTypeResetDescription" xml:space="preserve">
-    <value>Proje türü seçiminizi değiştirdiniz. Seçtiğiniz şablonlar kaybolur. Devam etmek istiyor musunuz?</value>
+    <value>Proje türü seçiminizi değiştirdiniz. Seçtiğiniz şablonlar kaybolacak. Devam etmek istiyor musunuz?</value>
     <comment>Project type changed message</comment>
   </data>
   <data name="StatusBarNewItemAddServiceCancelled" xml:space="preserve">
-    <value>Yeni hizmet iptal Ekle</value>
+    <value>Yeni hizmet ekleme işlemi iptal edildi</value>
     <comment>Status bar message for Add new service cancelled</comment>
   </data>
   <data name="StatusBarNewItemAddServiceSuccess" xml:space="preserve">
@@ -178,28 +303,39 @@
     <comment>Status bar message for Service successfully added, {0}: Service name</comment>
   </data>
   <data name="StatusBarNewItemAddTestingCancelled" xml:space="preserve">
-    <value>Yeni test projesini iptal Ekle</value>
+    <value>Yeni test projesi ekleme işlemi iptal edildi</value>
     <comment>Status bar message for Add new testing project cancelled</comment>
   </data>
   <data name="StatusBarNewItemAddTestingSuccess" xml:space="preserve">
-    <value>'{0}' sınama projesi başarıyla eklendi</value>
+    <value>{0} test projesi başarıyla eklendi</value>
     <comment>Status bar message for testing project successfully added, {0}: Testing project name</comment>
   </data>
   <data name="TemplateGroup_Data" xml:space="preserve">
-    <value>Veri</value>
+    <value>Veriler</value>
     <comment>Group header for Data templates</comment>
   </data>
   <data name="TemplateGroup_Tools" xml:space="preserve">
-    <value>Araçları</value>
+    <value>Araçlar</value>
     <comment>Group header for 'Tools' templates</comment>
   </data>
   <data name="NewItemTitleService" xml:space="preserve">
-    <value>Yeni servis</value>
+    <value>Yeni hizmet</value>
     <comment>New item: new service title</comment>
   </data>
   <data name="NewItemTitleTesting" xml:space="preserve">
     <value>Yeni test projesi</value>
     <comment>New item: new testing project title</comment>
+  </data>
+  <data name="NotificationAdditionError_Requirement" xml:space="preserve">
+    <value>Önce aşağıdaki şablonlardan birinin eklenmesini gerektirdiğinden **{0}** şablonunu ekleyemezsiniz: {1}</value>
+    <comment>Notification message for can not add template string format. {0}:Template name, {1}:Required template name. Character * add bold to word</comment>
+  </data>
+  <data name="NotificationRemoveError_Requirement" xml:space="preserve">
+    <value>Aşağıdakiler için gerekli olduğundan **{0}** şablonunu kaldıramazsınız. {1}</value>
+    <comment>Notification message for can not remove template string format. {0}:Template name, {1}:Required for template name. Character * add bold to word</comment>
+  </data>
+  <data name="SeparatorOr" xml:space="preserve">
+    <value>veya</value>
   </data>
   <data name="AddFeaturesTitle" xml:space="preserve">
     <value>Özellik ekle</value>
@@ -356,10 +492,6 @@
   <data name="NewItemTitlePage" xml:space="preserve">
     <value>Yeni sayfa</value>
     <comment>New item: new page title</comment>
-  </data>
-  <data name="NewProjectTitle" xml:space="preserve">
-    <value>Yeni Evrensel Windows Platformu uygulaması</value>
-    <comment>Wizard title on WizardShell page</comment>
   </data>
   <data name="NotificationRemoveError_Dependency" xml:space="preserve">
     <value>Bu şablonlar bağımlı olduğundan **{0}** öğesini kaldıramazsınız: {1}</value>
@@ -533,10 +665,6 @@
     <value>{0} projesi bulunamıyor</value>
     <comment>{0}: projectPath</comment>
   </data>
-  <data name="ErrorUnableAddFilesAndProjects" xml:space="preserve">
-    <value>Dosyalar ve projeler eklenemedi.</value>
-    <comment>Error message for unable to add files and projects</comment>
-  </data>
   <data name="ErrorVsGenShellCollapseSolutionItemsMessage" xml:space="preserve">
     <value>Çözüm ağacı daraltılırken bir hata oluştu. Ör:</value>
     <comment>Error message for VS GenShell collapse solution Items</comment>
@@ -585,17 +713,9 @@
     <value>Bildirim paneli</value>
     <comment> Notification panel label to accessibility</comment>
   </data>
-  <data name="AccessibilityEditPageItem" xml:space="preserve">
-    <value>Sayfayı düzenle</value>
-    <comment>Edit page label to accessibility</comment>
-  </data>
   <data name="AccessibilityNavigationMenu" xml:space="preserve">
     <value>Gezinme menüsü</value>
     <comment>Navigation menu label</comment>
-  </data>
-  <data name="AccessibilityProjectTypesList" xml:space="preserve">
-    <value>Proje türleri listesi</value>
-    <comment>Project types list label to accessibility</comment>
   </data>
   <data name="AccessibilitySequentialFlowControl" xml:space="preserve">
     <value>Ardışık akış denetimi</value>
@@ -604,10 +724,6 @@
   <data name="AccessibilityUserSelectionPageList" xml:space="preserve">
     <value>Kullanıcı seçimi sayfaları</value>
     <comment>User selection page list to accessibility</comment>
-  </data>
-  <data name="AccessibilityDesignPatternList" xml:space="preserve">
-    <value>Design pattern listesi</value>
-    <comment>Design pattern list to accessibility</comment>
   </data>
   <data name="AccessibilityTemplatesList" xml:space="preserve">
     <value>Şablonlar listesi</value>
@@ -668,25 +784,13 @@
     <value>içerik yok.</value>
     <comment>Message in no content panel</comment>
   </data>
-  <data name="ValidatorHasHamburgerMenuLink" xml:space="preserve">
-    <value>{0}projectTypes/updatetonavigationview.md</value>
-    <comment>Has hamburger menu validation link documentation</comment>
-  </data>
   <data name="ValidatorHasHamburgerMenuLinkMessage" xml:space="preserve">
     <value>Güncelleştirmek için belgelere bakın.</value>
     <comment>Has hamburger menu validation link documentation message</comment>
   </data>
-  <data name="ValidatorHasPivotLink" xml:space="preserve">
-    <value>{0}projectTypes/updatetohorizontalnavview.md</value>
-    <comment>Has pivot validation link documentation</comment>
-  </data>
   <data name="ValidatorHasPivotLinkMessage" xml:space="preserve">
     <value>Güncelleştirmek için belgelere bakın.</value>
     <comment>Has pivot validation link documentation message</comment>
-  </data>
-  <data name="ValidatorHasOldNavigationViewLink" xml:space="preserve">
-    <value>{0}projectTypes/updatetowinuinavigationview.md</value>
-    <comment>Has old navigation view validation link documentation</comment>
   </data>
   <data name="ValidatorHasOldNavigationViewLinkMessage" xml:space="preserve">
     <value>Güncelleştirmek için belgelere bakın.</value>
@@ -715,10 +819,6 @@
   <data name="ValidatorHasOldMvvmLightLocatorMessage" xml:space="preserve">
     <value>MVVMLight ViewModelLocator uygulamamızı MVVMLight içinde MultiView desteklenecek şekilde değiştirdik. </value>
     <comment>Has old MvvmLight Locator error message</comment>
-  </data>
-  <data name="ValidatorHasOldMvvmLightLocatorLink" xml:space="preserve">
-    <value>{0}frameworks/updatemvvmlightlocator.md</value>
-    <comment>Has old MvvmLight Locator link documentation</comment>
   </data>
   <data name="ValidatorHasOldMvvmLightLocatorLinkMessage" xml:space="preserve">
     <value>Güncelleştirmek için belgelere bakın.</value>
@@ -763,13 +863,9 @@ Lütfen projenizin kodunun gerektirdiği aşağıdaki paket listesini doğrulay�
     <value>Windows Şablon Stüdyosu şu anda bir çekirdek proje ekliyor. </value>
     <comment>Has no core project validation error message</comment>
   </data>
-  <data name="NotificationRemoveError_ReadOnly" xml:space="preserve">
-    <value>Salt okunur olduğundan **{0}** öğesini kaldıramazsınız.</value>
-    <comment>Remove error message: Template is read only</comment>
-  </data>
   <data name="TemplateDetailsLayout" xml:space="preserve">
-    <value>Düzen:</value>
-    <comment>Template details: Layout</comment>
+    <value>Içerir:</value>
+    <comment>Template details: Includes</comment>
   </data>
   <data name="TemplateDetailsFrameworks" xml:space="preserve">
     <value>Framework:</value>
@@ -777,7 +873,7 @@ Lütfen projenizin kodunun gerektirdiği aşağıdaki paket listesini doğrulay�
   </data>
   <data name="TemplateDetailsLayoutOptional" xml:space="preserve">
     <value>{0} (isteğe bağlı)</value>
-    <comment>The layout is optional</comment>
+    <comment>The include is optional</comment>
   </data>
   <data name="ProjectDetailsAboutSectionIssuesLink" xml:space="preserve">
     <value>Sorunu bildir</value>
@@ -797,5 +893,35 @@ Lütfen projenizin kodunun gerektirdiği aşağıdaki paket listesini doğrulay�
   <data name="ValidatorHasActivationServiceBeforeIdentityLinkMessage" xml:space="preserve">
     <value>Güncelleştirmek için belgelere bakın.</value>
     <comment>Has ActivationService before Identity link documentation message</comment>
+  </data>
+  <data name="NewProjectTitleWinUIDesktop" xml:space="preserve">
+    <value>Yeni WinUI 3 Masaüstü uygulaması</value>
+  </data>
+  <data name="NewProjectTitleWinUIUWP" xml:space="preserve">
+    <value>Yeni WinUI 3 UWP uygulaması</value>
+  </data>
+  <data name="WinUI" xml:space="preserve">
+    <value>Windows UI</value>
+  </data>
+  <data name="DeprecatedMessage" xml:space="preserve">
+    <value>Kullanımdan kaldırıldı</value>
+    <comment>Text used to indicate a deprecated option in the wizard</comment>
+  </data>
+  <data name="ErrorUnableToOpenProjectOverview" xml:space="preserve">
+    <value>Projeye genel bakış açılamadı.</value>
+    <comment>Error message for unable to open project overview dialog</comment>
+  </data>
+  <data name="ProjectConfigurationSelectAppModel" xml:space="preserve">
+    <value>AppModel'i seçin</value>
+  </data>
+  <data name="InfoDialogInvalidVSVersion" xml:space="preserve">
+    <value>{0} proje oluşturma visual studio 2019 sürüm {1} veya daha yüksek gerektirir.</value>
+    <comment>Error message for Invalid VS Version</comment>
+  </data>
+  <data name="ButtonMaximize" xml:space="preserve">
+    <value>Ekranı Kapla</value>
+  </data>
+  <data name="ButtonRestore" xml:space="preserve">
+    <value>Geri yüklemek</value>
   </data>
 </root>

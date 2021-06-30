@@ -12,6 +12,8 @@ namespace Param_RootNamespace.Core.Services
 
         void InitializeWithAadAndPersonalMsAccounts();
 
+        void InitializeWithPersonalMsAccount();
+
         void InitializeWithAadMultipleOrgs(bool integratedAuth = false);
 
         void InitializeWithAadSingleOrg(string tenant, bool integratedAuth = false);
@@ -26,7 +28,7 @@ namespace Param_RootNamespace.Core.Services
 
         Task LogoutAsync();
 
-        Task<string> GetAccessTokenAsync();
+        Task<string> GetAccessTokenForGraphAsync();
 
         Task<bool> AcquireTokenSilentAsync();
     }

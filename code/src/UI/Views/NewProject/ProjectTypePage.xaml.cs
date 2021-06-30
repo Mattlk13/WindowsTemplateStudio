@@ -3,8 +3,6 @@
 // See the LICENSE file in the project root for more information.
 
 using System.Windows.Controls;
-using System.Windows.Input;
-using Microsoft.Templates.UI.ViewModels.Common;
 using Microsoft.Templates.UI.ViewModels.NewProject;
 
 namespace Microsoft.Templates.UI.Views.NewProject
@@ -13,7 +11,7 @@ namespace Microsoft.Templates.UI.Views.NewProject
     {
         public ProjectTypePage()
         {
-            DataContext = MainViewModel.Instance.ProjectType;
+            DataContext = MainViewModel.Instance;
             InitializeComponent();
         }
     }

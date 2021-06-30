@@ -5,7 +5,7 @@ Namespace Services
 
     Public Delegate Sub ViewClosedHandler(viewControl As ViewLifetimeControl, e As EventArgs)
 
-    ' For instructions on using this service see https://github.com/Microsoft/WindowsTemplateStudio/blob/master/docs/features/multiple-views.md
+    ' For instructions on using this service see https://github.com/Microsoft/WindowsTemplateStudio/blob/release/docs/UWP/features/multiple-views.md
     ' More details about showing multiple views at https://docs.microsoft.com/windows/uwp/design/layout/show-multiple-views
     Public Class WindowManagerService
 
@@ -28,10 +28,13 @@ Namespace Services
 
         Public Property MainDispatcher As CoreDispatcher
 
-        Public Sub Initialize()
-            MainViewId = ApplicationView.GetForCurrentView().Id
-            MainDispatcher = Window.Current.Dispatcher
-        End Sub
+        Public Async Function InitializeAsync() As Task
+            Await CoreApplication.MainView.CoreWindow.Dispatcher.RunAsync(CoreDispatcherPriority.Normal,
+            Sub()
+                MainViewId = ApplicationView.GetForCurrentView().Id
+                MainDispatcher = Window.Current.Dispatcher
+            End Sub)
+        End Function
 
         ' Displays a view as a standalone
         ' You can use the resulting ViewLifeTileControl to interact with the new window.

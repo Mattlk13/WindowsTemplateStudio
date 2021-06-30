@@ -18,7 +18,7 @@ namespace Microsoft.Templates.UI.Controls
     /// </summary>
     public partial class CodeViewer : UserControl
     {
-        private bool _isInitialized;
+        private readonly bool _isInitialized;
 
         private string _currentHtml = string.Empty;
 
@@ -129,6 +129,11 @@ namespace Microsoft.Templates.UI.Controls
                 case ".json":
                     language = "json";
                     break;
+                case ".cpp":
+                case ".idl":
+                case ".h":
+                    language = "cpp";
+                    break;
             }
 
             return language;
@@ -152,9 +157,7 @@ namespace Microsoft.Templates.UI.Controls
 
         private static void OnItemChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {
-            var control = d as CodeViewer;
-            var item = control.Item as NewItemFileViewModel;
-            if (control != null && item != null)
+            if (d is CodeViewer control && control.Item is NewItemFileViewModel item)
             {
                 control.UpdateCodeView(item);
             }

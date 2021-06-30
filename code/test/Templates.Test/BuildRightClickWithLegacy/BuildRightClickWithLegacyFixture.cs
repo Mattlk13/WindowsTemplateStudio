@@ -7,95 +7,86 @@ using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.IO;
 using System.Linq;
-using System.Threading;
-
+using System.Threading.Tasks;
 using Microsoft.Templates.Core;
 using Microsoft.Templates.Core.Gen;
 using Microsoft.Templates.Core.Locations;
-using Microsoft.Templates.Fakes;
+using Microsoft.Templates.Fakes.GenShell;
 
-namespace Microsoft.Templates.Test
+namespace Microsoft.Templates.Test.BuildWithLegacy
 {
-    public sealed class BuildRightClickWithLegacyFixture : BaseGenAndBuildFixture, IDisposable
+    public abstract class BuildRightClickWithLegacyFixture : BaseGenAndBuildFixture, IDisposable
     {
-        private string testExecutionTimeStamp = DateTime.Now.FormatAsDateHoursMinutes();
+        private readonly string testExecutionTimeStamp = DateTime.Now.FormatAsDateHoursMinutes();
         public override string GetTestRunPath() => $"{Path.GetPathRoot(Environment.CurrentDirectory)}\\UIT\\LEG\\{testExecutionTimeStamp}\\";
 
-        public TemplatesSource Source => new LegacyTemplatesSourceV2(ProgrammingLanguages.CSharp);
-
-        public TemplatesSource VBSource => new LegacyTemplatesSourceV2(ProgrammingLanguages.VisualBasic);
+        public TemplatesSource Source => new LegacyTemplatesSourceV2(Platform, Language);
 
         public TemplatesSource LocalSource => new LocalTemplatesSource(null, "BldRClickLegacy");
 
-        private static bool syncExecuted;
+        public abstract  string Platform { get; }
+        public abstract string Language { get; }
 
-        public static IEnumerable<object[]> GetProjectTemplates()
+        private static Dictionary<string, bool> syncExecuted = new Dictionary<string, bool>();
+
+        public static IEnumerable<object[]> GetProjectTemplates(string platform, string language)
         {
             List<object[]> result = new List<object[]>();
 
-            foreach (var language in ProgrammingLanguages.GetAllLanguages())
+            Configuration.Current.CdnUrl = "https://wtsrepository.blob.core.windows.net/pro/";
+
+            InitializeTemplates(new LegacyTemplatesSourceV2(platform, language), platform, language);
+
+            var context = new UserSelectionContext(language, platform);
+
+            var projectTypes = GenContext.ToolBox.Repo.GetProjectTypes(context)
+                        .Where(m => !string.IsNullOrEmpty(m.Description))
+                        .Select(m => m.Name);
+
+            foreach (var projectType in projectTypes)
             {
-                Configuration.Current.CdnUrl = "https://wtsrepository.blob.core.windows.net/pro/";
+                context.ProjectType = projectType;
+                var targetFrameworks = GenContext.ToolBox.Repo.GetFrontEndFrameworks(context)
+                                            .Select(m => m.Name).ToList();
 
-                InitializeTemplates(new LegacyTemplatesSourceV2(ProgrammingLanguages.CSharp), language);
-
-                var projectTypes = GenContext.ToolBox.Repo.GetProjectTypes(Platforms.Uwp)
-                            .Where(m => !string.IsNullOrEmpty(m.Description))
-                            .Select(m => m.Name);
-
-                foreach (var projectType in projectTypes)
+                foreach (var framework in targetFrameworks)
                 {
-                    var targetFrameworks = GenContext.ToolBox.Repo.GetFrontEndFrameworks(Platforms.Uwp, projectType)
-                                                .Select(m => m.Name).ToList();
-
-                    foreach (var framework in targetFrameworks)
-                    {
-                        result.Add(new object[] { projectType, framework, Platforms.Uwp, language });
-                    }
+                    result.Add(new object[] { projectType, framework, platform, language });
                 }
-            }
+            }  
 
             return result;
         }
 
         [SuppressMessage(
-         "Usage",
-         "VSTHRD002:Synchronously waiting on tasks or awaiters may cause deadlocks",
-         Justification = "Required for unit testing.")]
-        private static void InitializeTemplates(TemplatesSource source, string language)
+ "Usage",
+ "VSTHRD002:Synchronously waiting on tasks or awaiters may cause deadlocks",
+ Justification = "Required for unit testing.")]
+        private static void InitializeTemplates(TemplatesSource source, string platform, string language)
         {
             Configuration.Current.CdnUrl = "https://wtsrepository.blob.core.windows.net/pro/";
 
-            source.LoadConfigAsync(default(CancellationToken)).Wait();
+            source.LoadConfigAsync(default).Wait();
             var version = new Version(source.Config.Latest.Version.Major, source.Config.Latest.Version.Minor);
 
-            GenContext.Bootstrap(source, new FakeGenShell(Platforms.Uwp, language), version, Platforms.Uwp, language);
-            if (!syncExecuted)
+            if (syncExecuted.ContainsKey(platform + language) && syncExecuted[platform + language] == true)
             {
-                GenContext.ToolBox.Repo.SynchronizeAsync(true, true).Wait();
-
-                syncExecuted = true;
+                return;
             }
+
+            GenContext.Bootstrap(source, new FakeGenShell(platform, language), version, platform, language);
+
+            GenContext.ToolBox.Repo.SynchronizeAsync(true, true).Wait();
+
+            syncExecuted.Add(platform + language, true);
+
         }
 
-        [SuppressMessage(
-         "Usage",
-         "VSTHRD002:Synchronously waiting on tasks or awaiters may cause deadlocks",
-         Justification = "Required for unit testing.")]
-        public void ChangeTemplatesSource(TemplatesSource source, string language, string platform)
-        {
-            GenContext.Bootstrap(source, new FakeGenShell(platform, language), new Version(GenContext.ToolBox.WizardVersion), platform, language);
-            GenContext.ToolBox.Repo.SynchronizeAsync(true, true).Wait();
-        }
 
-        [SuppressMessage(
-         "Usage",
-         "VSTHRD002:Synchronously waiting on tasks or awaiters may cause deadlocks",
-         Justification = "Required for unit testing.")]
-        public void ChangeToLocalTemplatesSource(TemplatesSource source, string language, string platform)
+        public async Task ChangeToLocalTemplatesSourceAsync()
         {
-            GenContext.Bootstrap(source, new FakeGenShell(platform, language), platform, language);
-            GenContext.ToolBox.Repo.SynchronizeAsync(true, true).Wait();
+            GenContext.Bootstrap(LocalSource, new FakeGenShell(Platform, Language), Platform, Language);
+            await GenContext.ToolBox.Repo.SynchronizeAsync(true, true);
         }
 
         // Renamed second parameter as this fixture needs the language while others don't
@@ -104,7 +95,7 @@ namespace Microsoft.Templates.Test
             GenContext.Current = contextProvider;
             Configuration.Current.Environment = "Pro";
             Configuration.Current.CdnUrl = "https://wtsrepository.blob.core.windows.net/pro/";
-            InitializeTemplates(Source, language);
+            InitializeTemplates(Source, Platform, Language);
         }
     }
 }

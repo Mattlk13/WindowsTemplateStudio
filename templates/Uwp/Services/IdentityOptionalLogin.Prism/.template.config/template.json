@@ -1,9 +1,11 @@
 ﻿{
+  "$schema": "http://json.schemastore.org/template",
   "author": "Microsoft",
   "classifications": [
     "Universal"
   ],
   "name": "Optional Login",
+  "shortName": "Optional Login",
   "groupIdentity": "wts.Service.IdentityOptionalLogin",
   "identity": "wts.Service.IdentityOptionalLogin.Prism",
   "description": "Make your application have an optional login and restricted features.",
@@ -13,7 +15,7 @@
     "wts.type": "service",
     "wts.projecttype": "all",
     "wts.frontendframework": "Prism",
-    "wts.licenses": "[Microsoft.Identity.Client](https://github.com/AzureAD/microsoft-authentication-library-for-dotnet/blob/master/LICENSE)|[Microsoft.Toolkit.Uwp](https://github.com/Microsoft/WindowsCommunityToolkit/blob/master/license.md)",
+    "wts.licenses": "[Microsoft.Identity.Client](https://github.com/AzureAD/microsoft-authentication-library-for-dotnet/blob/master/LICENSE)|[Microsoft.Toolkit.Uwp](https://github.com/windows-toolkit/WindowsCommunityToolkit/blob/main/License.md)",
     "wts.platform": "Uwp",
     "wts.version": "1.0.0",
     "wts.displayOrder": "2",
@@ -29,10 +31,10 @@
   "preferNameDirectory": true,
   "PrimaryOutputs": [
     {
-      "path": ".\\Helpers\\AuthenticationHelper.cs"
+      "path": "Helpers/AuthenticationHelper.cs"
     },
     {
-      "path": ".\\Helpers\\Restricted.cs"
+      "path": "Helpers/Restricted.cs"
     }
   ],
   "symbols": {
@@ -48,10 +50,10 @@
       "actionId": "0B814718-16A3-4F7F-89F1-69C0F9170EAD",
       "args": {
         "packageId" : "Microsoft.Toolkit.Uwp.UI.Controls",
-        "version" : "5.1.1",
+        "version" : "7.0.2",
         "projectPath": "Param_ProjectName.csproj"
       },
-      "continueOnError": "true"
+      "continueOnError": true
     }
   ]
 }

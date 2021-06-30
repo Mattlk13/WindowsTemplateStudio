@@ -7,6 +7,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text;
+using System.Text.RegularExpressions;
 using Xunit;
 
 namespace Microsoft.Templates.Test
@@ -15,6 +16,8 @@ namespace Microsoft.Templates.Test
     [Trait("Type", "CodeStyle")]
     [Trait("ExecutionSet", "Minimum")]
     [Trait("ExecutionSet", "TemplateValidation")]
+    [Trait("ExecutionSet", "_CIBuild")]
+    [Trait("ExecutionSet", "_Full")]
     public class CodeStyleEnforcementTests
     {
         // This is the relative path from where the test assembly will run from
@@ -23,7 +26,12 @@ namespace Microsoft.Templates.Test
         [Fact]
         public void EnsureCSharpCodeDoesNotUseThis()
         {
-            var result = CodeIsNotUsed("this.", ".cs");
+            var filesNeedsToUseThis = new List<string>()
+            {
+                "ContentGridViewDetailPage.xaml.cs",
+                @"WinUI\Pages\ContentGrid\Param_ProjectName\Views\wts.ItemNameDetailPage.xaml.cs"
+            };
+            var result = CodeIsNotUsed("this.", ".cs", filesNeedsToUseThis);
 
             Assert.True(result.Item1, result.Item2);
         }
@@ -97,6 +105,37 @@ namespace Microsoft.Templates.Test
         }
 
         [Fact]
+        public void EnsureCodeDoesNotUseInvalidTodoCommentIdentifier()
+        {
+            void EnsureWTSTODONotUsed(string fileExtension)
+            {
+                var result = CodeIsNotUsed("WTS TODO", fileExtension);
+
+                Assert.True(result.Item1, result.Item2);
+            }
+
+            EnsureWTSTODONotUsed("*.cs");
+            EnsureWTSTODONotUsed("*.vb");
+        }
+
+        [Fact]
+        public void EnsureCSharpCodeDoesNotUseLocalizedExceptionMessages()
+        {       
+            var result = CodeDoesNotMatchRegex("(throw).*(Exception\\().*(GetLocalized)", "*.cs");
+
+            Assert.True(result.Item1, result.Item2);
+
+        }
+
+        [Fact]
+        public void EnsureVisualBasicCodeDoesNotUseLocalizedExceptionMessages()
+        {
+            var result = CodeDoesNotMatchRegex("(Throw).*(Exception\\().*(GetLocalized)", "*.vb");
+
+            Assert.True(result.Item1, result.Item2);   
+        }
+
+        [Fact]
         public void EnsureVisualBasicCodeDoesNotIncludeCommonPortingIssues()
         {
             var foundErrors = new List<string>();
@@ -160,6 +199,8 @@ namespace Microsoft.Templates.Test
             CheckStringNotIncluded(" -= AddressOf"); // Use RemoveHandler instead
             CheckStringNotIncluded("Param_Setter("); // ParamSetter should be in square brackets
             CheckStringNotIncluded("CSharpImpl"); // Output by converter
+            CheckStringNotIncluded("//", exception: "App_postaction.xaml.vb"); // C# comment (exclusion is for URI in comments)
+            CheckStringNotIncluded("?.Invoke", exception: "DragDropService_postaction.vb"); //use RaiseEvent instead
 
             IfLineIncludes(" As Task", itMustAlsoInclude: " Async ", unlessItContains: new[] { " MustOverride ", "Function RunAsync(", "Function RunAsyncInternal(", " FireAndForget(", "OnPivotSelectedAsync", "OnPivotUnselectedAsync", "OnPivotActivatedAsync", "TaskCanceledException" });
 
@@ -236,15 +277,30 @@ namespace Microsoft.Templates.Test
             Assert.True(errorFiles.Count == 0, $"The following files don't end with a single NewLine{Environment.NewLine}{string.Join(Environment.NewLine, errorFiles)}");
         }
 
-        private Tuple<bool, string> CodeIsNotUsed(string textThatShouldNotBeInTheFile, string fileExtension)
+        private Tuple<bool, string> CodeIsNotUsed(string textThatShouldNotBeInTheFile, string fileExtension, IEnumerable<string> filesToExclude = null)
         {
-            foreach (var file in GetFiles(TemplatesRoot, fileExtension))
+            foreach (var file in GetFiles(TemplatesRoot, fileExtension).Where(f => filesToExclude == null || !filesToExclude.Any(fe => f.Contains(fe))))
             {
                 if (File.ReadAllText(file).Contains(textThatShouldNotBeInTheFile))
                 {
                     // Throw an assertion failure here and stop checking other files.
                     // We don't need to check every file if at least one fails as this should just be a final verification.
                     return new Tuple<bool, string>(false, $"The file '{file}' contains '{textThatShouldNotBeInTheFile}' but based on our style guidelines it shouldn't.");
+                }
+            }
+
+            return new Tuple<bool, string>(true, string.Empty);
+        }
+
+        private Tuple<bool, string> CodeDoesNotMatchRegex(string codeRegexThatShouldNotBeInTheFile, string fileExtension, IEnumerable<string> filesToExclude = null)
+        {
+            foreach (var file in GetFiles(TemplatesRoot, fileExtension).Where(f => filesToExclude == null || !filesToExclude.Any(fe => f.Contains(fe))))
+            {
+                if (Regex.IsMatch(File.ReadAllText(file),codeRegexThatShouldNotBeInTheFile))
+                {
+                    // Throw an assertion failure here and stop checking other files.
+                    // We don't need to check every file if at least one fails as this should just be a final verification.
+                    return new Tuple<bool, string>(false, $"The file '{file}' contains code that matches the regex '{codeRegexThatShouldNotBeInTheFile}' but based on our style guidelines it shouldn't.");
                 }
             }
 

@@ -5,27 +5,45 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Reflection;
 using Microsoft.Templates.Core;
 using Microsoft.Templates.Core.Diagnostics;
 using Microsoft.Templates.Core.Gen;
+using Microsoft.Templates.Core.Gen.Shell;
 using Microsoft.Templates.Core.Locations;
 using Microsoft.Templates.Core.PostActions.Catalog.Merge;
+using Microsoft.Templates.Core.Services;
 using Microsoft.Templates.UI.Launcher;
 using Microsoft.Templates.UI.Resources;
 using Microsoft.Templates.UI.Services;
 using Microsoft.Templates.UI.Threading;
-using Microsoft.Templates.Utilities.Services;
+using Microsoft.Templates.UI.VisualStudio.GenShell;
+using Microsoft.VisualStudio.Shell;
 using Microsoft.VisualStudio.TemplateWizard;
 using Microsoft.VisualStudio.Threading;
+
+#if !DEBUG
+// The following using directives are only required for the release configuration
+using System.Reflection;
+using Microsoft.Templates.Utilities.Services;
+#endif
 
 namespace Microsoft.Templates.UI.VisualStudio
 {
     public class RightClickActions : IContextProvider
     {
-        private static VsGenShell _shell;
+        private readonly IEnumerable<RightClickAvailability> _availableOptions = new List<RightClickAvailability>()
+        {
+            new RightClickAvailability(Platforms.Uwp, ProgrammingLanguages.CSharp) { TemplateTypes = new List<TemplateType>() { TemplateType.Page, TemplateType.Feature, TemplateType.Service, TemplateType.Testing } },
+            new RightClickAvailability(Platforms.Uwp, ProgrammingLanguages.VisualBasic) { TemplateTypes = new List<TemplateType>() { TemplateType.Page, TemplateType.Feature, TemplateType.Service, TemplateType.Testing } },
+            new RightClickAvailability(Platforms.Wpf, ProgrammingLanguages.CSharp) { TemplateTypes = new List<TemplateType>() { TemplateType.Page, TemplateType.Feature, TemplateType.Testing } },
+            new RightClickAvailability(Platforms.WinUI, ProgrammingLanguages.CSharp, AppModels.Desktop) { TemplateTypes = new List<TemplateType>() { TemplateType.Page, TemplateType.Feature } },
+        };
 
-        private GenerationService _generationService = GenerationService.Instance;
+        private readonly GenerationService _generationService = GenerationService.Instance;
+
+        private static IGenShell _shell;
+
+        private const string BlankProjectType = "Blank";
 
         public string ProjectName { get; private set; }
 
@@ -52,96 +70,111 @@ namespace Microsoft.Templates.UI.VisualStudio
 
         public void AddNewPage()
         {
-            if (!_shell.GetActiveProjectIsWts())
-            {
-                return;
-            }
+            ThreadHelper.ThrowIfNotOnUIThread();
 
             try
             {
                 SetContext();
-                var userSelection = WizardLauncher.Instance.StartAddTemplate(_shell.GetActiveProjectLanguage(), new VSStyleValuesProvider(), TemplateType.Page, WizardTypeEnum.AddPage);
+                var userSelection = WizardLauncher.Instance.StartAddTemplate(_shell.Project.GetActiveProjectLanguage(), new VSStyleValuesProvider(), TemplateType.Page, WizardTypeEnum.AddPage);
                 var statusBarMessage = string.Format(StringRes.StatusBarNewItemAddPageSuccess, userSelection.Pages[0].Name);
                 FinishGeneration(userSelection, statusBarMessage);
             }
             catch (WizardBackoutException)
             {
-                _shell.ShowStatusBarMessage(StringRes.StatusBarNewItemAddPageCancelled);
+                _shell.UI.ShowStatusBarMessage(StringRes.StatusBarNewItemAddPageCancelled);
             }
         }
 
         public void AddNewFeature()
         {
-            if (!_shell.GetActiveProjectIsWts())
-            {
-                return;
-            }
+            ThreadHelper.ThrowIfNotOnUIThread();
 
             try
             {
                 SetContext();
-                var userSelection = WizardLauncher.Instance.StartAddTemplate(_shell.GetActiveProjectLanguage(), new VSStyleValuesProvider(), TemplateType.Feature, WizardTypeEnum.AddFeature);
+                var userSelection = WizardLauncher.Instance.StartAddTemplate(_shell.Project.GetActiveProjectLanguage(), new VSStyleValuesProvider(), TemplateType.Feature, WizardTypeEnum.AddFeature);
                 var statusBarMessage = string.Format(StringRes.StatusBarNewItemAddFeatureSuccess, userSelection.Features[0].Name);
                 FinishGeneration(userSelection, statusBarMessage);
             }
             catch (WizardBackoutException)
             {
-                _shell.ShowStatusBarMessage(StringRes.StatusBarNewItemAddFeatureCancelled);
+                _shell.UI.ShowStatusBarMessage(StringRes.StatusBarNewItemAddFeatureCancelled);
             }
         }
 
         public void AddNewService()
         {
-            if (!_shell.GetActiveProjectIsWts())
-            {
-                return;
-            }
+            ThreadHelper.ThrowIfNotOnUIThread();
 
             try
             {
                 SetContext();
-                var userSelection = WizardLauncher.Instance.StartAddTemplate(_shell.GetActiveProjectLanguage(), new VSStyleValuesProvider(), TemplateType.Service, WizardTypeEnum.AddService);
+                var userSelection = WizardLauncher.Instance.StartAddTemplate(_shell.Project.GetActiveProjectLanguage(), new VSStyleValuesProvider(), TemplateType.Service, WizardTypeEnum.AddService);
                 var statusBarMessage = string.Format(StringRes.StatusBarNewItemAddServiceSuccess, userSelection.Services[0].Name);
                 FinishGeneration(userSelection, statusBarMessage);
             }
             catch (WizardBackoutException)
             {
-                _shell.ShowStatusBarMessage(StringRes.StatusBarNewItemAddServiceCancelled);
+                _shell.UI.ShowStatusBarMessage(StringRes.StatusBarNewItemAddServiceCancelled);
             }
         }
 
         public void AddNewTesting()
         {
-            if (!_shell.GetActiveProjectIsWts())
-            {
-                return;
-            }
+            ThreadHelper.ThrowIfNotOnUIThread();
 
             try
             {
                 SetContext();
-                var userSelection = WizardLauncher.Instance.StartAddTemplate(_shell.GetActiveProjectLanguage(), new VSStyleValuesProvider(), TemplateType.Testing, WizardTypeEnum.AddTesting);
+                var userSelection = WizardLauncher.Instance.StartAddTemplate(_shell.Project.GetActiveProjectLanguage(), new VSStyleValuesProvider(), TemplateType.Testing, WizardTypeEnum.AddTesting);
                 var statusBarMessage = string.Format(StringRes.StatusBarNewItemAddTestingSuccess, userSelection.Testing[0].Name);
                 FinishGeneration(userSelection, statusBarMessage);
             }
             catch (WizardBackoutException)
             {
-                _shell.ShowStatusBarMessage(StringRes.StatusBarNewItemAddTestingCancelled);
+                _shell.UI.ShowStatusBarMessage(StringRes.StatusBarNewItemAddTestingCancelled);
             }
+        }
+
+        public bool Visible(TemplateType templateType)
+        {
+            ThreadHelper.ThrowIfNotOnUIThread();
+            if (!_shell.Project.GetActiveProjectIsWts())
+            {
+                return false;
+            }
+
+            var projectConfigInfoService = new ProjectConfigInfoService(_shell);
+            var configInfo = projectConfigInfoService.ReadProjectConfiguration();
+
+            // Do not allow right click on WinUI Blank project type
+            if (configInfo?.Platform == Platforms.WinUI && configInfo?.ProjectType == BlankProjectType)
+            {
+                return false;
+            }
+
+            var rightClickOptions = _availableOptions.FirstOrDefault(o =>
+                                        o.Platform == configInfo?.Platform &&
+                                        o.Language == projectConfigInfoService.GetProgrammingLanguage() &&
+                                        o.AppModel == configInfo?.AppModel);
+
+            return rightClickOptions != null && rightClickOptions.TemplateTypes.Contains(templateType);
         }
 
         public bool Visible()
         {
-            return _shell.GetActiveProjectIsWts();
+            ThreadHelper.ThrowIfNotOnUIThread();
+            return _shell.Project.GetActiveProjectIsWts();
         }
 
         public bool Enabled()
         {
-            return !_shell.IsDebuggerEnabled() && !_shell.IsBuildInProgress();
+            return !_shell.VisualStudio.IsDebuggerEnabled() && !_shell.VisualStudio.IsBuildInProgress();
         }
 
         public void OpenTempFolder()
         {
+            ThreadHelper.ThrowIfNotOnUIThread();
             var tempPath = GetTempGenerationFolder();
             if (HasContent(tempPath))
             {
@@ -151,21 +184,22 @@ namespace Microsoft.Templates.UI.VisualStudio
 
         public bool TempFolderAvailable()
         {
+            ThreadHelper.ThrowIfNotOnUIThread();
             return HasContent(GetTempGenerationFolder());
         }
 
         private void SetContext()
         {
+            ThreadHelper.ThrowIfNotOnUIThread();
             EnsureGenContextInitialized();
-            if (GenContext.CurrentLanguage == _shell.GetActiveProjectLanguage())
+            var language = _shell.Project.GetActiveProjectLanguage();
+            if (GenContext.CurrentLanguage == language)
             {
-                var projectConfig = ProjectConfigInfo.ReadProjectConfiguration();
-                if (projectConfig.Platform == Platforms.Uwp)
-                {
-                    DestinationPath = GenContext.ToolBox.Shell.GetActiveProjectPath();
-                    ProjectName = GenContext.ToolBox.Shell.GetActiveProjectName();
-                    SafeProjectName = GenContext.ToolBox.Shell.GetActiveProjectNamespace();
-                }
+                GenContext.Current = this;
+
+                DestinationPath = GenContext.ToolBox.Shell.Project.GetActiveProjectPath();
+                ProjectName = GenContext.ToolBox.Shell.Project.GetActiveProjectName();
+                SafeProjectName = GenContext.ToolBox.Shell.Project.GetActiveProjectNamespace();
 
                 GenerationOutputPath = GenContext.GetTempGenerationPath(ProjectName);
                 ProjectInfo = new ProjectInfo();
@@ -173,56 +207,67 @@ namespace Microsoft.Templates.UI.VisualStudio
                 FailedMergePostActions = new List<FailedMergePostActionInfo>();
                 MergeFilesFromProject = new Dictionary<string, List<MergeInfo>>();
                 ProjectMetrics = new Dictionary<ProjectMetricsEnum, double>();
-
-                GenContext.Current = this;
             }
         }
 
-        private void FinishGeneration(UserSelection userSelection, string statusBarMessage)
+        protected void FinishGeneration(UserSelection userSelection, string statusBarMessage)
+        {
+            SafeThreading.JoinableTaskFactory.Run(
+            async () =>
+            {
+                await FinishGenerationAsync(userSelection, statusBarMessage);
+            },
+            JoinableTaskCreationOptions.LongRunning);
+        }
+
+        protected async System.Threading.Tasks.Task FinishGenerationAsync(UserSelection userSelection, string statusBarMessage)
         {
             if (userSelection is null)
             {
                 return;
             }
 
-            SafeThreading.JoinableTaskFactory.Run(
-            async () =>
-            {
-                await SafeThreading.JoinableTaskFactory.SwitchToMainThreadAsync();
-                _generationService.FinishGeneration(userSelection);
-                _shell.ShowStatusBarMessage(statusBarMessage);
-            },
-            JoinableTaskCreationOptions.LongRunning);
+            await SafeThreading.JoinableTaskFactory.SwitchToMainThreadAsync();
+            _generationService.FinishGeneration(userSelection);
+
+            // TODO: Change all async GensShell methods to public
+            await (_shell.UI as VsGenShellUI).ShowStatusBarMessageAsync(statusBarMessage);
         }
 
-        private void EnsureGenContextInitialized()
+        private bool EnsureGenContextInitialized()
         {
-            var projectLanguage = _shell.GetActiveProjectLanguage();
-            if (GenContext.CurrentLanguage != projectLanguage)
+            ThreadHelper.ThrowIfNotOnUIThread();
+            var projectLanguage = _shell.Project.GetActiveProjectLanguage();
+            var projectPlatform = ProjectMetadataService.GetProjectMetadata(_shell.Project.GetActiveProjectPath()).Platform;
+
+            if (!string.IsNullOrEmpty(projectLanguage) && !string.IsNullOrEmpty(projectPlatform))
             {
+                if (GenContext.CurrentLanguage != projectLanguage || GenContext.CurrentPlatform != projectPlatform)
+                {
 #if DEBUG
-                GenContext.Bootstrap(new LocalTemplatesSource(string.Empty), _shell, Platforms.Uwp, projectLanguage);
+                    GenContext.Bootstrap(new LocalTemplatesSource(string.Empty), _shell, projectPlatform, projectLanguage);
 #else
-                var mstxFilePath = Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location), "InstalledTemplates");
-                GenContext.Bootstrap(new RemoteTemplatesSource(Platforms.Uwp, projectLanguage, mstxFilePath, new DigitalSignatureService()), _shell,  Platforms.Uwp, _shell.GetActiveProjectLanguage());
+                    var mstxFilePath = Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location), "InstalledTemplates");
+                    GenContext.Bootstrap(new RemoteTemplatesSource(projectPlatform, projectLanguage, mstxFilePath, new DigitalSignatureService()), _shell, projectPlatform, projectLanguage);
 #endif
+                }
+
+                return true;
             }
 
-            if (GenContext.CurrentLanguage != projectLanguage)
-            {
-                GenContext.SetCurrentLanguage(projectLanguage);
-            }
+            return false;
         }
 
         private static string GetTempGenerationFolder()
         {
-            string projectGuid = _shell.GetVsProjectId().ToString();
+            ThreadHelper.ThrowIfNotOnUIThread();
+            string projectGuid = _shell.Project.GetProjectGuidByName(_shell.Project.GetActiveProjectName()).ToString();
             return Path.Combine(Path.GetTempPath(), Configuration.Current.TempGenerationFolderPath, projectGuid);
         }
 
         private static bool HasContent(string tempPath)
         {
-            return !string.IsNullOrEmpty(tempPath) && Directory.Exists(tempPath) && Directory.EnumerateDirectories(tempPath).Count() > 0;
+            return !string.IsNullOrEmpty(tempPath) && Directory.Exists(tempPath) && Directory.EnumerateDirectories(tempPath).Any();
         }
     }
 }

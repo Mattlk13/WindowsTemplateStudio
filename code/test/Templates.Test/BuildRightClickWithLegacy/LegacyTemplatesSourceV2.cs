@@ -10,14 +10,14 @@ using Microsoft.Templates.Core;
 using Microsoft.Templates.Core.Locations;
 using Microsoft.Templates.Utilities.Services;
 
-namespace Microsoft.Templates.Test
+namespace Microsoft.Templates.Test.BuildWithLegacy
 {
     public sealed class LegacyTemplatesSourceV2 : RemoteTemplatesSource
     {
         public override string Id => "TestLegacy" + GetAgentName();
 
-        public LegacyTemplatesSourceV2(string language)
-           : base(Platforms.Uwp, language, string.Empty, new DigitalSignatureService())
+        public LegacyTemplatesSourceV2(string platform, string language)
+           : base(platform, language, string.Empty, new DigitalSignatureService())
         {
         }
 

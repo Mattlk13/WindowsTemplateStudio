@@ -11,9 +11,9 @@ namespace Microsoft.Templates.UI.Services
 {
     public class GenerationService
     {
-        private static Lazy<GenerationService> _instance = new Lazy<GenerationService>(() => new GenerationService());
+        private readonly DialogService _dialogService = DialogService.Instance;
 
-        private DialogService _dialogService = DialogService.Instance;
+        private static readonly Lazy<GenerationService> _instance = new Lazy<GenerationService>(() => new GenerationService());
 
         public static GenerationService Instance => _instance.Value;
 
@@ -29,9 +29,9 @@ namespace Microsoft.Templates.UI.Services
             }
             catch (Exception ex)
             {
-                GenContext.ToolBox.Shell.CloseSolution();
                 _dialogService.ShowError(ex, userSelection.ToString());
-                GenContext.ToolBox.Shell.CancelWizard(false);
+                GenContext.ToolBox.Shell.Solution.CloseSolution();
+                GenContext.ToolBox.Shell.UI.CancelWizard(false);
             }
         }
 
@@ -44,7 +44,7 @@ namespace Microsoft.Templates.UI.Services
             catch (Exception ex)
             {
                 _dialogService.ShowError(ex, userSelection.ToString());
-                GenContext.ToolBox.Shell.CancelWizard(false);
+                GenContext.ToolBox.Shell.UI.CancelWizard(false);
             }
         }
 
@@ -57,7 +57,7 @@ namespace Microsoft.Templates.UI.Services
             catch (Exception ex)
             {
                 _dialogService.ShowError(ex, userSelection.ToString());
-                GenContext.ToolBox.Shell.CancelWizard(false);
+                GenContext.ToolBox.Shell.UI.CancelWizard(false);
             }
         }
     }

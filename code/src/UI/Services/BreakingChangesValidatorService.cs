@@ -15,7 +15,7 @@ namespace Microsoft.Templates.UI.Services
     public static class BreakingChangesValidatorService
     {
         // add breaking changes validators
-        private static List<IBreakingChangeValidator> _validators = new List<IBreakingChangeValidator>
+        private static readonly List<IBreakingChangeValidator> _validators = new List<IBreakingChangeValidator>
         {
             new HasHamburgerMenuValidator(),
             new HasOldMvvmLightLocatorValidator(),
@@ -26,7 +26,7 @@ namespace Microsoft.Templates.UI.Services
 
         public static ValidationResult Validate()
         {
-            var projectMetadata = ProjectMetadataService.GetProjectMetadata();
+            var projectMetadata = ProjectMetadataService.GetProjectMetadata(GenContext.ToolBox.Shell.Project.GetActiveProjectPath());
             var templatesVersion = GenContext.ToolBox.TemplatesVersion.ToVersion();
             var projectVersion = projectMetadata.TemplatesVersion.ToVersion();
 

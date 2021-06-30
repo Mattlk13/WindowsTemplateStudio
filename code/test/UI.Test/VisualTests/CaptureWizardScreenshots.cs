@@ -4,7 +4,6 @@
 
 using System;
 using System.IO;
-using Microsoft.Templates.Core;
 using Xunit;
 
 namespace Microsoft.UI.Test.VisualTests
@@ -23,7 +22,7 @@ namespace Microsoft.UI.Test.VisualTests
 
             foreach (var culture in AllVsCultures)
             {
-                foreach (var progLang in ProgrammingLanguages.GetAllLanguages())
+                foreach (var progLang in ProgrammingLanguageVBAndCharp)
                 {
                     ForEachPageInProjectWizard(culture, progLang, includeDetails: false, action: pageName =>
                     {
@@ -43,7 +42,7 @@ namespace Microsoft.UI.Test.VisualTests
 
             foreach (var culture in AllVsCultures)
             {
-                foreach (var progLang in ProgrammingLanguages.GetAllLanguages())
+                foreach (var progLang in ProgrammingLanguageVBAndCharp)
                 {
                     ForEachStepInAddPageWizard(culture, progLang, includeDetails: false, action: pageName =>
                     {
@@ -63,7 +62,7 @@ namespace Microsoft.UI.Test.VisualTests
 
             foreach (var culture in AllVsCultures)
             {
-                foreach (var progLang in ProgrammingLanguages.GetAllLanguages())
+                foreach (var progLang in ProgrammingLanguageVBAndCharp)
                 {
                     ForEachStepInAddFeatureWizard(culture, progLang, includeDetails: false, action: pageName =>
                     {

@@ -31,7 +31,7 @@ namespace Localization
             Console.WriteLine("\nGenerate catalog project types localization files");
             generator.GenerateCatalogProjectTypes();
 
-            Console.WriteLine("\nEGenerate catalog frameworks localization files");
+            Console.WriteLine("\nGenerate catalog frameworks localization files");
             generator.GenerateCatalogFramework();
 
             Console.WriteLine("\nGenerate pages localization files");
@@ -76,6 +76,9 @@ namespace Localization
 
                 Console.WriteLine("Extract project templates");
                 extractor.ExtractProjectTemplates();
+
+                Console.WriteLine("Extract item templates");
+                extractor.ExtractItemTemplates();
 
                 Console.WriteLine("Extract command templates");
                 extractor.ExtractCommandTemplates();

@@ -117,12 +117,137 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
+  <data name="AccessibilityEditPageItem" xml:space="preserve">
+    <value>ページ名</value>
+    <comment>Edit page label to accessibility</comment>
+  </data>
+  <data name="AccessibilityProjectTypesList" xml:space="preserve">
+    <value>プロジェクトタイプ</value>
+    <comment>Project types list label to accessibility</comment>
+  </data>
+  <data name="AccessibilityDesignPatternList" xml:space="preserve">
+    <value>Design patterns</value>
+    <comment>Design pattern list to accessibility</comment>
+  </data>
+  <data name="NotificationRemoveError_ReadOnly" xml:space="preserve">
+    <value>**{0}** は選択したプロジェクトの種類に必要なため、削除できません。</value>
+    <comment>Remove error message: Template is read only</comment>
+  </data>
+  <data name="InfoDialogRequiredWorkloadNotFoundMessage" xml:space="preserve">
+    <value>{0} プロジェクトを作成するには、次の負荷をインストールする必要 {1}があります。</value>
+  </data>
+  <data name="NotificationValidationError_ProjectNameAndPathDoNotMatch" xml:space="preserve">
+    <value>プロジェクト名がプロジェクト フォルダ名と一致しません。正しい生成を確実にするために調整してください。</value>
+  </data>
+  <data name="NotificationMissingVersions" xml:space="preserve">
+    <value>次のバージョンが見つかりません、 インストールして Visual Studio を再起動してください。{0}</value>
+  </data>
+  <data name="TemplateDetailsRequiredDotNetVersion" xml:space="preserve">
+    <value>.NET コアの最小バージョン:</value>
+  </data>
+  <data name="ErrorInvalidRequirementType" xml:space="preserve">
+    <value>無効な要件の種類 {0}</value>
+  </data>
+  <data name="NewProjectTitleUWP" xml:space="preserve">
+    <value>新しい Windows ユニバーサル プラットフォーム アプリ</value>
+    <comment>Wizard title on WizardShell page for UWP projects</comment>
+  </data>
+  <data name="NewProjectTitleWPF" xml:space="preserve">
+    <value>新しい WPF アプリ</value>
+    <comment>Wizard title on WizardShell page for WPF projects</comment>
+  </data>
+  <data name="TemplateGroup_Packaging" xml:space="preserve">
+    <value>パッケージ</value>
+    <comment>Group header for Packaging templates</comment>
+  </data>
+  <data name="ValidatorHasHamburgerMenuLink" xml:space="preserve">
+    <value>{0}UWP/projectTypes/updatetonavigationview.md</value>
+    <comment>Has hamburger menu validation link documentation</comment>
+  </data>
+  <data name="ValidatorHasPivotLink" xml:space="preserve">
+    <value>{0}UWP/projectTypes/updatetohorizontalnavview.md</value>
+    <comment>Has pivot validation link documentation</comment>
+  </data>
+  <data name="ValidatorHasOldNavigationViewLink" xml:space="preserve">
+    <value>{0}UWP/projectTypes/updatetowinuinavigationview.md</value>
+    <comment>Has old navigation view validation link documentation</comment>
+  </data>
+  <data name="ValidatorHasOldMvvmLightLocatorLink" xml:space="preserve">
+    <value>{0}UWP/frameworks/updatemvvmlightlocator.md</value>
+    <comment>Has old MvvmLight Locator link documentation</comment>
+  </data>
+  <data name="TemplateDetailsRequirements" xml:space="preserve">
+    <value>要件:</value>
+  </data>
+  <data name="NotificationAdditionError_Exclusion" xml:space="preserve">
+    <value>次のテンプレートに対応していないため、**{0}** を追加することはできません。{1}.</value>
+    <comment>Notification message for can not add template string format. {0}:Template name, {1}:Excluded template name. Character * add bold to word</comment>
+  </data>
+  <data name="TemplateDetailsExclusions" xml:space="preserve">
+    <value>除外:</value>
+  </data>
+  <data name="NotificationValidationError_Regex" xml:space="preserve">
+    <value>RegEx の検証 {0} が失敗しました。</value>
+    <comment>Validation error message: RegEx</comment>
+  </data>
+  <data name="ErrorAddingItemsToProject" xml:space="preserve">
+    <value>プロジェクト {0} に項目を追加する際のエラーです</value>
+    <comment>Error message for adding items to project</comment>
+  </data>
+  <data name="ErrorAddingProject" xml:space="preserve">
+    <value>プロジェクト {0} を追加する際のエラーです</value>
+    <comment>Error message for adding projects</comment>
+  </data>
+  <data name="ErrorAddingReferencesBetweenProjects" xml:space="preserve">
+    <value>プロジェクト間に参照を追加する際のエラーです</value>
+    <comment>Error message for adding items to project</comment>
+  </data>
+  <data name="ErrorAddingSdksToProject" xml:space="preserve">
+    <value>プロジェクト {0} に SDK を追加する際のエラーです。</value>
+    <comment>Error message for adding items to project</comment>
+  </data>
+  <data name="TemplateDetailsRequiredSdks" xml:space="preserve">
+    <value>必要な Windows SDK:</value>
+  </data>
+  <data name="WorkloadDisplayNameManagedDesktop" xml:space="preserve">
+    <value>.NET デスクトップ開発</value>
+  </data>
+  <data name="WorkloadDisplayNameMsixPackaging" xml:space="preserve">
+    <value>MSIX パッケージ作成ツール</value>
+  </data>
+  <data name="WorkloadDisplayNameNetWeb" xml:space="preserve">
+    <value>ASP.NET および Web 開発</value>
+  </data>
+  <data name="WorkloadDisplayNameUniversal" xml:space="preserve">
+    <value>ユニバーサル Windows プラットフォーム開発</value>
+  </data>
+  <data name="InfoDialogInvalidVersionTitle" xml:space="preserve">
+    <value>上位バージョンが必要です</value>
+  </data>
+  <data name="InfoDialogMissingWorkloadTitle" xml:space="preserve">
+    <value>ワークロードがありません</value>
+  </data>
+  <data name="InfoDialogMoreInfoLinkText" xml:space="preserve">
+    <value>詳細</value>
+  </data>
+  <data name="UWP" xml:space="preserve">
+    <value>UWP</value>
+  </data>
+  <data name="WPF" xml:space="preserve">
+    <value>WPF (.NET Core)</value>
+  </data>
+  <data name="TemplateDetailsRequiredVSWorkloads" xml:space="preserve">
+    <value>必要な Visual Studio ワークロード / コンポーネント:</value>
+  </data>
+  <data name="TemplateDetailsInfoUnavailableDueToMissingVSWorkload" xml:space="preserve">
+    <value>不足している Visual Studio ワークロード / コンポーネントがあるため、この項目は現在使用できません。</value>
+  </data>
   <data name="AddServiceTitle" xml:space="preserve">
-    <value>サービスの追加</value>
+    <value>サービスを追加する</value>
     <comment>AddService title on AddServicePage</comment>
   </data>
   <data name="AddTestingTitle" xml:space="preserve">
-    <value>テストの追加</value>
+    <value>テストを追加する</value>
     <comment>AddTesting title on AddTestingPage</comment>
   </data>
   <data name="NewItemHasNoChangesService" xml:space="preserve">
@@ -166,7 +291,7 @@
     <comment>Testing list header on project details</comment>
   </data>
   <data name="ProjectDetailsProjectTypeResetDescription" xml:space="preserve">
-    <value>プロジェクトの種類の選択を変更しました。選択したテンプレートは失われます。続行しますか?</value>
+    <value>プロジェクトの種類の選択が変更されました。選択したテンプレートは失われます。続行しますか?</value>
     <comment>Project type changed message</comment>
   </data>
   <data name="StatusBarNewItemAddServiceCancelled" xml:space="preserve">
@@ -174,15 +299,15 @@
     <comment>Status bar message for Add new service cancelled</comment>
   </data>
   <data name="StatusBarNewItemAddServiceSuccess" xml:space="preserve">
-    <value>サービス {0} が正常に追加されました</value>
+    <value>サービス {0} が追加されました</value>
     <comment>Status bar message for Service successfully added, {0}: Service name</comment>
   </data>
   <data name="StatusBarNewItemAddTestingCancelled" xml:space="preserve">
-    <value>新しいテスト プロジェクトの追加がキャンセルされました</value>
+    <value>新しいテスト プロジェクトがキャンセルされました</value>
     <comment>Status bar message for Add new testing project cancelled</comment>
   </data>
   <data name="StatusBarNewItemAddTestingSuccess" xml:space="preserve">
-    <value>テスト プロジェクト {0} が正常に追加されました</value>
+    <value>テスト プロジェクト {0} が追加されました</value>
     <comment>Status bar message for testing project successfully added, {0}: Testing project name</comment>
   </data>
   <data name="TemplateGroup_Data" xml:space="preserve">
@@ -200,6 +325,17 @@
   <data name="NewItemTitleTesting" xml:space="preserve">
     <value>新しいテスト プロジェクト</value>
     <comment>New item: new testing project title</comment>
+  </data>
+  <data name="NotificationAdditionError_Requirement" xml:space="preserve">
+    <value>次のいずれかのテンプレートを最初に追加する必要があるため、**{0}** を追加できません。{1}</value>
+    <comment>Notification message for can not add template string format. {0}:Template name, {1}:Required template name. Character * add bold to word</comment>
+  </data>
+  <data name="NotificationRemoveError_Requirement" xml:space="preserve">
+    <value>**{0}** は次の場合に必要なため、削除できません。{1}</value>
+    <comment>Notification message for can not remove template string format. {0}:Template name, {1}:Required for template name. Character * add bold to word</comment>
+  </data>
+  <data name="SeparatorOr" xml:space="preserve">
+    <value>または</value>
   </data>
   <data name="AddFeaturesTitle" xml:space="preserve">
     <value>機能の追加</value>
@@ -356,10 +492,6 @@
   <data name="NewItemTitlePage" xml:space="preserve">
     <value>新しいページ</value>
     <comment>New item: new page title</comment>
-  </data>
-  <data name="NewProjectTitle" xml:space="preserve">
-    <value>新しい Windows ユニバーサル プラットフォーム アプリ</value>
-    <comment>Wizard title on WizardShell page</comment>
   </data>
   <data name="NotificationRemoveError_Dependency" xml:space="preserve">
     <value>これらのテンプレートが依存しているため、**{0}** を削除できません。{1}</value>
@@ -533,10 +665,6 @@
     <value>プロジェクト {0} が見つかりません</value>
     <comment>{0}: projectPath</comment>
   </data>
-  <data name="ErrorUnableAddFilesAndProjects" xml:space="preserve">
-    <value>ファイルとプロジェクトを追加できません。</value>
-    <comment>Error message for unable to add files and projects</comment>
-  </data>
   <data name="ErrorVsGenShellCollapseSolutionItemsMessage" xml:space="preserve">
     <value>ソリューション ツリーを折りたたむ際のエラーです。例: </value>
     <comment>Error message for VS GenShell collapse solution Items</comment>
@@ -585,17 +713,9 @@
     <value>通知パネル</value>
     <comment> Notification panel label to accessibility</comment>
   </data>
-  <data name="AccessibilityEditPageItem" xml:space="preserve">
-    <value>ページの編集</value>
-    <comment>Edit page label to accessibility</comment>
-  </data>
   <data name="AccessibilityNavigationMenu" xml:space="preserve">
     <value>ナビゲーション メニュー</value>
     <comment>Navigation menu label</comment>
-  </data>
-  <data name="AccessibilityProjectTypesList" xml:space="preserve">
-    <value>プロジェクトの種類のリスト</value>
-    <comment>Project types list label to accessibility</comment>
   </data>
   <data name="AccessibilitySequentialFlowControl" xml:space="preserve">
     <value>シーケンシャル フロー コントロール</value>
@@ -604,10 +724,6 @@
   <data name="AccessibilityUserSelectionPageList" xml:space="preserve">
     <value>ユーザー選択ページ</value>
     <comment>User selection page list to accessibility</comment>
-  </data>
-  <data name="AccessibilityDesignPatternList" xml:space="preserve">
-    <value>Design pattern リスト</value>
-    <comment>Design pattern list to accessibility</comment>
   </data>
   <data name="AccessibilityTemplatesList" xml:space="preserve">
     <value>テンプレート リスト</value>
@@ -668,25 +784,13 @@
     <value>コンテンツがありません。</value>
     <comment>Message in no content panel</comment>
   </data>
-  <data name="ValidatorHasHamburgerMenuLink" xml:space="preserve">
-    <value>{0}projectTypes/updatetonavigationview.md</value>
-    <comment>Has hamburger menu validation link documentation</comment>
-  </data>
   <data name="ValidatorHasHamburgerMenuLinkMessage" xml:space="preserve">
     <value>更新するには、ドキュメントをご覧ください。</value>
     <comment>Has hamburger menu validation link documentation message</comment>
   </data>
-  <data name="ValidatorHasPivotLink" xml:space="preserve">
-    <value>{0}projectTypes/updatetohorizontalnavview.md</value>
-    <comment>Has pivot validation link documentation</comment>
-  </data>
   <data name="ValidatorHasPivotLinkMessage" xml:space="preserve">
     <value>更新するには、ドキュメントをご覧ください。</value>
     <comment>Has pivot validation link documentation message</comment>
-  </data>
-  <data name="ValidatorHasOldNavigationViewLink" xml:space="preserve">
-    <value>{0}projectTypes/updatetowinuinavigationview.md</value>
-    <comment>Has old navigation view validation link documentation</comment>
   </data>
   <data name="ValidatorHasOldNavigationViewLinkMessage" xml:space="preserve">
     <value>更新するには、ドキュメントをご覧ください。</value>
@@ -715,10 +819,6 @@
   <data name="ValidatorHasOldMvvmLightLocatorMessage" xml:space="preserve">
     <value>MVVMLight ViewModelLocator の実装が変更され、MVVMLight で MultiView がサポートされるようになりました。</value>
     <comment>Has old MvvmLight Locator error message</comment>
-  </data>
-  <data name="ValidatorHasOldMvvmLightLocatorLink" xml:space="preserve">
-    <value>{0}frameworks/updatemvvmlightlocator.md</value>
-    <comment>Has old MvvmLight Locator link documentation</comment>
   </data>
   <data name="ValidatorHasOldMvvmLightLocatorLinkMessage" xml:space="preserve">
     <value>更新するには、ドキュメントをご覧ください。</value>
@@ -763,13 +863,9 @@
     <value>Windows Template Studio により、コア プロジェクトを追加します。</value>
     <comment>Has no core project validation error message</comment>
   </data>
-  <data name="NotificationRemoveError_ReadOnly" xml:space="preserve">
-    <value>**{0}** は読み取り専用であるため、削除できません。</value>
-    <comment>Remove error message: Template is read only</comment>
-  </data>
   <data name="TemplateDetailsLayout" xml:space="preserve">
-    <value>レイアウト:</value>
-    <comment>Template details: Layout</comment>
+    <value>含む :</value>
+    <comment>Template details: Includes</comment>
   </data>
   <data name="TemplateDetailsFrameworks" xml:space="preserve">
     <value>Framework:</value>
@@ -777,7 +873,7 @@
   </data>
   <data name="TemplateDetailsLayoutOptional" xml:space="preserve">
     <value>{0} (オプション)</value>
-    <comment>The layout is optional</comment>
+    <comment>The include is optional</comment>
   </data>
   <data name="ProjectDetailsAboutSectionIssuesLink" xml:space="preserve">
     <value>問題の報告</value>
@@ -797,5 +893,35 @@
   <data name="ValidatorHasActivationServiceBeforeIdentityLinkMessage" xml:space="preserve">
     <value>更新するには、ドキュメントをご覧ください。</value>
     <comment>Has ActivationService before Identity link documentation message</comment>
+  </data>
+  <data name="NewProjectTitleWinUIDesktop" xml:space="preserve">
+    <value>新しい WinUI 3 デスクトップ アプリ</value>
+  </data>
+  <data name="NewProjectTitleWinUIUWP" xml:space="preserve">
+    <value>新しい WinUI 3 UWP アプリ</value>
+  </data>
+  <data name="WinUI" xml:space="preserve">
+    <value>Windows UI</value>
+  </data>
+  <data name="DeprecatedMessage" xml:space="preserve">
+    <value>廃止</value>
+    <comment>Text used to indicate a deprecated option in the wizard</comment>
+  </data>
+  <data name="ErrorUnableToOpenProjectOverview" xml:space="preserve">
+    <value>プロジェクトの概要を開けることができませんでした。</value>
+    <comment>Error message for unable to open project overview dialog</comment>
+  </data>
+  <data name="ProjectConfigurationSelectAppModel" xml:space="preserve">
+    <value>アプリモデルの選択</value>
+  </data>
+  <data name="InfoDialogInvalidVSVersion" xml:space="preserve">
+    <value>プロジェクト{0}作成するには、Visual Studio 2019 バージョン {1}以上が必要です。</value>
+    <comment>Error message for Invalid VS Version</comment>
+  </data>
+  <data name="ButtonMaximize" xml:space="preserve">
+    <value>最大化する</value>
+  </data>
+  <data name="ButtonRestore" xml:space="preserve">
+    <value>戻す</value>
   </data>
 </root>

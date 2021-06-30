@@ -1,118 +1,205 @@
-# Telemetry for Windows Template Studio - 2019.08
+# Telemetry for Windows Template Studio - 2021.05
 
 As new features and pages roll out, percentages  will adjust.
 
-## Project Type
+### Category
+
+|Type|Percentage|
+|:---|:---:|
+|Uwp|65.4%|
+|Wpf|33.3%|
+
+### Project Generation by category
+
+<details>
+<summary>Uwp Project Generation</summary>
+
+### Project Type
 
 |Project|Percentage|
 |:---|:---:|
-|Navigation View|62%|
-|Blank|16.9%|
-|Horizontal Navigation View|12.3%|
-|MenuBar|8.8%|
-|Tabbed / Pivot|0%|
+|Navigation View|69.3%|
+|Blank|13.8%|
+|Horizontal Navigation View|10.1%|
+|MenuBar|6.8%|
 
-## Framework
+### Framework
 
 |Framework Type|Percentage|
 |:---|:---:|
-|CodeBehind|54.2%|
-|MVVM Basic|17.3%|
-|MVVM Light|17.2%|
-|Prism|9.4%|
-|Caliburn.Micro|1.9%|
+|MVVMToolkit|48.8%|
+|CodeBehind|31.6%|
+|Prism|8.2%|
+|MVVM Basic|5.6%|
+|Caliburn.Micro|3%|
+|MVVM Light|2.8%|
 
-## Pages
+### Pages
 
 |Pages|Percentage|
 |:---|:---:|
-|Blank|35.6%|
-|Settings|14.8%|
-|Master/Detail|8%|
-|DataGrid|5.5%|
-|Web View|5%|
-|Content Grid|4.7%|
-|Chart|4.1%|
-|TreeView|3.7%|
-|Tabbed|3.7%|
-|Telerik Data Grid|3.2%|
-|Map|3%|
-|Media Player|2.3%|
-|ImageGallery|2.3%|
-|Camera|1.4%|
+|Blank|32.2%|
+|Settings|13.7%|
+|ListDetail|8.3%|
+|DataGrid|6.1%|
+|Content Grid|5.2%|
+|Web View|4.9%|
+|TabView|3.4%|
+|TreeView|3.3%|
+|Chart|3.1%|
+|Tabbed / Pivot|3%|
+|ImageGallery|2.9%|
+|MediaPlayer|2.8%|
+|Two Pane View|2.6%|
+|Map|2.3%|
+|Telerik Data Grid|1.9%|
+|Camera|1.5%|
 |Ink Draw|1.1%|
+|Ink Smart Canvas|1%|
 |Ink Draw Picture|0.9%|
-|Ink Smart Canvas|0.9%|
-|Grid|0%|
+|Media Player|0%|
 
-## Features
+### Features
 
 |Features|Percentage|
 |:---|:---:|
-|Settings Storage|22.4%|
-|Theme Selection|21%|
-|App Config|9.4%|
-|Toast Notifications|6.4%|
-|Multiple views|6.3%|
-|Background Task|4.7%|
-|First Run Prompt|3.5%|
-|Suspend and Resume|3.4%|
-|What's New Prompt|2.8%|
-|Drag & Drop|2.8%|
-|Live Tile|2.7%|
-|Deep Linking|2.6%|
-|VS App Center Analytics|2.3%|
-|User Activity|1.9%|
-|Feedback Hub Link|1.7%|
-|Web to App link|1.4%|
-|Share Source|1.1%|
-|Share Target|1%|
-|Dev Center Notifications|0.8%|
-|3D App Launcher|0.7%|
+|Settings Storage|24.5%|
+|Theme Selection|23%|
+|App Config|8.3%|
+|Toast Notifications|6.1%|
+|Multiple views|4.9%|
+|Drag & Drop|3.4%|
+|Background Task|3.3%|
+|First Run Prompt|3.2%|
+|What's New Prompt|2.6%|
+|Deep Linking|2.5%|
+|Suspend and Resume|2.1%|
+|Command Line Launch|2%|
+|Live Tile|2%|
+|Multi-Instance|1.8%|
+|User Activity|1.8%|
+|VS App Center Analytics|1.6%|
+|Share Source|1.3%|
+|Web to App link|1.1%|
+|Feedback Hub Link|1.1%|
+|Multi-Instance Advanced|0.9%|
+|Share Target|0.9%|
 |Azure Notifications|0.7%|
-|Sample Data|0.2%|
-|Optional Login|0%|
-|Forced Login|0%|
-|Test Core library with MSTest|0%|
-|Test App with MSTest|0%|
+|Dev Center Notifications|0.6%|
+|3D App Launcher|0.4%|
 
-## Services
+### Services
 
 |Services|Percentage|
 |:---|:---:|
-|Sample Data|44.7%|
-|SQL Server Data|13.8%|
-|HTTP Data Service|13.3%|
-|XAML Styler Config|9.4%|
-|Forced Login|7.5%|
-|Optional Login|6.9%|
-|Web API|4.4%|
+|Sample Data|49.6%|
+|HTTP Data Service|13.7%|
+|SQL Server Data|10.5%|
+|XAML Styler Config|8.8%|
+|Optional Login|5.8%|
+|Forced Login|5.2%|
+|Web API|5%|
+|Secured Web API|1.5%|
 
-## Testing
+### Testing
 
 |Testing|Percentage|
 |:---|:---:|
-|Test App with MSTest|35.6%|
-|Test App with xUnit|18.8%|
-|Win App Driver|12.9%|
-|Test Core library with MSTest|12.7%|
-|Test Core library with xUnit|10.6%|
-|Test Core library with NUnit|9.5%|
+|Test App with xUnit|29.3%|
+|Test App with MSTest|27.1%|
+|Test Core library with xUnit|18.8%|
+|Win App Driver|9.4%|
+|Test Core library with MSTest|8.3%|
+|Test Core library with NUnit|7.2%|
 
-## Windows Template Studio entry point
+
+</details>
+
+<details>
+<summary>Wpf Project Generation</summary>
+
+### Project Type
+
+|Project|Percentage|
+|:---|:---:|
+|Navigation View|65.3%|
+|Ribbon|12.2%|
+|MenuBar|11.3%|
+|Blank|11.1%|
+
+### Framework
+
+|Framework Type|Percentage|
+|:---|:---:|
+|MVVMToolkit|55.1%|
+|CodeBehind|19.8%|
+|Prism|15.3%|
+|MVVM Basic|5.6%|
+|MVVM Light|4.2%|
+
+### Pages
+
+|Pages|Percentage|
+|:---|:---:|
+|Blank|41.1%|
+|Settings|17.7%|
+|Data Grid|12.4%|
+|ListDetail|12.3%|
+|Content Grid|9.7%|
+|Web View|4.5%|
+|XAML Island|2.2%|
+
+### Features
+
+|Features|Percentage|
+|:---|:---:|
+|Persist And Restore|18%|
+|Theme Selection|17.1%|
+|System Service|15.8%|
+|Application Info Service|15.5%|
+|Sample Data|14.2%|
+|Multiple views|7.9%|
+|Toast Notifications|5.7%|
+|MSIX Packaging|3.9%|
+|XAML Island UWP App|1.9%|
+
+### Services
+
+|Services|Percentage|
+|:---|:---:|
+|Optional Login|51.8%|
+|Forced Login|48.2%|
+
+### Testing
+
+|Testing|Percentage|
+|:---|:---:|
+|Test App with xUnit|23.3%|
+|Test App with MSTest|22.7%|
+|Test Core library with xUnit|14.2%|
+|Test App with NUnit|13.3%|
+|Win App Driver|10.3%|
+|Test Core library with MSTest|8.2%|
+|Test Core library with NUnit|8.2%|
+
+
+</details>
+
+
+
+### Windows Template Studio entry point
 
 |Entry point|Percentage|
 |:---|:---:|
-|New Project|80.8%|
-|Add Page|12.5%|
-|Add Feature|3.7%|
-|Add Service|2.5%|
-|Add Testing|0.6%|
+|New Project|85.5%|
+|Add Page|10.2%|
+|Add Feature|2.6%|
+|Add Service|1.4%|
+|Add Testing|0.3%|
 
-## Programming languages
+### Programming languages
 
 |Languages|Percentage|
 |:---|:---:|
-|C#|90.1%|
-|VisualBasic|9.9%|
-
+|C#|95.7%|
+|VisualBasic|4.2%|

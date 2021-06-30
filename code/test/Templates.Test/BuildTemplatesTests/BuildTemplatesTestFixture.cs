@@ -10,7 +10,8 @@ using System.Linq;
 using Microsoft.Templates.Core;
 using Microsoft.Templates.Core.Gen;
 using Microsoft.Templates.Core.Locations;
-using Microsoft.Templates.Fakes;
+using Microsoft.Templates.Fakes.GenShell;
+using Microsoft.Templates.UI;
 
 namespace Microsoft.Templates.Test
 {
@@ -55,34 +56,72 @@ namespace Microsoft.Templates.Test
                 {
                     SetCurrentPlatform(platform);
 
-                    var projectTypes = GenContext.ToolBox.Repo.GetProjectTypes(platform)
-                                .Where(m => !string.IsNullOrEmpty(m.Description))
-                                .Select(m => m.Name);
-
-                    foreach (var projectType in projectTypes)
+                    if (platform == Platforms.WinUI)
                     {
-
-                        var targetFrameworks = GenContext.ToolBox.Repo.GetFrontEndFrameworks(platform, projectType)
-                                                    .Where(m => m.Name == frameworkFilter)
-                                                    .Select(m => m.Name)
-                                                    .ToList();
-
-                        foreach (var framework in targetFrameworks)
+                        var appModels = AppModels.GetAllAppModels().ToList();
+                        foreach (var appModel in appModels)
                         {
-                            result.Add(new object[] { projectType, framework, platform, language });
+                            if (appModel == AppModels.Desktop)
+                            {
+                                result.AddRange(GetContextOptions(frameworkFilter, language, platform, appModel));
+                            }
                         }
+                    }
+                    else
+                    {
+                        result.AddRange(GetContextOptions(frameworkFilter, language, platform, string.Empty));
+
                     }
                 }
             }
-
             return result;
         }
 
-        public static IEnumerable<object[]> GetPageAndFeatureTemplatesForBuild(string frameworkFilter, string language = ProgrammingLanguages.CSharp)
+        private static List<object[]> GetContextOptions(string frameworkFilter, string language, string platform, string appModel)
+        {
+            List<object[]> result = new List<object[]>();
+
+            var context = new UserSelectionContext(language, platform);
+            if (!string.IsNullOrEmpty(appModel))
+            {
+                context.AddAppModel(appModel);
+            }
+
+            var projectTypes = GenContext.ToolBox.Repo.GetProjectTypes(context)
+                    .Where(m => !string.IsNullOrEmpty(m.Description))
+                    .Select(m => m.Name);
+
+
+
+            foreach (var projectType in projectTypes)
+            {
+                context.ProjectType = projectType;
+                var targetFrameworks = GenContext.ToolBox.Repo.GetFrontEndFrameworks(context)
+                                            .Where(m => m.Name == frameworkFilter)
+                                            .Select(m => m.Name)
+                                            .ToList();
+
+                foreach (var framework in targetFrameworks)
+                {
+                    if (!string.IsNullOrEmpty(appModel))
+                    {
+                        result.Add(new object[] { projectType, framework, platform, language, appModel });
+                    }
+                    else
+                    {
+                        result.Add(new object[] { projectType, framework, platform, language });
+                    }
+                    
+                }
+            }
+            return result;
+        }
+
+        public static IEnumerable<object[]> GetPageAndFeatureTemplatesForBuild(string frameworkFilter, string language = ProgrammingLanguages.CSharp, string platform = Platforms.Uwp, string excludedItem = "")
         {
             InitializeTemplates(new LocalTemplatesSource(null, ShortFrameworkName(frameworkFilter)));
 
-            return BaseGenAndBuildFixture.GetPageAndFeatureTemplates(frameworkFilter);
+            return BaseGenAndBuildFixture.GetPageAndFeatureTemplates(frameworkFilter, language, platform, excludedItem);
         }
 
         [SuppressMessage(
@@ -91,12 +130,13 @@ namespace Microsoft.Templates.Test
          Justification = "Required for unit testing.")]
         private static void InitializeTemplates(TemplatesSource source)
         {
-            GenContext.Bootstrap(source, new FakeGenShell(Platforms.Uwp, ProgrammingLanguages.CSharp), Platforms.Uwp, ProgrammingLanguages.CSharp);
 
             if (syncExecuted.ContainsKey(source.Id) && syncExecuted[ShortFrameworkName(source.Id)] == true)
             {
                 return;
             }
+
+            GenContext.Bootstrap(source, new FakeGenShell(Platforms.Uwp, ProgrammingLanguages.CSharp), Platforms.Uwp, ProgrammingLanguages.CSharp);
 
             GenContext.ToolBox.Repo.SynchronizeAsync(true).Wait();
 
@@ -111,20 +151,22 @@ namespace Microsoft.Templates.Test
             InitializeTemplates(Source);
         }
 
-        private static string ShortFrameworkName(string framework)
+        public static string ShortFrameworkName(string framework)
         {
             switch (framework)
             {
-                case "CaliburnMicro":
+                case Frameworks.CaliburnMicro:
                     return "CM";
-                case "Prism":
+                case Frameworks.Prism:
                     return "P";
-                case "CodeBehind":
+                case Frameworks.CodeBehind:
                     return "CB";
-                case "MVVMLight":
+                case Frameworks.MVVMLight:
                     return "ML";
-                case "MVVMBasic":
+                case Frameworks.MVVMBasic:
                     return "MB";
+                case Frameworks.MVVMToolkit:
+                    return "MTM";
                 default:
                     return framework;
             }

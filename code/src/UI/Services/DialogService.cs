@@ -12,7 +12,7 @@ namespace Microsoft.Templates.UI.Services
 {
     public class DialogService
     {
-        private static Lazy<DialogService> _instance = new Lazy<DialogService>(() => new DialogService());
+        private static readonly Lazy<DialogService> _instance = new Lazy<DialogService>(() => new DialogService());
 
         public static DialogService Instance => _instance.Value;
 
@@ -22,13 +22,12 @@ namespace Microsoft.Templates.UI.Services
 
         public void ShowError(Exception ex, string message = null)
         {
-            AppHealth.Current.Error.TrackAsync(ex.ToString()).FireAndForget();
             AppHealth.Current.Exception.TrackAsync(ex, message).FireAndForget();
 
             var vm = new ErrorDialogViewModel(ex);
             var error = new Views.Common.ErrorDialog(vm);
 
-            GenContext.ToolBox.Shell.ShowModal(error);
+            GenContext.ToolBox.Shell.UI.ShowModal(error);
         }
     }
 }

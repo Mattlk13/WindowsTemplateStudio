@@ -17,6 +17,8 @@ namespace Microsoft.Templates.Test
     [Trait("Type", "TemplateValidation")]
     [Trait("ExecutionSet", "Minimum")]
     [Trait("ExecutionSet", "TemplateValidation")]
+    [Trait("ExecutionSet", "_CIBuild")]
+    [Trait("ExecutionSet", "_Full")]
     public class TemplateJsonValidationTests
     {
         public static IEnumerable<object[]> GetAllTemplateJsonFiles()
@@ -25,14 +27,20 @@ namespace Microsoft.Templates.Test
             const string templatesRoot = "../../../../../Templates";
 
             // The following excludes the catalog and project folders, but they only contain a single template file each
-            var foldersOfInterest = new[] { "Uwp/_comp", "Uwp/Features", "Uwp/Pages", "Uwp/Services", "Uwp/Testing" };
+            var foldersOfInterest = new[] { "Uwp/_comp", "Uwp/Features", "Uwp/Pages", "Uwp/Services", "Uwp/Testing",
+                                            "Wpf/_comp", "Wpf/Features", "Wpf/Pages", "Wpf/Services", "Wpf/Testing",
+                                            "WinUI/_comp", "WinUI/Features", "WinUI/Pages", "WinUI/Services", "WinUI/Testing"};
 
             foreach (var folder in foldersOfInterest)
             {
-                foreach (var file in new DirectoryInfo(Path.Combine(templatesRoot, folder)).GetFiles("template.json", SearchOption.AllDirectories))
+                var folderPath = Path.Combine(templatesRoot, folder);
+                if (Directory.Exists(folderPath))
                 {
-                    yield return new object[] { file.FullName };
-                }
+                    foreach (var file in new DirectoryInfo(folderPath).GetFiles("template.json", SearchOption.AllDirectories))
+                    {
+                        yield return new object[] { file.FullName };
+                    }
+                }     
             }
         }
 
@@ -63,7 +71,6 @@ namespace Microsoft.Templates.Test
     }
 
     [Trait("Type", "TemplateValidation")]
-    [Trait("ExecutionSet", "TemplateValidation")]
     [Trait("ExecutionSet", "ManualOnly")]
     public class TemplateJsonLanguageConsistencyTests
     {
@@ -114,7 +121,7 @@ namespace Microsoft.Templates.Test
                                     {
                                         if (!csItem.Value.Contains("Prism") && !csItem.Value.Contains("Caliburn"))
                                         {
-                                            errors.Add($"{template[0].ToString()}: check {vbItem.Field}.");
+                                            errors.Add($"{template[0].ToString()}: check {vbItem.Field} in composition query.");
                                         }
                                     }
                                 }

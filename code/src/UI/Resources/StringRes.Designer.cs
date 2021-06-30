@@ -19,7 +19,7 @@ namespace Microsoft.Templates.UI.Resources {
     // class via a tool like ResGen or Visual Studio.
     // To add or remove a member, edit your .ResX file then rerun ResGen
     // with the /str option, or rebuild your VS project.
-    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "15.0.0.0")]
+    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "16.0.0.0")]
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
     public class StringRes {
@@ -70,7 +70,7 @@ namespace Microsoft.Templates.UI.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Design pattern list.
+        ///   Looks up a localized string similar to Design patterns.
         /// </summary>
         public static string AccessibilityDesignPatternList {
             get {
@@ -79,7 +79,7 @@ namespace Microsoft.Templates.UI.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Edit page.
+        ///   Looks up a localized string similar to Page name.
         /// </summary>
         public static string AccessibilityEditPageItem {
             get {
@@ -124,7 +124,7 @@ namespace Microsoft.Templates.UI.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Project types list.
+        ///   Looks up a localized string similar to Project types.
         /// </summary>
         public static string AccessibilityProjectTypesList {
             get {
@@ -277,6 +277,15 @@ namespace Microsoft.Templates.UI.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Maximize.
+        /// </summary>
+        public static string ButtonMaximize {
+            get {
+                return ResourceManager.GetString("ButtonMaximize", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Next.
         /// </summary>
         public static string ButtonNext {
@@ -318,6 +327,15 @@ namespace Microsoft.Templates.UI.Resources {
         public static string ButtonRemove {
             get {
                 return ResourceManager.GetString("ButtonRemove", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Restore.
+        /// </summary>
+        public static string ButtonRestore {
+            get {
+                return ResourceManager.GetString("ButtonRestore", resourceCulture);
             }
         }
         
@@ -457,6 +475,51 @@ namespace Microsoft.Templates.UI.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Deprecated.
+        /// </summary>
+        public static string DeprecatedMessage {
+            get {
+                return ResourceManager.GetString("DeprecatedMessage", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Error adding items to project {0}.
+        /// </summary>
+        public static string ErrorAddingItemsToProject {
+            get {
+                return ResourceManager.GetString("ErrorAddingItemsToProject", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Error adding project {0}.
+        /// </summary>
+        public static string ErrorAddingProject {
+            get {
+                return ResourceManager.GetString("ErrorAddingProject", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Error adding references between projects.
+        /// </summary>
+        public static string ErrorAddingReferencesBetweenProjects {
+            get {
+                return ResourceManager.GetString("ErrorAddingReferencesBetweenProjects", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Error adding sdks to project {0}..
+        /// </summary>
+        public static string ErrorAddingSdksToProject {
+            get {
+                return ResourceManager.GetString("ErrorAddingSdksToProject", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Show details.
         /// </summary>
         public static string ErrorDialogShowDetails {
@@ -471,6 +534,15 @@ namespace Microsoft.Templates.UI.Resources {
         public static string ErrorDialogTitle {
             get {
                 return ResourceManager.GetString("ErrorDialogTitle", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Invalid Requirement Type {0}.
+        /// </summary>
+        public static string ErrorInvalidRequirementType {
+            get {
+                return ResourceManager.GetString("ErrorInvalidRequirementType", resourceCulture);
             }
         }
         
@@ -496,20 +568,20 @@ namespace Microsoft.Templates.UI.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Unable to add files and projects..
-        /// </summary>
-        public static string ErrorUnableAddFilesAndProjects {
-            get {
-                return ResourceManager.GetString("ErrorUnableAddFilesAndProjects", resourceCulture);
-            }
-        }
-        
-        /// <summary>
         ///   Looks up a localized string similar to Unable to find project {0}.
         /// </summary>
         public static string ErrorUnableGetProjectByPath {
             get {
                 return ResourceManager.GetString("ErrorUnableGetProjectByPath", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Could not open project overview..
+        /// </summary>
+        public static string ErrorUnableToOpenProjectOverview {
+            get {
+                return ResourceManager.GetString("ErrorUnableToOpenProjectOverview", resourceCulture);
             }
         }
         
@@ -564,6 +636,51 @@ namespace Microsoft.Templates.UI.Resources {
         public static string HelpTextPressEnterToAddItem {
             get {
                 return ResourceManager.GetString("HelpTextPressEnterToAddItem", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Higher version required.
+        /// </summary>
+        public static string InfoDialogInvalidVersionTitle {
+            get {
+                return ResourceManager.GetString("InfoDialogInvalidVersionTitle", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to {0} project creation requires Visual Studio 2019 Version {1} or higher..
+        /// </summary>
+        public static string InfoDialogInvalidVSVersion {
+            get {
+                return ResourceManager.GetString("InfoDialogInvalidVSVersion", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Missing workload.
+        /// </summary>
+        public static string InfoDialogMissingWorkloadTitle {
+            get {
+                return ResourceManager.GetString("InfoDialogMissingWorkloadTitle", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to More info.
+        /// </summary>
+        public static string InfoDialogMoreInfoLinkText {
+            get {
+                return ResourceManager.GetString("InfoDialogMoreInfoLinkText", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to You need to install the following workloads to create a {0} project: {1} .
+        /// </summary>
+        public static string InfoDialogRequiredWorkloadNotFoundMessage {
+            get {
+                return ResourceManager.GetString("InfoDialogRequiredWorkloadNotFoundMessage", resourceCulture);
             }
         }
         
@@ -750,9 +867,36 @@ namespace Microsoft.Templates.UI.Resources {
         /// <summary>
         ///   Looks up a localized string similar to New Universal Windows Platform app.
         /// </summary>
-        public static string NewProjectTitle {
+        public static string NewProjectTitleUWP {
             get {
-                return ResourceManager.GetString("NewProjectTitle", resourceCulture);
+                return ResourceManager.GetString("NewProjectTitleUWP", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to New WinUI 3 Desktop app.
+        /// </summary>
+        public static string NewProjectTitleWinUIDesktop {
+            get {
+                return ResourceManager.GetString("NewProjectTitleWinUIDesktop", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to New WinUI 3 UWP app.
+        /// </summary>
+        public static string NewProjectTitleWinUIUWP {
+            get {
+                return ResourceManager.GetString("NewProjectTitleWinUIUWP", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to New WPF app.
+        /// </summary>
+        public static string NewProjectTitleWPF {
+            get {
+                return ResourceManager.GetString("NewProjectTitleWPF", resourceCulture);
             }
         }
         
@@ -766,6 +910,33 @@ namespace Microsoft.Templates.UI.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to You can not add **{0}** because the following templates are not compatible: {1}..
+        /// </summary>
+        public static string NotificationAdditionError_Exclusion {
+            get {
+                return ResourceManager.GetString("NotificationAdditionError_Exclusion", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to You can not add **{0}** because it is requires one of the following templates to be added first: {1}.
+        /// </summary>
+        public static string NotificationAdditionError_Requirement {
+            get {
+                return ResourceManager.GetString("NotificationAdditionError_Requirement", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to The following versions are missing, please install them and restart Visual Studio: {0}.
+        /// </summary>
+        public static string NotificationMissingVersions {
+            get {
+                return ResourceManager.GetString("NotificationMissingVersions", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to You can not remove **{0}** because these templates depend on it: {1}.
         /// </summary>
         public static string NotificationRemoveError_Dependency {
@@ -775,11 +946,20 @@ namespace Microsoft.Templates.UI.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to You can not remove **{0}** because it is readonly..
+        ///   Looks up a localized string similar to You can not remove **{0}** because it is required for the selected project type..
         /// </summary>
         public static string NotificationRemoveError_ReadOnly {
             get {
                 return ResourceManager.GetString("NotificationRemoveError_ReadOnly", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to You can not remove **{0}** because it is required for: {1}.
+        /// </summary>
+        public static string NotificationRemoveError_Requirement {
+            get {
+                return ResourceManager.GetString("NotificationRemoveError_Requirement", resourceCulture);
             }
         }
         
@@ -892,6 +1072,24 @@ namespace Microsoft.Templates.UI.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to The project name does not match the project folder name. Please adjust to ensure a correct generation..
+        /// </summary>
+        public static string NotificationValidationError_ProjectNameAndPathDoNotMatch {
+            get {
+                return ResourceManager.GetString("NotificationValidationError_ProjectNameAndPathDoNotMatch", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to RegEx validation {0} failed..
+        /// </summary>
+        public static string NotificationValidationError_Regex {
+            get {
+                return ResourceManager.GetString("NotificationValidationError_Regex", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Name is reserved.
         /// </summary>
         public static string NotificationValidationError_ReservedName {
@@ -915,6 +1113,15 @@ namespace Microsoft.Templates.UI.Resources {
         public static string ProjectConfigurationDescriptionText {
             get {
                 return ResourceManager.GetString("ProjectConfigurationDescriptionText", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Select AppModel.
+        /// </summary>
+        public static string ProjectConfigurationSelectAppModel {
+            get {
+                return ResourceManager.GetString("ProjectConfigurationSelectAppModel", resourceCulture);
             }
         }
         
@@ -1126,6 +1333,15 @@ namespace Microsoft.Templates.UI.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to or.
+        /// </summary>
+        public static string SeparatorOr {
+            get {
+                return ResourceManager.GetString("SeparatorOr", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Adding {0} to project ....
         /// </summary>
         public static string StatusAddingItem {
@@ -1279,6 +1495,15 @@ namespace Microsoft.Templates.UI.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Exclusions:.
+        /// </summary>
+        public static string TemplateDetailsExclusions {
+            get {
+                return ResourceManager.GetString("TemplateDetailsExclusions", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Frameworks:.
         /// </summary>
         public static string TemplateDetailsFrameworks {
@@ -1288,7 +1513,16 @@ namespace Microsoft.Templates.UI.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Layout:.
+        ///   Looks up a localized string similar to This item is currently not available due to missing Visual Studio Workloads / Components..
+        /// </summary>
+        public static string TemplateDetailsInfoUnavailableDueToMissingVSWorkload {
+            get {
+                return ResourceManager.GetString("TemplateDetailsInfoUnavailableDueToMissingVSWorkload", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Includes:.
         /// </summary>
         public static string TemplateDetailsLayout {
             get {
@@ -1311,6 +1545,42 @@ namespace Microsoft.Templates.UI.Resources {
         public static string TemplateDetailsLicenses {
             get {
                 return ResourceManager.GetString("TemplateDetailsLicenses", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Minimum .NET Core Version:.
+        /// </summary>
+        public static string TemplateDetailsRequiredDotNetVersion {
+            get {
+                return ResourceManager.GetString("TemplateDetailsRequiredDotNetVersion", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Required Windows Sdks:.
+        /// </summary>
+        public static string TemplateDetailsRequiredSdks {
+            get {
+                return ResourceManager.GetString("TemplateDetailsRequiredSdks", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Required Visual Studio Workloads / Components:.
+        /// </summary>
+        public static string TemplateDetailsRequiredVSWorkloads {
+            get {
+                return ResourceManager.GetString("TemplateDetailsRequiredVSWorkloads", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Requirements:.
+        /// </summary>
+        public static string TemplateDetailsRequirements {
+            get {
+                return ResourceManager.GetString("TemplateDetailsRequirements", resourceCulture);
             }
         }
         
@@ -1387,6 +1657,15 @@ namespace Microsoft.Templates.UI.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Packaging.
+        /// </summary>
+        public static string TemplateGroup_Packaging {
+            get {
+                return ResourceManager.GetString("TemplateGroup_Packaging", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Tools.
         /// </summary>
         public static string TemplateGroup_Tools {
@@ -1423,6 +1702,15 @@ namespace Microsoft.Templates.UI.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to UWP.
+        /// </summary>
+        public static string UWP {
+            get {
+                return ResourceManager.GetString("UWP", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to {0}update-activationservice-for-identity.md.
         /// </summary>
         public static string ValidatorHasActivationServiceBeforeIdentityLink {
@@ -1450,7 +1738,7 @@ namespace Microsoft.Templates.UI.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to {0}projectTypes/updatetonavigationview.md.
+        ///   Looks up a localized string similar to {0}UWP/projectTypes/updatetonavigationview.md.
         /// </summary>
         public static string ValidatorHasHamburgerMenuLink {
             get {
@@ -1504,7 +1792,7 @@ namespace Microsoft.Templates.UI.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to {0}frameworks/updatemvvmlightlocator.md.
+        ///   Looks up a localized string similar to {0}UWP/frameworks/updatemvvmlightlocator.md.
         /// </summary>
         public static string ValidatorHasOldMvvmLightLocatorLink {
             get {
@@ -1531,7 +1819,7 @@ namespace Microsoft.Templates.UI.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to {0}projectTypes/updatetowinuinavigationview.md.
+        ///   Looks up a localized string similar to {0}UWP/projectTypes/updatetowinuinavigationview.md.
         /// </summary>
         public static string ValidatorHasOldNavigationViewLink {
             get {
@@ -1558,7 +1846,7 @@ namespace Microsoft.Templates.UI.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to {0}projectTypes/updatetohorizontalnavview.md.
+        ///   Looks up a localized string similar to {0}UWP/projectTypes/updatetohorizontalnavview.md.
         /// </summary>
         public static string ValidatorHasPivotLink {
             get {
@@ -1590,6 +1878,60 @@ namespace Microsoft.Templates.UI.Resources {
         public static string WindowsTemplateStudio {
             get {
                 return ResourceManager.GetString("WindowsTemplateStudio", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Windows UI.
+        /// </summary>
+        public static string WinUI {
+            get {
+                return ResourceManager.GetString("WinUI", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to .NET desktop development.
+        /// </summary>
+        public static string WorkloadDisplayNameManagedDesktop {
+            get {
+                return ResourceManager.GetString("WorkloadDisplayNameManagedDesktop", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to MSIX Packaging Tools.
+        /// </summary>
+        public static string WorkloadDisplayNameMsixPackaging {
+            get {
+                return ResourceManager.GetString("WorkloadDisplayNameMsixPackaging", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to ASP.NET and web development.
+        /// </summary>
+        public static string WorkloadDisplayNameNetWeb {
+            get {
+                return ResourceManager.GetString("WorkloadDisplayNameNetWeb", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Universal Windows Platform development.
+        /// </summary>
+        public static string WorkloadDisplayNameUniversal {
+            get {
+                return ResourceManager.GetString("WorkloadDisplayNameUniversal", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to WPF (.NET Core).
+        /// </summary>
+        public static string WPF {
+            get {
+                return ResourceManager.GetString("WPF", resourceCulture);
             }
         }
     }

@@ -17,6 +17,8 @@ namespace Microsoft.Templates.UI.ViewModels.NewProject
 {
     public class UserSelectionGroup : Observable
     {
+        private readonly string _headerText;
+        private readonly bool _allowsOrdering;
         private string _header;
         private ICommand _moveUpCommand;
         private ICommand _moveDownCommand;
@@ -24,7 +26,6 @@ namespace Microsoft.Templates.UI.ViewModels.NewProject
         private ICommand _deleteCommand;
         private SavedTemplateViewModel _selectedItem;
         private OrderingService _orderingService;
-        private bool _allowsOrdering;
 
         public string Header
         {
@@ -53,7 +54,8 @@ namespace Microsoft.Templates.UI.ViewModels.NewProject
         public UserSelectionGroup(TemplateType templateType, string header, bool allowsOrdering = false)
         {
             TemplateType = templateType;
-            Header = header;
+            _headerText = header;
+            Header = _headerText;
             _allowsOrdering = allowsOrdering;
         }
 
@@ -77,18 +79,21 @@ namespace Microsoft.Templates.UI.ViewModels.NewProject
         public void Remove(SavedTemplateViewModel savedTemplate)
         {
             Items.Remove(savedTemplate);
+            Header = $"{_headerText} ({Items.Count})";
             OnPropertyChanged(nameof(Items));
         }
 
         public void Insert(int index, SavedTemplateViewModel savedTemplate)
         {
             Items.Insert(index, savedTemplate);
+            Header = $"{_headerText} ({Items.Count})";
             OnPropertyChanged(nameof(Items));
         }
 
         public void Clear()
         {
             Items.Clear();
+            Header = _headerText;
             OnPropertyChanged(nameof(Items));
         }
 

@@ -45,7 +45,7 @@ namespace Microsoft.Templates.UI.Services
 
         public override System.Drawing.Color GetThemedColor(string className, string memberName)
         {
-            Type classType = null;
+            Type classType;
             switch (className)
             {
                 case "CommonDocument":
@@ -56,6 +56,9 @@ namespace Microsoft.Templates.UI.Services
                     break;
                 case "Environment":
                     classType = typeof(EnvironmentColors);
+                    break;
+                case "ThemedDialog":
+                    classType = typeof(ThemedDialogColors);
                     break;
                 case "InfoBar":
                     classType = typeof(InfoBarColors);
@@ -119,12 +122,23 @@ namespace Microsoft.Templates.UI.Services
         private double GetVSFontSize(object value)
         {
             var font = Application.Current.FindResource(value);
-            if (font is double)
+            if (font is double d)
             {
-                return (double)font;
+                return d;
             }
 
             throw new Exception($"The font size is not valid.");
+        }
+
+        public override Style GetStyle(object resourceKey)
+        {
+            var style = Application.Current.FindResource(resourceKey);
+            if (style is Style s)
+            {
+                return s;
+            }
+
+            throw new Exception($"The style is not valid.");
         }
     }
 }

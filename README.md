@@ -1,53 +1,90 @@
 # Windows Template Studio
 
-Windows Template Studio (WTS) is a Visual Studio 2017 and 2019 Extension that accelerates the creation of new Universal Windows Platform (UWP) apps using a wizard-based experience. The resulting UWP project is well-formed, readable code that incorporates the latest Windows 10 features while implementing proven patterns and best practices. Sprinkled throughout the generated code we have links Docs, Stack Overflow and blogs to provide useful insights. WTS supports creating apps in C# or VB.Net.
+*Windows Template Studio* (aka *WinTS*) is a Visual Studio 2019 Extension that accelerates the creation of new **Universal Windows Platform (UWP)**, **Windows Presentation Foundation (WPF .NET Core 3.1)** and **WinUI 3 in Desktop** apps using a wizard-based experience. The resulting project is well-formed, readable code that incorporates great development features while implementing proven patterns and best practices. Sprinkled throughout the generated code we have links to documentation to provide useful insights.
+*WinTS* supports creating UWP apps in C# or VB.Net, WPF (.NET Core 3.1) apps in C# and **WinUI 3 in Desktop** apps in C# or C++.
 
-**Example scenario:**
-I need an app that uses MVVM Light, uses master detail, can suspend and resume, settings, maps on one of the pages and will need Azure hub notifications.   It will need a background service that does a query every 5 minutes.
+![Windows Template Studio UWP screenshot](./docs/resources/getting-started/WTS%20-%20Project%20Type.png)
 
-![Windows Template Studio screenshot](docs/resources/getting-started/WTS%20-%20Project%20Type.png)
+![Windows Template Studio WPF screenshot](./docs/resources/getting-started/WTSProjectTypeWPF.png)
+
+![Windows Template Studio **WinUI 3** screenshot](./docs/resources/getting-started/WTSProjectTypeWinUI.png)
 
 ## Build Status
 
 |Branch   |CI                |Test Version|Version|
 |:--------|:----------------:|:---------------:|:---------------:|
-|master|[![Build status](https://ci.appveyor.com/api/projects/status/nf8r35r45o4yqbqs/branch/master?svg=true)](https://ci.appveyor.com/project/ralarcon/windowstemplatestudio/branch/master)|[![Prerelease Version](https://wtsrepository.blob.core.windows.net/badges/img.prerelease.version.svg)](https://github.com/Microsoft/WindowsTemplateStudio/blob/master/docs/getting-started-extension.md#nightly--pre-release-feeds-for-windows-template-studio) |[![Production Version](https://wtsrepository.blob.core.windows.net/badges/img.release.version.svg?maxAge=600)](https://marketplace.visualstudio.com/items?itemName=WASTeamAccount.WindowsTemplateStudio)|
-|dev|[![Build status](https://ci.appveyor.com/api/projects/status/nf8r35r45o4yqbqs/branch/dev?svg=true)](https://ci.appveyor.com/project/ralarcon/windowstemplatestudio/branch/dev)|[![Nightly Version](https://wtsrepository.blob.core.windows.net/badges/img.nightly.version.svg)](https://github.com/Microsoft/WindowsTemplateStudio/blob/master/docs/getting-started-extension.md#nightly--pre-release-feeds-for-windows-template-studio)||
+|release|[![Build status](https://winappstudio.visualstudio.com/DefaultCollection/WTS/_apis/build/status/WindowsTemplateStudio/wints.ci?branchName=release)](https://winappstudio.visualstudio.com/DefaultCollection/WTS/_build/latest?definitionId=166)|[![Prerelease Version](https://wtsrepository.blob.core.windows.net/badges/img.prerelease.version.svg)](https://github.com/Microsoft/WindowsTemplateStudio/blob/release/docs/getting-started-extension.md#nightly--pre-release-feeds-for-windows-template-studio) |[![Production Version](https://wtsrepository.blob.core.windows.net/badges/img.release.version.svg?no-cache)](https://marketplace.visualstudio.com/items?itemName=WASTeamAccount.WindowsTemplateStudio)|
+|dev|[![Build status](https://winappstudio.visualstudio.com/DefaultCollection/WTS/_apis/build/status/WindowsTemplateStudio/wints.ci?branchName=dev)](https://winappstudio.visualstudio.com/DefaultCollection/WTS/_build/latest?definitionId=166)|[![Nightly Version](https://wtsrepository.blob.core.windows.net/badges/img.nightly.version.svg)](https://github.com/Microsoft/WindowsTemplateStudio/blob/release/docs/getting-started-extension.md#nightly--pre-release-feeds-for-windows-template-studio)||
 
 |Branch   |Full Tests       |OneByOne Tests       |WACK Tests       |
 |:--------|:---------------:|:---------------:|:---------------:|
-|master|[![Full Integration Tests](https://winappstudio.visualstudio.com/_apis/public/build/definitions/5c80cfe7-3bfb-4799-9d04-803c84df7a60/129/badge)](https://github.com/Microsoft/WindowsTemplateStudio/blob/vsts-builds/docs/vsts-builds/129.md)|[![OneByOne Integration Tests](https://winappstudio.visualstudio.com/_apis/public/build/definitions/5c80cfe7-3bfb-4799-9d04-803c84df7a60/154/badge)](https://github.com/Microsoft/WindowsTemplateStudio/blob/vsts-builds/docs/vsts-builds/154.md)|[![Wack Tests](https://winappstudio.visualstudio.com/DefaultCollection/_apis/public/build/definitions/5c80cfe7-3bfb-4799-9d04-803c84df7a60/144/badge)](https://github.com/Microsoft/WindowsTemplateStudio/blob/vsts-builds/docs/vsts-builds/144.md)
-|dev|[![Full Integration Tests](https://winappstudio.visualstudio.com/_apis/public/build/definitions/5c80cfe7-3bfb-4799-9d04-803c84df7a60/128/badge)](https://github.com/Microsoft/WindowsTemplateStudio/blob/vsts-builds/docs/vsts-builds/128.md)|[![OneByOne Integration Tests](https://winappstudio.visualstudio.com/_apis/public/build/definitions/5c80cfe7-3bfb-4799-9d04-803c84df7a60/153/badge)](https://github.com/Microsoft/WindowsTemplateStudio/blob/vsts-builds/docs/vsts-builds/153.md)|[![Wack Tests](https://winappstudio.visualstudio.com/DefaultCollection/_apis/public/build/definitions/5c80cfe7-3bfb-4799-9d04-803c84df7a60/142/badge)](https://github.com/Microsoft/WindowsTemplateStudio/blob/vsts-builds/docs/vsts-builds/142.md)
+|release|[![Full Integration Tests](https://winappstudio.visualstudio.com/DefaultCollection/WTS/_apis/build/status/WindowsTemplateStudio/wints.templates.tests.full?branchName=release)](https://winappstudio.visualstudio.com/DefaultCollection/WTS/_build/latest?definitionId=167)|[![OneByOne Integration Tests](https://winappstudio.visualstudio.com/DefaultCollection/WTS/_apis/build/status/WindowsTemplateStudio/wints.templates.tests.onebyone?branchName=release)](https://winappstudio.visualstudio.com/DefaultCollection/WTS/_build/latest?definitionId=168)|[![Wack Tests](https://winappstudio.visualstudio.com/DefaultCollection/WTS/_apis/build/status/WindowsTemplateStudio/wints.templates.tests.wack?branchName=release)](https://winappstudio.visualstudio.com/DefaultCollection/WTS/_build/latest?definitionId=169)
+|dev|[![Full Integration Tests](https://winappstudio.visualstudio.com/DefaultCollection/WTS/_apis/build/status/WindowsTemplateStudio/wints.templates.tests.full?branchName=dev)](https://winappstudio.visualstudio.com/DefaultCollection/WTS/_build/latest?definitionId=167)|[![OneByOne Integration Tests](https://winappstudio.visualstudio.com/DefaultCollection/WTS/_apis/build/status/WindowsTemplateStudio/wints.templates.tests.onebyone?branchName=dev)](https://winappstudio.visualstudio.com/DefaultCollection/WTS/_build/latest?definitionId=168)|[![Wack Tests](https://winappstudio.visualstudio.com/DefaultCollection/WTS/_apis/build/status/WindowsTemplateStudio/wints.templates.tests.wack?branchName=dev)](https://winappstudio.visualstudio.com/DefaultCollection/WTS/_build/latest?definitionId=169)
 
 > The builds include test verifications to validate the contributions:
-> * *CI Build*: Includes all unit test + minimum integration verifications (minimum generation + build + code style rules). Runs every PR requested / PR accepted.
-> * *Full Tests*: Includes tests to verify combinations and variations of templates from a project generation point of view and builds the solutions generated to ensure no build time issues found. Runs every PR accepted and takes longer to be completed.
-> * *One By One Tests*: Includes tests to verify every template individually from a project generation point of view and builds the solutions generated to ensure no build time issues found. Runs every PR accepted and takes longer to be completed.
-> * *Wack Tests*: Includes tests that run the App Certification Kit against the generated projects to ensure there are no issues blocking a submission to the store. Runs once nightly and takes quite a while to complete.
+>
+> - *CI Build*: Includes all unit test + minimum integration verifications (minimum generation + build + code style rules). Runs every PR requested / PR accepted.
+> - *Full Tests*: Includes tests to verify combinations and variations of templates from a project generation point of view and builds the solutions generated to ensure no build time issues found. Runs every PR accepted and takes longer to be completed.
+> - *One By One Tests*: Includes tests to verify every template individually from a project generation point of view and builds the solutions generated to ensure no build time issues found. Runs once every week and takes longer to be completed.
+> - *Wack Tests*: Includes tests that run the App Certification Kit against the generated projects to ensure there are no issues blocking a submission to the store. Runs once nightly and takes quite a while to complete.
 
 ## Features
 
-Windows Template Studio approaches UWP app creation using the following six attribute sets:
+*Windows Template Studio* approaches app creation using the following six attribute sets:
 
-* **Project type**: First, how do you want your app's UI navigation to behave? We currently support three project types: *basic*, *[navigation pane](docs/projectTypes/navigationpane.md)*, and *pivot and tabs*.
-* **App design pattern**: Next, what coding pattern do you want to use in your project, we currently support three common patterns: *code behind*, *basic MVVM*, *[MVVMLight](http://www.mvvmlight.net/)*, *[Caliburn.Micro](https://caliburnmicro.com/)*, and *[Prism](https://github.com/PrismLibrary/Prism)*.
-* **App pages**: To accelerate app creation, we provide a number of app page templates that you can use to add common UI pages into your new app. We currently include page templates from the *blank page* to the common layouts (*e.g., master/detail, tabbed, web view*) to pages that implement common patterns (*e.g., [app settings](docs/pages/settings.md), map control*). Using the wizard, add as many of the pages as you need, providing a name for each one, and we'll generate them for you.
-* **Windows 10 features**: You specify which UWP capabilities you want to use in your app, and we'll build out the framework for the features into your app, tagging 'TODO' items. Currently supported features cover analytics, application launching, application lifecycle (*settings storage, suspend and resume, multiple views*), background work, connected experiences (*share source and target*), and user interaction (*app notifications, Live tiles, prompts, feedback, drag & drop and theme selection*).
-* **Services**: You can connect to data services or setup identity logins for your application as well as enforce certain XAML style rules with the [XAML Styler](https://github.com/Xavalon/XamlStyler) extension.
-* **Automated Tests**:  Lastly, you can setup test projects for your application including Selenium-like UI test automation.
+### **Project type**
 
-Once you select the attributes you want your new UWP app to have, you can quickly [extend the generated code](docs/getting-started-endusers.md).
+First, how do you want your app's UI navigation to behave?
+
+- **UWP**: *[Blank](./docs/UWP/projectTypes/blank.md)*, *[Navigation Pane](./docs/UWP/projectTypes/navigationpane.md)*, *[Horizontal Navigation Pane](./docs/UWP/projectTypes/horizontalnavigationpane.md)*, and a *[Menu Bar](./docs/UWP/projectTypes/menubar.md)*.
+
+- **WPF**: *[Blank](./docs/WPF/projectTypes/blank.md)*, *[Navigation Pane](./docs/WPF/projectTypes/navigationpane.md)*, *[Menu Bar](./docs/WPF/projectTypes/menubar.md)* and a *[Ribbon](./docs/WPF/projectTypes/ribbon.md)*.
+
+- **WinUI 3**: *[Blank](./docs/WinUI/projectTypes/blank.md)*, *[Blank Advanced](./docs/WinUI/projectTypes/blankadvanced.md)*, *[Navigation Pane](./docs/WinUI/projectTypes/navigationpane.md)*, *[Menu Bar](./docs/WinUI/projectTypes/menubar.md)*.
+
+
+### **App design pattern**
+
+Next, what coding pattern do you want to use in your project.
+
+- **UWP**: *[MVVM Toolkit](./docs/UWP/frameworks/mvvmtoolkit.md)*, *[Code Behind](./docs/UWP/frameworks/codebehind.md)*, *[Prism](./docs/UWP/frameworks/prism.md)*, *[MVVM Basic](./docs/UWP/frameworks/mvvmbasic.md)* *, *[MVVMLight](./docs/UWP/frameworks/mvvmlight.md)* * and *[Caliburn.Micro](./docs/UWP/frameworks/caliburnmicro.md)* *.
+
+- **WPF**: *[MVVM Toolkit](./docs/WPF/frameworks/mvvmtoolkit.md)*, *[Code Behind](./docs/WPF/frameworks/codebehind.md)*, *[Prism](./docs/WPF/frameworks/prism.md)*,  *[MVVM Basic](./docs/WPF/frameworks/mvvmbasic.md)* * and *[MVVMLight](./docs/WPF/frameworks/mvvmlight.md)* *.
+
+- **WinUI 3**: *[MVVM Toolkit](./docs/WinUI/frameworks/mvvmtoolkit.md)*.
+
+(Frameworks marked with * were deprecated in Version 3.10 and will be removed in a future version)
+
+### **App pages**
+
+To accelerate app creation, we provide a number of app page templates you can use to add common UI pages into your new app. We currently include everything from a *blank page*, to common layouts (*e.g., list/detail, web view*), to pages that implement common patterns (*e.g., app settings*). Use the wizard to add as many of each page as you need, providing a name for each one, and we'll generate them for you.
+
+### **Features**
+
+Specify which capabilities you want to use in your app, and we'll build out the framework for the features into your app, tagging `TODO` items. Here you can add features that enable your app to interact with storage, notifications, layout theming, etc.
+
+### **Services**
+
+Connect to data services, setup cloud connected services for your application, and enforce rules with the [XAML Styler](https://github.com/Xavalon/XamlStyler) extension.
+
+### **Automated Tests**
+
+Lastly, you can include test projects for your application to run unit tests or use Selenium-like UI test automation.
+
+After selecting the items wanted in your app, you can extend the generated code on [UWP](./docs/UWP/getting-started-endusers.md), [WPF](./docs/WPF/getting-started-endusers.md) or [WinUI 3](./docs/WinUI/readme.md).
 
 ## Documentation
 
-* [Installing / Using the extension](docs/getting-started-extension.md)
-* [Using and extending your generated project](docs/getting-started-endusers.md)
-* [Concepts of Windows Template Studio](docs/readme.md)
-* [Getting started with the generator codebase](docs/getting-started-developers.md)
-* [Authoring Templates](docs/templates.md)
+- [Installing the extension](./docs/getting-started-extension.md)
+- [Understand the core concepts](./docs/concepts.md)
+- [Using WinTS to build UWP apps](./docs/UWP/getting-started-endusers.md)
+- [Using WinTS to build WPF apps](./docs/WPF/getting-started-endusers.md)
+- [Using WinTS to build WinUI 3 in Desktop apps](./docs/WinUI/readme.md)
+- [Working on WinTS](./docs/getting-started-developers.md)
 
 ## Known issues
-* You can't have side-by-side versions (nightly/pre-release/release) of WindowsTemplateStudio VSPackage into a single instance of Visual Studio.
+
+- You can't have side-by-side versions (nightly/pre-release/release) of *Windows Template Studio* VSPackage into a single instance of Visual Studio.
 
 ## Feedback, Requests and Roadmap
 
@@ -55,7 +92,7 @@ Please use [GitHub issues](https://github.com/Microsoft/WindowsTemplateStudio/is
 
 If you have specific feature requests or would like to vote on what others are recommending, please go to the [GitHub issues](https://github.com/Microsoft/WindowsTemplateStudio/issues) section as well.  We would love to see what you are thinking.
 
-Here is what we're currently thinking in our [roadmap](docs/roadmap.md).
+Here is what we're currently thinking in our [roadmap](./docs/roadmap.md).
 
 ## Contributing
 
@@ -67,8 +104,8 @@ Do you want to contribute? We would love to have you help out. Here are our [con
 2. Generated templates are a starting point, not a completed application.
 3. Generated templates must be able to compile and run once generated.
 4. Generated templates should work on all device families.
-5. Templates should have comments to aid developers.  This includes links to signup pages for keys, MSDN, blogs and how-to's.  All guidance provide should be validated from either the framework/SDK/library’s creator.
-6. All features will be supported for two most recent RTM Windows 10 Updates. Those supported releases are Windows 10 October 2018 Update (version 1809) and Windows 10 April 2018 Update (version 1803).
+5. Templates should have comments to aid developers. This includes links to signup pages for keys, MSDN, blogs and how-to's.  All guidance provide should be validated from either the framework/SDK/library’s creator.
+6. All UWP features will be supported for two most recent RTM Windows 10 Updates. Those supported releases are Windows 10 May 2020 Update (version 2004) and Windows 10 May 2019 Update (version 1903).
 7. Templates released in production will try to adhere to the design language used in the current release of Windows 10.
 8. Code should follow [.NET Core coding style](https://github.com/dotnet/corefx/blob/master/Documentation/coding-guidelines/coding-style.md).
 
@@ -81,7 +118,7 @@ This code is distributed under the terms and conditions of the [MIT license](LIC
 
 ## Privacy Statement
 
-The extension does [log basic telemetry](docs/telemetry.md) for what is being selected. Our [Telemetry Data](docs/telemetryData.md) page has the trends from the telemetry. Please read the [Microsoft privacy statement](http://go.microsoft.com/fwlink/?LinkId=521839) for more information.
+The extension logs [basic telemetry](./docs/telemetry.md) regarding what is selected in the wizard. Our [Telemetry Data](./docs/telemetryData.md) page has the trends from the telemetry. Please read the [Microsoft privacy statement](http://go.microsoft.com/fwlink/?LinkId=521839) for more information.
 
 ## .NET Foundation
 
@@ -92,19 +129,34 @@ This project is supported by the [.NET Foundation](https://dotnetfoundation.org)
 - [Web Template Studio](https://github.com/Microsoft/WebTemplateStudio)
 - [Rapid Xaml Toolkit](https://github.com/Microsoft/Rapid-XAML-Toolkit)
 - [Windows Community Toolkit](https://github.com/Microsoft/WindowsCommunityToolkit)
+- [Windows UI](https://github.com/microsoft/microsoft-ui-xaml)
+- [Windows App SDK](https://github.com/microsoft/WindowsAppSDK)
 - [Fluent XAML Theme Editor](https://github.com/Microsoft/fluent-xaml-theme-editor)
+- [XAML Styler](https://github.com/Xavalon/XamlStyler)
 
 ## Frameworks and libraries in generated code not created by our team
-**Frameworks**
+
+### Frameworks
+- [MVVM Toolkit](https://aka.ms/mvvmtoolkit)
+- [Prism](https://github.com/PrismLibrary/Prism)
 - [Caliburn.Micro](https://github.com/Caliburn-Micro/Caliburn.Micro)
 - [MVVMLight](https://github.com/lbugnion/mvvmlight)
-- [Prism](https://github.com/PrismLibrary/Prism)
 
-**Libraries**
+
+### Libraries
+
+- [AdaptiveCards](https://adaptivecards.io/)
+- [Appium.WebDriver](https://github.com/appium/appium-dotnet-driver)
+- [MahApps.Metro](https://github.com/MahApps/MahApps.Metro)
 - [Microsoft AppCenter SDK](https://github.com/Microsoft/AppCenter-SDK-DotNet)
+- [Microsoft Authentication Library (MSAL)](https://github.com/AzureAD/microsoft-authentication-library-for-dotnet)
 - [Microsoft Store Services SDK](https://marketplace.visualstudio.com/items?itemName=AdMediator.MicrosoftStoreServicesSDK)
 - [Microsoft Win2D](https://github.com/Microsoft/Win2D)
+- [MSTest V2](https://github.com/microsoft/testfx)
 - [Newtonsoft.Json](https://github.com/JamesNK/Newtonsoft.Json)
+- [NUnit](https://nunit.org/)
 - [Telerik UI For UWP](https://github.com/telerik/UI-For-UWP)
 - [Windows Azure Messaging Managed](https://www.nuget.org/packages/WindowsAzure.Messaging.Managed)
 - [Windows Community Toolkit](https://github.com/Microsoft/WindowsCommunityToolkit)
+- [Windows UI Library](https://github.com/Microsoft/microsoft-ui-xaml)
+- [xunit](https://github.com/xunit/xunit)

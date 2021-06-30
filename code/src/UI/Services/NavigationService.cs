@@ -28,6 +28,10 @@ namespace Microsoft.Templates.UI.Services
         {
             _secondaryFrame = secondaryFrame;
             _secondaryFrame.Content = content;
+        }
+
+        public static void SubscribeEventHandlers()
+        {
             _secondaryFrame.Navigated += SecondaryFrameNavigated;
             _secondaryFrame.Navigating += SecondaryFrameNavigating;
         }
@@ -57,7 +61,7 @@ namespace Microsoft.Templates.UI.Services
 
         public static bool NavigateMainFrame(object content) => _mainFrame.Navigate(content);
 
-        public static bool NavigateSecondaryFrame(object content) => _secondaryFrame.Navigate(content);
+        public static void NavigateSecondaryFrame(object content) => _secondaryFrame?.Navigate(content);
 
         public static void GoBackMainFrame() => _mainFrame.GoBack();
 

@@ -40,7 +40,7 @@ namespace Microsoft.Templates.Fakes
                 var nsElement = _root.Descendants().FirstOrDefault(e => e.Name.LocalName == "ProjectGuid");
 
                 // Generate a GUID if the proj file doesn't include one (such as NetStandard projects)
-                return nsElement?.Value ?? $"{{{System.Guid.NewGuid().ToString()}}}";
+                return nsElement?.Value ?? string.Empty;
             }
         }
 
@@ -88,6 +88,10 @@ namespace Microsoft.Templates.Fakes
 
             var lastItems = _root.Descendants().LastOrDefault(d => d.Name.LocalName == "ItemGroup");
             lastItems?.AddAfterSelf(itemsContainer);
+            if (itemPath.EndsWith("xaml.cpp", StringComparison.OrdinalIgnoreCase))
+            {
+                AddItem(itemPath.Replace("xaml.cpp", "idl"));
+            }
         }
 
         public void AddNugetReference(NugetReference nugetReference)
@@ -98,13 +102,43 @@ namespace Microsoft.Templates.Fakes
                 return;
             }
 
-            var itemsContainer = new XElement(_root.GetDefaultNamespace() + "ItemGroup");
-
             XElement element = GetNugetReferenceXElement(nugetReference.PackageId, nugetReference.Version.ToString(), isCpsProject);
             ApplyNs(element);
-            itemsContainer.Add(element);
 
-            _root.Add(itemsContainer);
+            var firstPackageReference = _root.Descendants().FirstOrDefault(d => d.Name.LocalName == "PackageReference");
+
+            if (firstPackageReference != null)
+            {
+                firstPackageReference.AddBeforeSelf(element);
+            }
+            else
+            {
+                var itemsContainer = new XElement(_root.GetDefaultNamespace() + "ItemGroup");
+                itemsContainer.Add(element);
+                _root.Add(itemsContainer);
+            }
+        }
+
+        public void AddNugetImport(NugetReference nugetReference)
+        {
+            if (NugetImportExists(nugetReference))
+            {
+                return;
+            }
+
+            XElement targetsElement = GetPackageImportXElement(nugetReference.PackageId, nugetReference.Version.ToString(), "targets");
+            ApplyNs(targetsElement);
+
+            var importGroup = _root.Descendants().FirstOrDefault(d => d.Name.LocalName == "ImportGroup" && d.FirstAttribute.Value == "ExtensionTargets");
+
+            if (importGroup != null)
+            {
+                importGroup.AddFirst(targetsElement);
+            }
+
+            XElement propsElement = GetPackageImportXElement(nugetReference.PackageId, nugetReference.Version.ToString(), "props");
+            ApplyNs(propsElement);
+            _root.AddFirst(propsElement);
         }
 
         public void AddSDKReference(SdkReference sdkReference)
@@ -170,6 +204,16 @@ namespace Microsoft.Templates.Fakes
                 sb.AppendLine($"<Version>{version}</Version>");
                 sb.AppendLine("</PackageReference>");
             }
+
+            var itemElement = XElement.Parse(sb.ToString());
+
+            return itemElement;
+        }
+
+        private static XElement GetPackageImportXElement(string package, string version, string importFile)
+        {
+            var sb = new StringBuilder();
+            sb.Append($"<Import Project=\"..\\packages\\{package}.{version}\\build\\native\\{package}.{importFile}\" Condition=\"Exists(\'..\\packages\\{package}.{version}\\build\\native\\{package}.{importFile}\')\"/>");
 
             var itemElement = XElement.Parse(sb.ToString());
 
@@ -243,13 +287,20 @@ namespace Microsoft.Templates.Fakes
             }
         }
 
+        private bool NugetImportExists(NugetReference nuget)
+        {
+                return _root.Descendants().Any(
+                    d => d.Attribute("Project") != null &&
+                    d.Attribute("Project").Value.Contains($"{nuget.PackageId}.{nuget.Version}"));
+        }
+
         private VsItemType GetItemType(string fileName)
         {
             VsItemType returnType = VsItemType.Content;
 
-            switch (Path.GetExtension(fileName).ToLowerInvariant())
+            switch (Path.GetExtension(fileName).ToUpperInvariant())
             {
-                case ".cs":
+                case ".CS":
                     if (fileName.EndsWith(".xaml.cs", StringComparison.OrdinalIgnoreCase))
                     {
                         returnType = VsItemType.CompiledWithDependant;
@@ -260,7 +311,33 @@ namespace Microsoft.Templates.Fakes
                     }
 
                     break;
-                case ".vb":
+                case ".IDL":
+                    returnType = VsItemType.Midl;
+
+                    break;
+                case ".H":
+                    if (fileName.EndsWith(".xaml.h", StringComparison.OrdinalIgnoreCase))
+                    {
+                        returnType = VsItemType.ClIncludeWithDependant;
+                    }
+                    else
+                    {
+                        returnType = VsItemType.ClInclude;
+                    }
+
+                    break;
+                case ".CPP":
+                    if (fileName.EndsWith(".xaml.cpp", StringComparison.OrdinalIgnoreCase))
+                    {
+                        returnType = VsItemType.ClCompiledWithDependant;
+                    }
+                    else
+                    {
+                        returnType = VsItemType.ClCompiled;
+                    }
+
+                    break;
+                case ".VB":
                     if (fileName.EndsWith(".xaml.vb", StringComparison.OrdinalIgnoreCase))
                     {
                         returnType = VsItemType.CompiledWithDependant;
@@ -271,13 +348,13 @@ namespace Microsoft.Templates.Fakes
                     }
 
                     break;
-                case ".xaml":
+                case ".XAML":
                     returnType = VsItemType.XamlPage;
                     break;
-                case ".resw":
+                case ".RESW":
                     returnType = VsItemType.Resource;
                     break;
-                case ".pfx":
+                case ".PFX":
                     returnType = VsItemType.None;
                     break;
                 default:

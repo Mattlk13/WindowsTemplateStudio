@@ -9,7 +9,7 @@
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>Microsoft.Templates.Test</RootNamespace>
     <AssemblyName>Microsoft.Templates.Test</AssemblyName>
-    <TargetFrameworkVersion>v4.7</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.7.2</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <ProjectTypeGuids>{3AC096D0-A1C2-E12C-1390-A8335801FDAB};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">15.0</VisualStudioVersion>
@@ -29,7 +29,6 @@
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
-    <CodeAnalysisRuleSet>..\..\WtsRules.ruleset</CodeAnalysisRuleSet>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
@@ -38,7 +37,6 @@
     <DefineConstants>TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
-    <CodeAnalysisRuleSet>..\..\WtsRules.ruleset</CodeAnalysisRuleSet>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Analyze|AnyCPU'">
     <DebugSymbols>true</DebugSymbols>
@@ -47,8 +45,6 @@
     <DebugType>full</DebugType>
     <PlatformTarget>AnyCPU</PlatformTarget>
     <ErrorReport>prompt</ErrorReport>
-    <CodeAnalysisRuleSet>..\..\WtsRulesTests.ruleset</CodeAnalysisRuleSet>
-    <RunCodeAnalysis>true</RunCodeAnalysis>
     <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
   </PropertyGroup>
   <PropertyGroup>
@@ -69,21 +65,35 @@
     <Reference Include="System.Xml.Linq" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="BuildRightClickWithLegacy\BuildRightClickWithLegacyCollection.cs" />
     <Compile Include="BuildRightClickWithLegacy\BuildRightClickWithLegacyFixture.cs" />
-    <Compile Include="BuildRightClickWithLegacy\BuildRightClickWithLegacyTests.cs" />
+    <Compile Include="BuildRightClickWithLegacy\Uwp\BuildRightClickWithLegacyCSharpFixture.cs" />
+    <Compile Include="BuildRightClickWithLegacy\Uwp\BuildRightClickWithLegacyVBTests.cs" />
+    <Compile Include="BuildRightClickWithLegacy\Uwp\BuildRightClickWithLegacyCSharpTests.cs" />
     <Compile Include="BuildRightClickWithLegacy\LegacyTemplatesSourceV2.cs" />
-    <Compile Include="BuildTemplatesTests\BuildMVVMBasicProjectTests.cs" />
-    <Compile Include="BuildTemplatesTests\BuildMVVMLightProjectTests.cs" />
-    <Compile Include="BuildTemplatesTests\BuildPrismProjectTests.cs" />
+    <Compile Include="BuildTemplatesTests\Uwp\BuildToolkitMVVMProjectTests.cs" />
+    <Compile Include="BuildRightClickWithLegacy\Uwp\BuildRightClickWithLegacyVBFixture.cs" />
+    <Compile Include="BuildRightClickWithLegacy\Wpf\BuildRightClickWithLegacyWpfFixture.cs" />
+    <Compile Include="BuildRightClickWithLegacy\Wpf\BuildRightClickWithLegacyTests.cs" />
+    <Compile Include="BuildTemplatesTests\Uwp\BuildMVVMBasicProjectTests.cs" />
+    <Compile Include="BuildTemplatesTests\Uwp\BuildMVVMLightProjectTests.cs" />
+    <Compile Include="BuildTemplatesTests\Uwp\BuildPrismProjectTests.cs" />
     <Compile Include="BuildTemplatesTests\BuildTemplatesTestCollection.cs" />
     <Compile Include="BuildTemplatesTests\BuildTemplatesTestFixture.cs" />
-    <Compile Include="BuildTemplatesTests\BuildCaliburnMicroProjectTests.cs" />
-    <Compile Include="BuildTemplatesTests\BuildCodeBehindProjectTests.cs" />
+    <Compile Include="BuildTemplatesTests\Uwp\BuildCaliburnMicroProjectTests.cs" />
+    <Compile Include="BuildTemplatesTests\Uwp\BuildCodeBehindProjectTests.cs" />
     <Compile Include="BuildFixture.cs" />
-    <Compile Include="CodeAnalysis\VBStyleProjectGenerationTests.cs" />
-    <Compile Include="CodeAnalysis\VBStyleGenerationTestsFixture.cs" />
-    <Compile Include="CodeAnalysis\VBStyleCollection.cs" />
+    <Compile Include="BuildTemplatesTests\WinUI\BuildNoneProjectTests.cs" />
+    <Compile Include="BuildTemplatesTests\Wpf\BuildToolkitMVVMProjectTests.cs" />
+    <Compile Include="BuildTemplatesTests\WinUI\BuildMVVMToolkitProjectTests.cs" />
+    <Compile Include="BuildTemplatesTests\Wpf\BuildCodeBehindProjectTests.cs" />
+    <Compile Include="BuildTemplatesTests\Wpf\BuildPrismProjectTests.cs" />
+    <Compile Include="BuildTemplatesTests\Wpf\BuildMVVMLightProjectTests.cs" />
+    <Compile Include="BuildTemplatesTests\Wpf\BuildMVVMBasicProjectTests.cs" />
+    <Compile Include="Frameworks.cs" />
+    <Compile Include="ProjectTypes.cs" />
+    <Compile Include="VBCodeAnalysis\VBStyleProjectGenerationTests.cs" />
+    <Compile Include="VBCodeAnalysis\VBStyleGenerationTestsFixture.cs" />
+    <Compile Include="VBCodeAnalysis\VBStyleCollection.cs" />
     <Compile Include="ExternalLinksTests.cs" />
     <Compile Include="TemplatePathTests.cs" />
     <Compile Include="GenTests\ResourceUsageTests.cs" />
@@ -92,14 +102,39 @@
     <Compile Include="FileEncodingTests.cs" />
     <Compile Include="CodeStyleEnforcementTests.cs" />
     <Compile Include="GenTests\LanguageComparisonTests.cs" />
+    <Compile Include="VisualTests\AccessibilityTests.cs" />
+    <Compile Include="VisualTests\WPF\AccessibilityTests.cs" />
+    <Compile Include="WACK\WinUI\WindowsAppCertKitTests.cs" />
+    <Compile Include="WACK\Wpf\WindowsAppCertKitTests.cs" />
     <None Include=".codeclonesettings" />
     <None Include="App.config" />
-    <None Include="RunTests.bat">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    <None Include="bat\WinUI\RestoreAndBuildCppAppx.bat">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="bat\WinUI\RestoreAndBuildCpp.bat">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="bat\WinUI\RestoreAndBuild.bat">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="bat\WinUI\RestoreAndBuildAppx.bat">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="bat\Wpf\RestoreAndBuildAppx.bat">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="bat\Wpf\RestoreAndBuildWithMsix.bat">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="bat\Wpf\RestoreAndBuild.bat">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="bat\Uwp\RunTests.bat">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
     <None Include="test.config.json">
       <SubType>Designer</SubType>
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
     <None Include="VisualTests\TestProjectSource\app.config">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
@@ -131,23 +166,20 @@
     </AdditionalFiles>
     <Compile Include="TemplateFolderValidationTests.cs" />
     <Compile Include="TemplateJsonValidationTests.cs" />
-    <Compile Include="WACK\WindowsAppCertKitTests.cs" />
-    <None Include="RestoreAndBuildXamarin.bat">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    <Compile Include="WACK\Uwp\WindowsAppCertKitTests.cs" />
+    <None Include="bat\RunWackTest.bat">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Include="RunWackTest.bat">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-    <None Include="RestoreAndBuildAppx.bat">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    <None Include="bat\Uwp\RestoreAndBuildAppx.bat">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
     <None Include="VisualTests\TestProjectSource\packages.config">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
   </ItemGroup>
   <ItemGroup>
-    <None Include="RestoreAndBuild.bat">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    <None Include="bat\Uwp\RestoreAndBuild.bat">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
   </ItemGroup>
   <ItemGroup>
@@ -173,29 +205,39 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
+    <PackageReference Include="Axe.Windows">
+      <Version>1.0.8</Version>
+    </PackageReference>
     <PackageReference Include="Microsoft.CodeAnalysis.Analyzers">
-      <Version>1.1.0</Version>
+      <Version>3.3.2</Version>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+      <PrivateAssets>all</PrivateAssets>
+    </PackageReference>
+    <PackageReference Include="Microsoft.CodeAnalysis.Common">
+      <Version>3.9.0</Version>
     </PackageReference>
     <PackageReference Include="Microsoft.CodeAnalysis.CSharp">
-      <Version>2.3.2</Version>
+      <Version>3.9.0</Version>
+    </PackageReference>
+    <PackageReference Include="Microsoft.CodeAnalysis.NetAnalyzers">
+      <Version>5.0.3</Version>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+      <PrivateAssets>all</PrivateAssets>
     </PackageReference>
     <PackageReference Include="Microsoft.CodeAnalysis.VisualBasic">
-      <Version>2.3.2</Version>
+      <Version>3.9.0</Version>
     </PackageReference>
     <PackageReference Include="Microsoft.TemplateEngine.Edge">
-      <Version>1.0.0-beta2-20170518-234</Version>
+      <Version>3.0.0-preview9.19381.3</Version>
     </PackageReference>
     <PackageReference Include="Microsoft.TemplateEngine.Orchestrator.RunnableProjects">
-      <Version>1.0.0-beta2-20170518-234</Version>
-    </PackageReference>
-    <PackageReference Include="Newtonsoft.Json">
-      <Version>10.0.3</Version>
+      <Version>3.0.0-preview9.19381.3</Version>
     </PackageReference>
     <PackageReference Include="System.ValueTuple">
       <Version>4.5.0</Version>
     </PackageReference>
     <PackageReference Include="WindowsTestHelpers">
-      <Version>0.2.0</Version>
+      <Version>0.4.1</Version>
     </PackageReference>
     <PackageReference Include="xunit">
       <Version>2.4.1</Version>
@@ -212,12 +254,16 @@
       <PrivateAssets>all</PrivateAssets>
     </PackageReference>
     <PackageReference Include="xunit.runner.visualstudio">
-      <Version>2.4.1</Version>
+      <Version>2.4.3</Version>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers</IncludeAssets>
       <PrivateAssets>all</PrivateAssets>
     </PackageReference>
   </ItemGroup>
   <ItemGroup>
+    <Content Include="..\..\tools\nuget.exe">
+      <Link>nuget\nuget.exe</Link>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
     <Content Include="TestData\NonDefaultAssets\LockScreenLogo.scale-200.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
@@ -253,6 +299,7 @@
       <SubType>Designer</SubType>
     </None>
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(VSToolsPath)\TeamTest\Microsoft.TestTools.targets" Condition="Exists('$(VSToolsPath)\TeamTest\Microsoft.TestTools.targets')" />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

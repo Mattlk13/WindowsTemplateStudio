@@ -1,9 +1,11 @@
 ﻿{
+  "$schema": "http://json.schemastore.org/template",
   "author": "Microsoft Community",
   "classifications": [
     "Universal"
   ],
   "name": "Web to App link",
+  "shortName": "Web to App link",
   "groupIdentity": "wts.Feat.WebToAppLink.VB",
   "identity": "wts.Feat.WebToAppLink.VB",
   "description": "Web to App link associates your app with a website so that when someone opens a link to your website.",
@@ -12,7 +14,7 @@
     "type": "item",
     "wts.type": "feature",
     "wts.projecttype": "all",
-    "wts.frontendframework": "MVVMBasic|MVVMLight|CodeBehind",
+    "wts.frontendframework": "MVVMBasic|MVVMLight|CodeBehind|MVVMToolkit",
     "wts.platform": "Uwp",
     "wts.version": "1.0.0",
     "wts.displayOrder": "2",
@@ -26,7 +28,7 @@
   "preferNameDirectory": true,
   "PrimaryOutputs": [
     {
-      "path": ".\\Activation\\WebToAppLinkActivationHandler.vb"
+      "path": "Activation/WebToAppLinkActivationHandler.vb"
     }
   ],
   "symbols": {

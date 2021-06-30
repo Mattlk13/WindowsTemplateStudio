@@ -1,7 +1,9 @@
 ﻿{
+  "$schema": "http://json.schemastore.org/template",
   "author": "Microsoft",
   "classifications": ["Universal"],
   "name": "Theme Selection",
+  "shortName": "Theme Selection",
   "groupIdentity": "wts.Feature.ThemeSelection.VB",
   "identity": "wts.Feature.ThemeSelection.VB",
   "description": "Adds theming support to your application.",
@@ -10,7 +12,7 @@
     "type": "item",
     "wts.type": "feature",
     "wts.projecttype": "all",
-    "wts.frontendframework": "MVVMBasic|MVVMLight|CodeBehind",
+    "wts.frontendframework": "MVVMBasic|MVVMLight|CodeBehind|MVVMToolkit",
     "wts.platform": "Uwp",
     "wts.version": "1.0.0",
     "wts.displayOrder": "10",
@@ -25,7 +27,7 @@
   "preferNameDirectory": true,
   "PrimaryOutputs": [
     {
-      "path": ".\\Services\\ThemeSelectorService.vb"
+      "path": "Services/ThemeSelectorService.vb"
     }
   ],
   "symbols": {

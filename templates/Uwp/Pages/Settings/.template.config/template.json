@@ -1,9 +1,11 @@
 ﻿{
+  "$schema": "http://json.schemastore.org/template",
   "author": "Microsoft",
   "classifications": [
     "Universal"
   ],
   "name": "Settings",
+  "shortName": "Settings",
   "groupIdentity": "wts.Page.Settings",
   "identity": "wts.Page.Settings",
   "description": "The settings page is the page where we recommend putting the configuration settings for your app.",
@@ -12,7 +14,7 @@
     "type": "item",
     "wts.type": "page",
     "wts.projecttype": "all",
-    "wts.frontendframework": "MVVMBasic|MVVMLight",
+    "wts.frontendframework": "MVVMBasic|MVVMLight|MVVMToolkit",
     "wts.platform": "Uwp",
     "wts.version": "1.0.0",
     "wts.displayOrder": "2",
@@ -26,16 +28,16 @@
   "preferNameDirectory": true,
   "PrimaryOutputs": [
     {
-      "path": ".\\Helpers\\EnumToBooleanConverter.cs"
+      "path": "Helpers/EnumToBooleanConverter.cs"
     },
     {
-      "path": ".\\Views\\SettingsPagePage.xaml"
+      "path": "Views/SettingsPagePage.xaml"
     },
     {
-      "path": ".\\Views\\SettingsPagePage.xaml.cs"
+      "path": "Views/SettingsPagePage.xaml.cs"
     },
     {
-      "path": ".\\ViewModels\\SettingsPageViewModel.cs"
+      "path": "ViewModels/SettingsPageViewModel.cs"
     }
   ],
   "symbols": {

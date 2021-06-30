@@ -5,20 +5,19 @@
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Windows;
 using Microsoft.Templates.Core;
 using Microsoft.Templates.Core.Diagnostics;
 using Microsoft.Templates.Core.Gen;
-using Microsoft.Templates.Core.Services;
 using Microsoft.Templates.UI.Controls;
 using Microsoft.Templates.UI.Mvvm;
 using Microsoft.Templates.UI.Resources;
 using Microsoft.Templates.UI.Services;
 using Microsoft.Templates.UI.Threading;
 using Microsoft.Templates.UI.ViewModels.Common;
-using Microsoft.Templates.UI.Views.Common;
 using Microsoft.Templates.UI.Views.NewItem;
 
 namespace Microsoft.Templates.UI.ViewModels.NewItem
@@ -28,21 +27,13 @@ namespace Microsoft.Templates.UI.ViewModels.NewItem
         public const string NewItemStepTemplateSelection = "TemplateSelection";
         public const string NewItemStepChangesSummary = "ChangesSummary";
 
+        private readonly GenerationService _generationService = GenerationService.Instance;
+
         private RelayCommand _refreshTemplatesCacheCommand;
 
         private static NewItemGenerationResult _output;
 
-        private GenerationService _generationService = GenerationService.Instance;
-
-        private string _emptyBackendFramework = string.Empty;
-
         public TemplateType TemplateType { get; set; }
-
-        public string ConfigPlatform { get; private set; }
-
-        public string ConfigFramework { get; private set; }
-
-        public string ConfigProjectType { get; private set; }
 
         public static MainViewModel Instance { get; private set; }
 
@@ -92,12 +83,12 @@ namespace Microsoft.Templates.UI.ViewModels.NewItem
             }
         }
 
-        public async Task InitializeAsync(TemplateType templateType, string language)
+        public void Initialize(TemplateType templateType, UserSelectionContext context)
         {
             TemplateType = templateType;
             WizardStatus.Title = GetNewItemTitle(templateType);
-            SetProjectConfigInfo();
-            await InitializeAsync(ConfigPlatform, language);
+
+            Initialize(context);
         }
 
         private string GetNewItemTitle(TemplateType templateType)
@@ -117,14 +108,14 @@ namespace Microsoft.Templates.UI.ViewModels.NewItem
             }
         }
 
-        private void OnStepUpdated(object sender, StepData step)
+        private void OnStepUpdated(object sender, StepDataEventsArgs e)
         {
-            if (step.Id == NewItemStepTemplateSelection)
+            if (e.StepData.Id == NewItemStepTemplateSelection)
             {
                 ChangesSummary.ClearSelected();
                 WizardNavigation.Current.SetCanFinish(false);
             }
-            else if (step.Id == NewItemStepChangesSummary)
+            else if (e.StepData.Id == NewItemStepChangesSummary)
             {
                 WizardNavigation.Current.SetCanFinish(true);
             }
@@ -176,7 +167,7 @@ namespace Microsoft.Templates.UI.ViewModels.NewItem
 
         private UserSelection CreateUserSelection()
         {
-            var userSelection = new UserSelection(ConfigProjectType, ConfigFramework, _emptyBackendFramework, ConfigPlatform, Language) { HomeName = string.Empty };
+            var userSelection = new UserSelection(Context) { HomeName = string.Empty };
             var selectedTemplate = new UserSelectionItem { Name = TemplateSelection.Name, TemplateId = TemplateSelection.Template.TemplateId };
             userSelection.Add(selectedTemplate, TemplateSelection.Template.TemplateType);
 
@@ -191,7 +182,7 @@ namespace Microsoft.Templates.UI.ViewModels.NewItem
 
         private void OnFinish(object sender, EventArgs e)
         {
-            var userSelection = new UserSelection(ConfigProjectType, ConfigFramework, _emptyBackendFramework, ConfigPlatform, Language);
+            var userSelection = new UserSelection(Context);
             userSelection.Add(
                 new UserSelectionItem()
                 {
@@ -202,9 +193,15 @@ namespace Microsoft.Templates.UI.ViewModels.NewItem
             WizardShell.Current.Result.ItemGenerationType = ChangesSummary.DoNotMerge ? ItemGenerationType.Generate : ItemGenerationType.GenerateAndMerge;
         }
 
-        protected override async Task OnTemplatesAvailableAsync()
+        public IEnumerable<string> GetNames()
         {
-            TemplateSelection.LoadData(TemplateType, ConfigPlatform, ConfigProjectType, ConfigFramework);
+            return TemplateSelection.Dependencies.Select(i => i.DefaultName);
+        }
+
+        public override async Task OnTemplatesAvailableAsync()
+        {
+            ValidationService.Initialize(GetNames, null);
+            TemplateSelection.LoadData(TemplateType, Context);
             WizardStatus.IsLoading = false;
 
             var result = BreakingChangesValidatorService.Validate();
@@ -216,6 +213,8 @@ namespace Microsoft.Templates.UI.ViewModels.NewItem
 
                 await Task.CompletedTask;
             }
+
+            ValidateProjectPaths();
         }
 
         protected async Task OnRefreshTemplatesAsync()
@@ -238,36 +237,19 @@ namespace Microsoft.Templates.UI.ViewModels.NewItem
             }
         }
 
-        private void SetProjectConfigInfo()
+        private void ValidateProjectPaths()
         {
-            var configInfo = ProjectConfigInfo.ReadProjectConfiguration();
-            if (string.IsNullOrEmpty(configInfo.ProjectType) || string.IsNullOrEmpty(configInfo.Framework) || string.IsNullOrEmpty(configInfo.Platform))
+            if (GenContext.Current.ProjectName != new DirectoryInfo(GenContext.Current.DestinationPath).Name)
             {
-                var vm = new ProjectConfigurationViewModel();
-                ProjectConfigurationDialog projectConfig = new ProjectConfigurationDialog(vm);
-                projectConfig.Owner = WizardShell.Current;
-                projectConfig.ShowDialog();
-
-                if (vm.Result == DialogResult.Accept)
-                {
-                    configInfo.ProjectType = vm.SelectedProjectType.Name;
-                    configInfo.Framework = vm.SelectedFramework.Name;
-                    configInfo.Platform = vm.SelectedPlatform;
-                    ProjectMetadataService.SaveProjectMetadata(configInfo);
-                    ConfigFramework = configInfo.Framework;
-                    ConfigProjectType = configInfo.ProjectType;
-                    ConfigPlatform = configInfo.Platform;
-                }
-                else
-                {
-                    Navigation.Cancel();
-                }
+                var notification = Notification.Error(StringRes.NotificationValidationError_ProjectNameAndPathDoNotMatch, ErrorCategory.ProjectPathValidation);
+                NotificationsControl.AddNotificationAsync(notification).FireAndForget();
+                ChangesSummary.DoNotMerge = true;
+                ChangesSummary.IsDoNotMergeEnabled = false;
             }
             else
             {
-                ConfigFramework = configInfo.Framework;
-                ConfigProjectType = configInfo.ProjectType;
-                ConfigPlatform = configInfo.Platform;
+                ChangesSummary.DoNotMerge = false;
+                ChangesSummary.IsDoNotMergeEnabled = true;
             }
         }
 

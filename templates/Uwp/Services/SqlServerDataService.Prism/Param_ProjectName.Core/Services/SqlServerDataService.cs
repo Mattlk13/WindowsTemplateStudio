@@ -9,7 +9,7 @@ using Param_RootNamespace.Core.Models;
 namespace Param_RootNamespace.Core.Services
 {
     // This class holds sample data used by some generated pages to show how they can be used.
-    // More information on using and configuring this service can be found at https://github.com/Microsoft/WindowsTemplateStudio/blob/master/docs/features/sql-server-data-service.md
+    // More information on using and configuring this service can be found at https://github.com/Microsoft/WindowsTemplateStudio/blob/release/docs/UWP/services/sql-server-data-service.md
     // TODO WTS: Change your code to use this instead of the SampleDataService.
     public static class SqlServerDataService
     {
@@ -17,7 +17,7 @@ namespace Param_RootNamespace.Core.Services
         private static string GetConnectionString()
         {
             // Attempt to get the connection string from a config file
-            // Learn more about specifying the connection string in a config file at https://docs.microsoft.com/en-us/dotnet/api/system.configuration.configurationmanager?view=netframework-4.7.2
+            // Learn more about specifying the connection string in a config file at https://docs.microsoft.com/dotnet/api/system.configuration.configurationmanager?view=netframework-4.7.2
             var conStr = ConfigurationManager.ConnectionStrings["MyAppConnectionString"]?.ConnectionString;
 
             if (!string.IsNullOrWhiteSpace(conStr))
@@ -138,9 +138,9 @@ namespace Param_RootNamespace.Core.Services
                                     var sampleOrder = sampleCompany.Orders.FirstOrDefault(o => o.OrderID == orderID);
                                     if (sampleOrder == null)
                                     {
-                                        var orderDate = !reader.IsDBNull(11) ? reader.GetDateTime(11) : default(DateTime);
-                                        var requiredDate = !reader.IsDBNull(12) ? reader.GetDateTime(12) : default(DateTime);
-                                        var shippedDate = !reader.IsDBNull(13) ? reader.GetDateTime(13) : default(DateTime);
+                                        var orderDate = !reader.IsDBNull(11) ? reader.GetDateTime(11) : default;
+                                        var requiredDate = !reader.IsDBNull(12) ? reader.GetDateTime(12) : default;
+                                        var shippedDate = !reader.IsDBNull(13) ? reader.GetDateTime(13) : default;
                                         var freight = !reader.IsDBNull(14) ? double.Parse(reader.GetDecimal(14).ToString()) : 0;
                                         var shipperName = !reader.IsDBNull(15) ? reader.GetString(15) : string.Empty;
                                         var shipperPhone = !reader.IsDBNull(16) ? reader.GetString(16) : string.Empty;

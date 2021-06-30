@@ -2,6 +2,7 @@
 // The .NET Foundation licenses this file to you under the MIT license.
 // See the LICENSE file in the project root for more information.
 
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using Microsoft.Templates.Core;
@@ -20,7 +21,7 @@ namespace Microsoft.Templates.UI.ViewModels.Common
 
         public IEnumerable<LayoutViewModel> Layout { get; private set; }
 
-        public FrameworkMetaDataViewModel(MetadataInfo metadataInfo, string platform)
+        public FrameworkMetaDataViewModel(MetadataInfo metadataInfo)
         {
             Name = metadataInfo.Name;
             Identity = metadataInfo.Name;
@@ -32,6 +33,7 @@ namespace Microsoft.Templates.UI.ViewModels.Common
             Order = metadataInfo.Order;
             MetadataType = metadataInfo.MetadataType;
             Licenses = metadataInfo.LicenseTerms?.Select(l => new LicenseViewModel(l));
+            Deprecated = bool.TryParse(metadataInfo.Tags.FirstOrDefault(t => t.Key.Equals("deprecated", StringComparison.Ordinal)).Value?.ToString(), out bool isDeprecated);
         }
     }
 }

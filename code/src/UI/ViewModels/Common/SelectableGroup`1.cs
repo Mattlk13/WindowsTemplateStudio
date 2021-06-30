@@ -14,15 +14,27 @@ namespace Microsoft.Templates.UI.ViewModels.Common
     public class SelectableGroup<T> : Observable
         where T : Selectable
     {
+        private readonly Func<bool> _isSelectionEnabled;
+        private readonly Func<Task> _onSelected;
+        private readonly DialogService _dialogService = DialogService.Instance;
+
         private T _selected;
         private T _origSelected;
-        private Func<bool> _isSelectionEnabled;
-        private Func<Task> _onSelected;
 
         public T Selected
         {
             get => _selected;
-            set => SafeThreading.JoinableTaskFactory.RunAsync(async () => await SelectAsync(value));
+            set => SafeThreading.JoinableTaskFactory.RunAsync(async () =>
+            {
+                try
+                {
+                    await SelectAsync(value);
+                }
+                catch (Exception ex)
+                {
+                    _dialogService.ShowError(ex);
+                }
+            });
         }
 
         public ObservableCollection<T> Items { get; } = new ObservableCollection<T>();

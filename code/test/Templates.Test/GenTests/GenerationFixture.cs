@@ -6,11 +6,10 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.IO;
-using System.Linq;
 using Microsoft.Templates.Core;
 using Microsoft.Templates.Core.Gen;
 using Microsoft.Templates.Core.Locations;
-using Microsoft.Templates.Fakes;
+using Microsoft.Templates.Fakes.GenShell;
 
 namespace Microsoft.Templates.Test
 {
@@ -21,7 +20,7 @@ namespace Microsoft.Templates.Test
 
         public TemplatesSource Source => new LocalTemplatesSource(null, "TestGen");
 
-        private static bool syncExecuted;
+        private static Dictionary<string, bool> syncExecuted = new Dictionary<string, bool>();
 
         public static IEnumerable<object[]> GetProjectTemplates()
         {
@@ -42,13 +41,16 @@ namespace Microsoft.Templates.Test
          Justification = "Required for unit testing.")]
         private static void InitializeTemplates(TemplatesSource source)
         {
+
+            if (syncExecuted.ContainsKey(source.Id) && syncExecuted[source.Id] == true)
+            {
+                return;
+            }
+
             GenContext.Bootstrap(source, new FakeGenShell(Platforms.Uwp, ProgrammingLanguages.CSharp), Platforms.Uwp, ProgrammingLanguages.CSharp);
 
-            if (!syncExecuted)
-            {
-                GenContext.ToolBox.Repo.SynchronizeAsync(true).Wait();
-                syncExecuted = true;
-            }
+            GenContext.ToolBox.Repo.SynchronizeAsync(true).Wait();
+            syncExecuted.Add(source.Id, true);
         }
 
         public override void InitializeFixture(IContextProvider contextProvider, string framework = "")
